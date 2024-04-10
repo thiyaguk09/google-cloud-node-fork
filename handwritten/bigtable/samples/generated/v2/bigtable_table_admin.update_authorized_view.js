@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name, consistencyToken) {
-  // [START bigtableadmin_v2_generated_BigtableTableAdmin_CheckConsistency_async]
+function main(authorizedView) {
+  // [START bigtableadmin_v2_generated_BigtableTableAdmin_UpdateAuthorizedView_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,27 +29,27 @@ function main(name, consistencyToken) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The unique name of the Table for which to check replication
-   *  consistency. Values are of the form
-   *  `projects/{project}/instances/{instance}/tables/{table}`.
+   *  Required. The AuthorizedView to update. The `name` in `authorized_view` is
+   *  used to identify the AuthorizedView. AuthorizedView name must in this
+   *  format
+   *  projects/<project>/instances/<instance>/tables/<table>/authorizedViews/<authorized_view>
    */
-  // const name = 'abc123'
+  // const authorizedView = {}
   /**
-   *  Required. The token created using GenerateConsistencyToken for the Table.
+   *  Optional. The list of fields to update.
+   *  A mask specifying which fields in the AuthorizedView resource should be
+   *  updated. This mask is relative to the AuthorizedView resource, not to the
+   *  request message. A field will be overwritten if it is in the mask. If
+   *  empty, all fields set in the request will be overwritten. A special value
+   *  `*` means to overwrite all fields (including fields not set in the
+   *  request).
    */
-  // const consistencyToken = 'abc123'
+  // const updateMask = {}
   /**
-   *  Checks that reads using an app profile with `StandardIsolation` can
-   *  see all writes committed before the token was created, even if the
-   *  read and write target different clusters.
+   *  Optional. If true, ignore the safety checks when updating the
+   *  AuthorizedView.
    */
-  // const standardReadRemoteWrites = {}
-  /**
-   *  Checks that reads using an app profile with `DataBoostIsolationReadOnly`
-   *  can see all writes committed before the token was created, but only if
-   *  the read and write target the same cluster.
-   */
-  // const dataBoostReadLocalWrites = {}
+  // const ignoreWarnings = true
 
   // Imports the Admin library
   const {BigtableTableAdminClient} = require('@google-cloud/bigtable').v2;
@@ -57,20 +57,20 @@ function main(name, consistencyToken) {
   // Instantiates a client
   const adminClient = new BigtableTableAdminClient();
 
-  async function callCheckConsistency() {
+  async function callUpdateAuthorizedView() {
     // Construct request
     const request = {
-      name,
-      consistencyToken,
+      authorizedView,
     };
 
     // Run request
-    const response = await adminClient.checkConsistency(request);
+    const [operation] = await adminClient.updateAuthorizedView(request);
+    const [response] = await operation.promise();
     console.log(response);
   }
 
-  callCheckConsistency();
-  // [END bigtableadmin_v2_generated_BigtableTableAdmin_CheckConsistency_async]
+  callUpdateAuthorizedView();
+  // [END bigtableadmin_v2_generated_BigtableTableAdmin_UpdateAuthorizedView_async]
 }
 
 process.on('unhandledRejection', err => {

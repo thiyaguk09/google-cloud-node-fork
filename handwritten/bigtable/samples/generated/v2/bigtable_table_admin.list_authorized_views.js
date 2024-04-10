@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name, consistencyToken) {
-  // [START bigtableadmin_v2_generated_BigtableTableAdmin_CheckConsistency_async]
+function main(parent) {
+  // [START bigtableadmin_v2_generated_BigtableTableAdmin_ListAuthorizedViews_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,27 +29,30 @@ function main(name, consistencyToken) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The unique name of the Table for which to check replication
-   *  consistency. Values are of the form
+   *  Required. The unique name of the table for which AuthorizedViews should be
+   *  listed. Values are of the form
    *  `projects/{project}/instances/{instance}/tables/{table}`.
    */
-  // const name = 'abc123'
+  // const parent = 'abc123'
   /**
-   *  Required. The token created using GenerateConsistencyToken for the Table.
+   *  Optional. Maximum number of results per page.
+   *  A page_size of zero lets the server choose the number of items to return.
+   *  A page_size which is strictly positive will return at most that many items.
+   *  A negative page_size will cause an error.
+   *  Following the first request, subsequent paginated calls are not required
+   *  to pass a page_size. If a page_size is set in subsequent calls, it must
+   *  match the page_size given in the first request.
    */
-  // const consistencyToken = 'abc123'
+  // const pageSize = 1234
   /**
-   *  Checks that reads using an app profile with `StandardIsolation` can
-   *  see all writes committed before the token was created, even if the
-   *  read and write target different clusters.
+   *  Optional. The value of `next_page_token` returned by a previous call.
    */
-  // const standardReadRemoteWrites = {}
+  // const pageToken = 'abc123'
   /**
-   *  Checks that reads using an app profile with `DataBoostIsolationReadOnly`
-   *  can see all writes committed before the token was created, but only if
-   *  the read and write target the same cluster.
+   *  Optional. The resource_view to be applied to the returned views' fields.
+   *  Default to NAME_ONLY.
    */
-  // const dataBoostReadLocalWrites = {}
+  // const view = {}
 
   // Imports the Admin library
   const {BigtableTableAdminClient} = require('@google-cloud/bigtable').v2;
@@ -57,20 +60,21 @@ function main(name, consistencyToken) {
   // Instantiates a client
   const adminClient = new BigtableTableAdminClient();
 
-  async function callCheckConsistency() {
+  async function callListAuthorizedViews() {
     // Construct request
     const request = {
-      name,
-      consistencyToken,
+      parent,
     };
 
     // Run request
-    const response = await adminClient.checkConsistency(request);
-    console.log(response);
+    const iterable = adminClient.listAuthorizedViewsAsync(request);
+    for await (const response of iterable) {
+        console.log(response);
+    }
   }
 
-  callCheckConsistency();
-  // [END bigtableadmin_v2_generated_BigtableTableAdmin_CheckConsistency_async]
+  callListAuthorizedViews();
+  // [END bigtableadmin_v2_generated_BigtableTableAdmin_ListAuthorizedViews_async]
 }
 
 process.on('unhandledRejection', err => {

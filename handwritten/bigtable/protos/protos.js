@@ -9691,6 +9691,7 @@
                          * @property {google.bigtable.admin.v2.AppProfile.ISingleClusterRouting|null} [singleClusterRouting] AppProfile singleClusterRouting
                          * @property {google.bigtable.admin.v2.AppProfile.Priority|null} [priority] AppProfile priority
                          * @property {google.bigtable.admin.v2.AppProfile.IStandardIsolation|null} [standardIsolation] AppProfile standardIsolation
+                         * @property {google.bigtable.admin.v2.AppProfile.IDataBoostIsolationReadOnly|null} [dataBoostIsolationReadOnly] AppProfile dataBoostIsolationReadOnly
                          */
     
                         /**
@@ -9764,6 +9765,14 @@
                          */
                         AppProfile.prototype.standardIsolation = null;
     
+                        /**
+                         * AppProfile dataBoostIsolationReadOnly.
+                         * @member {google.bigtable.admin.v2.AppProfile.IDataBoostIsolationReadOnly|null|undefined} dataBoostIsolationReadOnly
+                         * @memberof google.bigtable.admin.v2.AppProfile
+                         * @instance
+                         */
+                        AppProfile.prototype.dataBoostIsolationReadOnly = null;
+    
                         // OneOf field names bound to virtual getters and setters
                         var $oneOfFields;
     
@@ -9780,12 +9789,12 @@
     
                         /**
                          * AppProfile isolation.
-                         * @member {"priority"|"standardIsolation"|undefined} isolation
+                         * @member {"priority"|"standardIsolation"|"dataBoostIsolationReadOnly"|undefined} isolation
                          * @memberof google.bigtable.admin.v2.AppProfile
                          * @instance
                          */
                         Object.defineProperty(AppProfile.prototype, "isolation", {
-                            get: $util.oneOfGetter($oneOfFields = ["priority", "standardIsolation"]),
+                            get: $util.oneOfGetter($oneOfFields = ["priority", "standardIsolation", "dataBoostIsolationReadOnly"]),
                             set: $util.oneOfSetter($oneOfFields)
                         });
     
@@ -9825,6 +9834,8 @@
                                 $root.google.bigtable.admin.v2.AppProfile.SingleClusterRouting.encode(message.singleClusterRouting, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                             if (message.priority != null && Object.hasOwnProperty.call(message, "priority"))
                                 writer.uint32(/* id 7, wireType 0 =*/56).int32(message.priority);
+                            if (message.dataBoostIsolationReadOnly != null && Object.hasOwnProperty.call(message, "dataBoostIsolationReadOnly"))
+                                $root.google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly.encode(message.dataBoostIsolationReadOnly, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
                             if (message.standardIsolation != null && Object.hasOwnProperty.call(message, "standardIsolation"))
                                 $root.google.bigtable.admin.v2.AppProfile.StandardIsolation.encode(message.standardIsolation, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
                             return writer;
@@ -9887,6 +9898,10 @@
                                     }
                                 case 11: {
                                         message.standardIsolation = $root.google.bigtable.admin.v2.AppProfile.StandardIsolation.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 10: {
+                                        message.dataBoostIsolationReadOnly = $root.google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly.decode(reader, reader.uint32());
                                         break;
                                     }
                                 default:
@@ -9974,6 +9989,16 @@
                                         return "standardIsolation." + error;
                                 }
                             }
+                            if (message.dataBoostIsolationReadOnly != null && message.hasOwnProperty("dataBoostIsolationReadOnly")) {
+                                if (properties.isolation === 1)
+                                    return "isolation: multiple values";
+                                properties.isolation = 1;
+                                {
+                                    var error = $root.google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly.verify(message.dataBoostIsolationReadOnly);
+                                    if (error)
+                                        return "dataBoostIsolationReadOnly." + error;
+                                }
+                            }
                             return null;
                         };
     
@@ -10034,6 +10059,11 @@
                                     throw TypeError(".google.bigtable.admin.v2.AppProfile.standardIsolation: object expected");
                                 message.standardIsolation = $root.google.bigtable.admin.v2.AppProfile.StandardIsolation.fromObject(object.standardIsolation);
                             }
+                            if (object.dataBoostIsolationReadOnly != null) {
+                                if (typeof object.dataBoostIsolationReadOnly !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.AppProfile.dataBoostIsolationReadOnly: object expected");
+                                message.dataBoostIsolationReadOnly = $root.google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly.fromObject(object.dataBoostIsolationReadOnly);
+                            }
                             return message;
                         };
     
@@ -10075,6 +10105,11 @@
                                 object.priority = options.enums === String ? $root.google.bigtable.admin.v2.AppProfile.Priority[message.priority] === undefined ? message.priority : $root.google.bigtable.admin.v2.AppProfile.Priority[message.priority] : message.priority;
                                 if (options.oneofs)
                                     object.isolation = "priority";
+                            }
+                            if (message.dataBoostIsolationReadOnly != null && message.hasOwnProperty("dataBoostIsolationReadOnly")) {
+                                object.dataBoostIsolationReadOnly = $root.google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly.toObject(message.dataBoostIsolationReadOnly, options);
+                                if (options.oneofs)
+                                    object.isolation = "dataBoostIsolationReadOnly";
                             }
                             if (message.standardIsolation != null && message.hasOwnProperty("standardIsolation")) {
                                 object.standardIsolation = $root.google.bigtable.admin.v2.AppProfile.StandardIsolation.toObject(message.standardIsolation, options);
@@ -10804,6 +10839,260 @@
                             };
     
                             return StandardIsolation;
+                        })();
+    
+                        AppProfile.DataBoostIsolationReadOnly = (function() {
+    
+                            /**
+                             * Properties of a DataBoostIsolationReadOnly.
+                             * @memberof google.bigtable.admin.v2.AppProfile
+                             * @interface IDataBoostIsolationReadOnly
+                             * @property {google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly.ComputeBillingOwner|null} [computeBillingOwner] DataBoostIsolationReadOnly computeBillingOwner
+                             */
+    
+                            /**
+                             * Constructs a new DataBoostIsolationReadOnly.
+                             * @memberof google.bigtable.admin.v2.AppProfile
+                             * @classdesc Represents a DataBoostIsolationReadOnly.
+                             * @implements IDataBoostIsolationReadOnly
+                             * @constructor
+                             * @param {google.bigtable.admin.v2.AppProfile.IDataBoostIsolationReadOnly=} [properties] Properties to set
+                             */
+                            function DataBoostIsolationReadOnly(properties) {
+                                if (properties)
+                                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                        if (properties[keys[i]] != null)
+                                            this[keys[i]] = properties[keys[i]];
+                            }
+    
+                            /**
+                             * DataBoostIsolationReadOnly computeBillingOwner.
+                             * @member {google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly.ComputeBillingOwner|null|undefined} computeBillingOwner
+                             * @memberof google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly
+                             * @instance
+                             */
+                            DataBoostIsolationReadOnly.prototype.computeBillingOwner = null;
+    
+                            // OneOf field names bound to virtual getters and setters
+                            var $oneOfFields;
+    
+                            /**
+                             * DataBoostIsolationReadOnly _computeBillingOwner.
+                             * @member {"computeBillingOwner"|undefined} _computeBillingOwner
+                             * @memberof google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly
+                             * @instance
+                             */
+                            Object.defineProperty(DataBoostIsolationReadOnly.prototype, "_computeBillingOwner", {
+                                get: $util.oneOfGetter($oneOfFields = ["computeBillingOwner"]),
+                                set: $util.oneOfSetter($oneOfFields)
+                            });
+    
+                            /**
+                             * Creates a new DataBoostIsolationReadOnly instance using the specified properties.
+                             * @function create
+                             * @memberof google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly
+                             * @static
+                             * @param {google.bigtable.admin.v2.AppProfile.IDataBoostIsolationReadOnly=} [properties] Properties to set
+                             * @returns {google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly} DataBoostIsolationReadOnly instance
+                             */
+                            DataBoostIsolationReadOnly.create = function create(properties) {
+                                return new DataBoostIsolationReadOnly(properties);
+                            };
+    
+                            /**
+                             * Encodes the specified DataBoostIsolationReadOnly message. Does not implicitly {@link google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly.verify|verify} messages.
+                             * @function encode
+                             * @memberof google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly
+                             * @static
+                             * @param {google.bigtable.admin.v2.AppProfile.IDataBoostIsolationReadOnly} message DataBoostIsolationReadOnly message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            DataBoostIsolationReadOnly.encode = function encode(message, writer) {
+                                if (!writer)
+                                    writer = $Writer.create();
+                                if (message.computeBillingOwner != null && Object.hasOwnProperty.call(message, "computeBillingOwner"))
+                                    writer.uint32(/* id 1, wireType 0 =*/8).int32(message.computeBillingOwner);
+                                return writer;
+                            };
+    
+                            /**
+                             * Encodes the specified DataBoostIsolationReadOnly message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly.verify|verify} messages.
+                             * @function encodeDelimited
+                             * @memberof google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly
+                             * @static
+                             * @param {google.bigtable.admin.v2.AppProfile.IDataBoostIsolationReadOnly} message DataBoostIsolationReadOnly message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            DataBoostIsolationReadOnly.encodeDelimited = function encodeDelimited(message, writer) {
+                                return this.encode(message, writer).ldelim();
+                            };
+    
+                            /**
+                             * Decodes a DataBoostIsolationReadOnly message from the specified reader or buffer.
+                             * @function decode
+                             * @memberof google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @param {number} [length] Message length if known beforehand
+                             * @returns {google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly} DataBoostIsolationReadOnly
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            DataBoostIsolationReadOnly.decode = function decode(reader, length) {
+                                if (!(reader instanceof $Reader))
+                                    reader = $Reader.create(reader);
+                                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly();
+                                while (reader.pos < end) {
+                                    var tag = reader.uint32();
+                                    switch (tag >>> 3) {
+                                    case 1: {
+                                            message.computeBillingOwner = reader.int32();
+                                            break;
+                                        }
+                                    default:
+                                        reader.skipType(tag & 7);
+                                        break;
+                                    }
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Decodes a DataBoostIsolationReadOnly message from the specified reader or buffer, length delimited.
+                             * @function decodeDelimited
+                             * @memberof google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @returns {google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly} DataBoostIsolationReadOnly
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            DataBoostIsolationReadOnly.decodeDelimited = function decodeDelimited(reader) {
+                                if (!(reader instanceof $Reader))
+                                    reader = new $Reader(reader);
+                                return this.decode(reader, reader.uint32());
+                            };
+    
+                            /**
+                             * Verifies a DataBoostIsolationReadOnly message.
+                             * @function verify
+                             * @memberof google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly
+                             * @static
+                             * @param {Object.<string,*>} message Plain object to verify
+                             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                             */
+                            DataBoostIsolationReadOnly.verify = function verify(message) {
+                                if (typeof message !== "object" || message === null)
+                                    return "object expected";
+                                var properties = {};
+                                if (message.computeBillingOwner != null && message.hasOwnProperty("computeBillingOwner")) {
+                                    properties._computeBillingOwner = 1;
+                                    switch (message.computeBillingOwner) {
+                                    default:
+                                        return "computeBillingOwner: enum value expected";
+                                    case 0:
+                                    case 1:
+                                        break;
+                                    }
+                                }
+                                return null;
+                            };
+    
+                            /**
+                             * Creates a DataBoostIsolationReadOnly message from a plain object. Also converts values to their respective internal types.
+                             * @function fromObject
+                             * @memberof google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly
+                             * @static
+                             * @param {Object.<string,*>} object Plain object
+                             * @returns {google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly} DataBoostIsolationReadOnly
+                             */
+                            DataBoostIsolationReadOnly.fromObject = function fromObject(object) {
+                                if (object instanceof $root.google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly)
+                                    return object;
+                                var message = new $root.google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly();
+                                switch (object.computeBillingOwner) {
+                                default:
+                                    if (typeof object.computeBillingOwner === "number") {
+                                        message.computeBillingOwner = object.computeBillingOwner;
+                                        break;
+                                    }
+                                    break;
+                                case "COMPUTE_BILLING_OWNER_UNSPECIFIED":
+                                case 0:
+                                    message.computeBillingOwner = 0;
+                                    break;
+                                case "HOST_PAYS":
+                                case 1:
+                                    message.computeBillingOwner = 1;
+                                    break;
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Creates a plain object from a DataBoostIsolationReadOnly message. Also converts values to other types if specified.
+                             * @function toObject
+                             * @memberof google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly
+                             * @static
+                             * @param {google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly} message DataBoostIsolationReadOnly
+                             * @param {$protobuf.IConversionOptions} [options] Conversion options
+                             * @returns {Object.<string,*>} Plain object
+                             */
+                            DataBoostIsolationReadOnly.toObject = function toObject(message, options) {
+                                if (!options)
+                                    options = {};
+                                var object = {};
+                                if (message.computeBillingOwner != null && message.hasOwnProperty("computeBillingOwner")) {
+                                    object.computeBillingOwner = options.enums === String ? $root.google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly.ComputeBillingOwner[message.computeBillingOwner] === undefined ? message.computeBillingOwner : $root.google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly.ComputeBillingOwner[message.computeBillingOwner] : message.computeBillingOwner;
+                                    if (options.oneofs)
+                                        object._computeBillingOwner = "computeBillingOwner";
+                                }
+                                return object;
+                            };
+    
+                            /**
+                             * Converts this DataBoostIsolationReadOnly to JSON.
+                             * @function toJSON
+                             * @memberof google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly
+                             * @instance
+                             * @returns {Object.<string,*>} JSON object
+                             */
+                            DataBoostIsolationReadOnly.prototype.toJSON = function toJSON() {
+                                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            };
+    
+                            /**
+                             * Gets the default type url for DataBoostIsolationReadOnly
+                             * @function getTypeUrl
+                             * @memberof google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly
+                             * @static
+                             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                             * @returns {string} The default type url
+                             */
+                            DataBoostIsolationReadOnly.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                if (typeUrlPrefix === undefined) {
+                                    typeUrlPrefix = "type.googleapis.com";
+                                }
+                                return typeUrlPrefix + "/google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly";
+                            };
+    
+                            /**
+                             * ComputeBillingOwner enum.
+                             * @name google.bigtable.admin.v2.AppProfile.DataBoostIsolationReadOnly.ComputeBillingOwner
+                             * @enum {number}
+                             * @property {number} COMPUTE_BILLING_OWNER_UNSPECIFIED=0 COMPUTE_BILLING_OWNER_UNSPECIFIED value
+                             * @property {number} HOST_PAYS=1 HOST_PAYS value
+                             */
+                            DataBoostIsolationReadOnly.ComputeBillingOwner = (function() {
+                                var valuesById = {}, values = Object.create(valuesById);
+                                values[valuesById[0] = "COMPUTE_BILLING_OWNER_UNSPECIFIED"] = 0;
+                                values[valuesById[1] = "HOST_PAYS"] = 1;
+                                return values;
+                            })();
+    
+                            return DataBoostIsolationReadOnly;
                         })();
     
                         return AppProfile;
@@ -11697,6 +11986,171 @@
                          * @instance
                          * @param {google.bigtable.admin.v2.IUndeleteTableRequest} request UndeleteTableRequest message or plain object
                          * @returns {Promise<google.longrunning.Operation>} Promise
+                         * @variation 2
+                         */
+    
+                        /**
+                         * Callback as used by {@link google.bigtable.admin.v2.BigtableTableAdmin|createAuthorizedView}.
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @typedef CreateAuthorizedViewCallback
+                         * @type {function}
+                         * @param {Error|null} error Error, if any
+                         * @param {google.longrunning.Operation} [response] Operation
+                         */
+    
+                        /**
+                         * Calls CreateAuthorizedView.
+                         * @function createAuthorizedView
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @instance
+                         * @param {google.bigtable.admin.v2.ICreateAuthorizedViewRequest} request CreateAuthorizedViewRequest message or plain object
+                         * @param {google.bigtable.admin.v2.BigtableTableAdmin.CreateAuthorizedViewCallback} callback Node-style callback called with the error, if any, and Operation
+                         * @returns {undefined}
+                         * @variation 1
+                         */
+                        Object.defineProperty(BigtableTableAdmin.prototype.createAuthorizedView = function createAuthorizedView(request, callback) {
+                            return this.rpcCall(createAuthorizedView, $root.google.bigtable.admin.v2.CreateAuthorizedViewRequest, $root.google.longrunning.Operation, request, callback);
+                        }, "name", { value: "CreateAuthorizedView" });
+    
+                        /**
+                         * Calls CreateAuthorizedView.
+                         * @function createAuthorizedView
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @instance
+                         * @param {google.bigtable.admin.v2.ICreateAuthorizedViewRequest} request CreateAuthorizedViewRequest message or plain object
+                         * @returns {Promise<google.longrunning.Operation>} Promise
+                         * @variation 2
+                         */
+    
+                        /**
+                         * Callback as used by {@link google.bigtable.admin.v2.BigtableTableAdmin|listAuthorizedViews}.
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @typedef ListAuthorizedViewsCallback
+                         * @type {function}
+                         * @param {Error|null} error Error, if any
+                         * @param {google.bigtable.admin.v2.ListAuthorizedViewsResponse} [response] ListAuthorizedViewsResponse
+                         */
+    
+                        /**
+                         * Calls ListAuthorizedViews.
+                         * @function listAuthorizedViews
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @instance
+                         * @param {google.bigtable.admin.v2.IListAuthorizedViewsRequest} request ListAuthorizedViewsRequest message or plain object
+                         * @param {google.bigtable.admin.v2.BigtableTableAdmin.ListAuthorizedViewsCallback} callback Node-style callback called with the error, if any, and ListAuthorizedViewsResponse
+                         * @returns {undefined}
+                         * @variation 1
+                         */
+                        Object.defineProperty(BigtableTableAdmin.prototype.listAuthorizedViews = function listAuthorizedViews(request, callback) {
+                            return this.rpcCall(listAuthorizedViews, $root.google.bigtable.admin.v2.ListAuthorizedViewsRequest, $root.google.bigtable.admin.v2.ListAuthorizedViewsResponse, request, callback);
+                        }, "name", { value: "ListAuthorizedViews" });
+    
+                        /**
+                         * Calls ListAuthorizedViews.
+                         * @function listAuthorizedViews
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @instance
+                         * @param {google.bigtable.admin.v2.IListAuthorizedViewsRequest} request ListAuthorizedViewsRequest message or plain object
+                         * @returns {Promise<google.bigtable.admin.v2.ListAuthorizedViewsResponse>} Promise
+                         * @variation 2
+                         */
+    
+                        /**
+                         * Callback as used by {@link google.bigtable.admin.v2.BigtableTableAdmin|getAuthorizedView}.
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @typedef GetAuthorizedViewCallback
+                         * @type {function}
+                         * @param {Error|null} error Error, if any
+                         * @param {google.bigtable.admin.v2.AuthorizedView} [response] AuthorizedView
+                         */
+    
+                        /**
+                         * Calls GetAuthorizedView.
+                         * @function getAuthorizedView
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @instance
+                         * @param {google.bigtable.admin.v2.IGetAuthorizedViewRequest} request GetAuthorizedViewRequest message or plain object
+                         * @param {google.bigtable.admin.v2.BigtableTableAdmin.GetAuthorizedViewCallback} callback Node-style callback called with the error, if any, and AuthorizedView
+                         * @returns {undefined}
+                         * @variation 1
+                         */
+                        Object.defineProperty(BigtableTableAdmin.prototype.getAuthorizedView = function getAuthorizedView(request, callback) {
+                            return this.rpcCall(getAuthorizedView, $root.google.bigtable.admin.v2.GetAuthorizedViewRequest, $root.google.bigtable.admin.v2.AuthorizedView, request, callback);
+                        }, "name", { value: "GetAuthorizedView" });
+    
+                        /**
+                         * Calls GetAuthorizedView.
+                         * @function getAuthorizedView
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @instance
+                         * @param {google.bigtable.admin.v2.IGetAuthorizedViewRequest} request GetAuthorizedViewRequest message or plain object
+                         * @returns {Promise<google.bigtable.admin.v2.AuthorizedView>} Promise
+                         * @variation 2
+                         */
+    
+                        /**
+                         * Callback as used by {@link google.bigtable.admin.v2.BigtableTableAdmin|updateAuthorizedView}.
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @typedef UpdateAuthorizedViewCallback
+                         * @type {function}
+                         * @param {Error|null} error Error, if any
+                         * @param {google.longrunning.Operation} [response] Operation
+                         */
+    
+                        /**
+                         * Calls UpdateAuthorizedView.
+                         * @function updateAuthorizedView
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @instance
+                         * @param {google.bigtable.admin.v2.IUpdateAuthorizedViewRequest} request UpdateAuthorizedViewRequest message or plain object
+                         * @param {google.bigtable.admin.v2.BigtableTableAdmin.UpdateAuthorizedViewCallback} callback Node-style callback called with the error, if any, and Operation
+                         * @returns {undefined}
+                         * @variation 1
+                         */
+                        Object.defineProperty(BigtableTableAdmin.prototype.updateAuthorizedView = function updateAuthorizedView(request, callback) {
+                            return this.rpcCall(updateAuthorizedView, $root.google.bigtable.admin.v2.UpdateAuthorizedViewRequest, $root.google.longrunning.Operation, request, callback);
+                        }, "name", { value: "UpdateAuthorizedView" });
+    
+                        /**
+                         * Calls UpdateAuthorizedView.
+                         * @function updateAuthorizedView
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @instance
+                         * @param {google.bigtable.admin.v2.IUpdateAuthorizedViewRequest} request UpdateAuthorizedViewRequest message or plain object
+                         * @returns {Promise<google.longrunning.Operation>} Promise
+                         * @variation 2
+                         */
+    
+                        /**
+                         * Callback as used by {@link google.bigtable.admin.v2.BigtableTableAdmin|deleteAuthorizedView}.
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @typedef DeleteAuthorizedViewCallback
+                         * @type {function}
+                         * @param {Error|null} error Error, if any
+                         * @param {google.protobuf.Empty} [response] Empty
+                         */
+    
+                        /**
+                         * Calls DeleteAuthorizedView.
+                         * @function deleteAuthorizedView
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @instance
+                         * @param {google.bigtable.admin.v2.IDeleteAuthorizedViewRequest} request DeleteAuthorizedViewRequest message or plain object
+                         * @param {google.bigtable.admin.v2.BigtableTableAdmin.DeleteAuthorizedViewCallback} callback Node-style callback called with the error, if any, and Empty
+                         * @returns {undefined}
+                         * @variation 1
+                         */
+                        Object.defineProperty(BigtableTableAdmin.prototype.deleteAuthorizedView = function deleteAuthorizedView(request, callback) {
+                            return this.rpcCall(deleteAuthorizedView, $root.google.bigtable.admin.v2.DeleteAuthorizedViewRequest, $root.google.protobuf.Empty, request, callback);
+                        }, "name", { value: "DeleteAuthorizedView" });
+    
+                        /**
+                         * Calls DeleteAuthorizedView.
+                         * @function deleteAuthorizedView
+                         * @memberof google.bigtable.admin.v2.BigtableTableAdmin
+                         * @instance
+                         * @param {google.bigtable.admin.v2.IDeleteAuthorizedViewRequest} request DeleteAuthorizedViewRequest message or plain object
+                         * @returns {Promise<google.protobuf.Empty>} Promise
                          * @variation 2
                          */
     
@@ -16450,6 +16904,7 @@
                              * @property {google.bigtable.admin.v2.IColumnFamily|null} [create] Modification create
                              * @property {google.bigtable.admin.v2.IColumnFamily|null} [update] Modification update
                              * @property {boolean|null} [drop] Modification drop
+                             * @property {google.protobuf.IFieldMask|null} [updateMask] Modification updateMask
                              */
     
                             /**
@@ -16499,6 +16954,14 @@
                              */
                             Modification.prototype.drop = null;
     
+                            /**
+                             * Modification updateMask.
+                             * @member {google.protobuf.IFieldMask|null|undefined} updateMask
+                             * @memberof google.bigtable.admin.v2.ModifyColumnFamiliesRequest.Modification
+                             * @instance
+                             */
+                            Modification.prototype.updateMask = null;
+    
                             // OneOf field names bound to virtual getters and setters
                             var $oneOfFields;
     
@@ -16545,6 +17008,8 @@
                                     $root.google.bigtable.admin.v2.ColumnFamily.encode(message.update, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                                 if (message.drop != null && Object.hasOwnProperty.call(message, "drop"))
                                     writer.uint32(/* id 4, wireType 0 =*/32).bool(message.drop);
+                                if (message.updateMask != null && Object.hasOwnProperty.call(message, "updateMask"))
+                                    $root.google.protobuf.FieldMask.encode(message.updateMask, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                                 return writer;
                             };
     
@@ -16593,6 +17058,10 @@
                                         }
                                     case 4: {
                                             message.drop = reader.bool();
+                                            break;
+                                        }
+                                    case 6: {
+                                            message.updateMask = $root.google.protobuf.FieldMask.decode(reader, reader.uint32());
                                             break;
                                         }
                                     default:
@@ -16659,6 +17128,11 @@
                                     if (typeof message.drop !== "boolean")
                                         return "drop: boolean expected";
                                 }
+                                if (message.updateMask != null && message.hasOwnProperty("updateMask")) {
+                                    var error = $root.google.protobuf.FieldMask.verify(message.updateMask);
+                                    if (error)
+                                        return "updateMask." + error;
+                                }
                                 return null;
                             };
     
@@ -16688,6 +17162,11 @@
                                 }
                                 if (object.drop != null)
                                     message.drop = Boolean(object.drop);
+                                if (object.updateMask != null) {
+                                    if (typeof object.updateMask !== "object")
+                                        throw TypeError(".google.bigtable.admin.v2.ModifyColumnFamiliesRequest.Modification.updateMask: object expected");
+                                    message.updateMask = $root.google.protobuf.FieldMask.fromObject(object.updateMask);
+                                }
                                 return message;
                             };
     
@@ -16704,8 +17183,10 @@
                                 if (!options)
                                     options = {};
                                 var object = {};
-                                if (options.defaults)
+                                if (options.defaults) {
                                     object.id = "";
+                                    object.updateMask = null;
+                                }
                                 if (message.id != null && message.hasOwnProperty("id"))
                                     object.id = message.id;
                                 if (message.create != null && message.hasOwnProperty("create")) {
@@ -16723,6 +17204,8 @@
                                     if (options.oneofs)
                                         object.mod = "drop";
                                 }
+                                if (message.updateMask != null && message.hasOwnProperty("updateMask"))
+                                    object.updateMask = $root.google.protobuf.FieldMask.toObject(message.updateMask, options);
                                 return object;
                             };
     
@@ -17172,6 +17655,8 @@
                          * @interface ICheckConsistencyRequest
                          * @property {string|null} [name] CheckConsistencyRequest name
                          * @property {string|null} [consistencyToken] CheckConsistencyRequest consistencyToken
+                         * @property {google.bigtable.admin.v2.IStandardReadRemoteWrites|null} [standardReadRemoteWrites] CheckConsistencyRequest standardReadRemoteWrites
+                         * @property {google.bigtable.admin.v2.IDataBoostReadLocalWrites|null} [dataBoostReadLocalWrites] CheckConsistencyRequest dataBoostReadLocalWrites
                          */
     
                         /**
@@ -17206,6 +17691,36 @@
                         CheckConsistencyRequest.prototype.consistencyToken = "";
     
                         /**
+                         * CheckConsistencyRequest standardReadRemoteWrites.
+                         * @member {google.bigtable.admin.v2.IStandardReadRemoteWrites|null|undefined} standardReadRemoteWrites
+                         * @memberof google.bigtable.admin.v2.CheckConsistencyRequest
+                         * @instance
+                         */
+                        CheckConsistencyRequest.prototype.standardReadRemoteWrites = null;
+    
+                        /**
+                         * CheckConsistencyRequest dataBoostReadLocalWrites.
+                         * @member {google.bigtable.admin.v2.IDataBoostReadLocalWrites|null|undefined} dataBoostReadLocalWrites
+                         * @memberof google.bigtable.admin.v2.CheckConsistencyRequest
+                         * @instance
+                         */
+                        CheckConsistencyRequest.prototype.dataBoostReadLocalWrites = null;
+    
+                        // OneOf field names bound to virtual getters and setters
+                        var $oneOfFields;
+    
+                        /**
+                         * CheckConsistencyRequest mode.
+                         * @member {"standardReadRemoteWrites"|"dataBoostReadLocalWrites"|undefined} mode
+                         * @memberof google.bigtable.admin.v2.CheckConsistencyRequest
+                         * @instance
+                         */
+                        Object.defineProperty(CheckConsistencyRequest.prototype, "mode", {
+                            get: $util.oneOfGetter($oneOfFields = ["standardReadRemoteWrites", "dataBoostReadLocalWrites"]),
+                            set: $util.oneOfSetter($oneOfFields)
+                        });
+    
+                        /**
                          * Creates a new CheckConsistencyRequest instance using the specified properties.
                          * @function create
                          * @memberof google.bigtable.admin.v2.CheckConsistencyRequest
@@ -17233,6 +17748,10 @@
                                 writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
                             if (message.consistencyToken != null && Object.hasOwnProperty.call(message, "consistencyToken"))
                                 writer.uint32(/* id 2, wireType 2 =*/18).string(message.consistencyToken);
+                            if (message.standardReadRemoteWrites != null && Object.hasOwnProperty.call(message, "standardReadRemoteWrites"))
+                                $root.google.bigtable.admin.v2.StandardReadRemoteWrites.encode(message.standardReadRemoteWrites, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                            if (message.dataBoostReadLocalWrites != null && Object.hasOwnProperty.call(message, "dataBoostReadLocalWrites"))
+                                $root.google.bigtable.admin.v2.DataBoostReadLocalWrites.encode(message.dataBoostReadLocalWrites, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                             return writer;
                         };
     
@@ -17275,6 +17794,14 @@
                                         message.consistencyToken = reader.string();
                                         break;
                                     }
+                                case 3: {
+                                        message.standardReadRemoteWrites = $root.google.bigtable.admin.v2.StandardReadRemoteWrites.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 4: {
+                                        message.dataBoostReadLocalWrites = $root.google.bigtable.admin.v2.DataBoostReadLocalWrites.decode(reader, reader.uint32());
+                                        break;
+                                    }
                                 default:
                                     reader.skipType(tag & 7);
                                     break;
@@ -17310,12 +17837,31 @@
                         CheckConsistencyRequest.verify = function verify(message) {
                             if (typeof message !== "object" || message === null)
                                 return "object expected";
+                            var properties = {};
                             if (message.name != null && message.hasOwnProperty("name"))
                                 if (!$util.isString(message.name))
                                     return "name: string expected";
                             if (message.consistencyToken != null && message.hasOwnProperty("consistencyToken"))
                                 if (!$util.isString(message.consistencyToken))
                                     return "consistencyToken: string expected";
+                            if (message.standardReadRemoteWrites != null && message.hasOwnProperty("standardReadRemoteWrites")) {
+                                properties.mode = 1;
+                                {
+                                    var error = $root.google.bigtable.admin.v2.StandardReadRemoteWrites.verify(message.standardReadRemoteWrites);
+                                    if (error)
+                                        return "standardReadRemoteWrites." + error;
+                                }
+                            }
+                            if (message.dataBoostReadLocalWrites != null && message.hasOwnProperty("dataBoostReadLocalWrites")) {
+                                if (properties.mode === 1)
+                                    return "mode: multiple values";
+                                properties.mode = 1;
+                                {
+                                    var error = $root.google.bigtable.admin.v2.DataBoostReadLocalWrites.verify(message.dataBoostReadLocalWrites);
+                                    if (error)
+                                        return "dataBoostReadLocalWrites." + error;
+                                }
+                            }
                             return null;
                         };
     
@@ -17335,6 +17881,16 @@
                                 message.name = String(object.name);
                             if (object.consistencyToken != null)
                                 message.consistencyToken = String(object.consistencyToken);
+                            if (object.standardReadRemoteWrites != null) {
+                                if (typeof object.standardReadRemoteWrites !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.CheckConsistencyRequest.standardReadRemoteWrites: object expected");
+                                message.standardReadRemoteWrites = $root.google.bigtable.admin.v2.StandardReadRemoteWrites.fromObject(object.standardReadRemoteWrites);
+                            }
+                            if (object.dataBoostReadLocalWrites != null) {
+                                if (typeof object.dataBoostReadLocalWrites !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.CheckConsistencyRequest.dataBoostReadLocalWrites: object expected");
+                                message.dataBoostReadLocalWrites = $root.google.bigtable.admin.v2.DataBoostReadLocalWrites.fromObject(object.dataBoostReadLocalWrites);
+                            }
                             return message;
                         };
     
@@ -17359,6 +17915,16 @@
                                 object.name = message.name;
                             if (message.consistencyToken != null && message.hasOwnProperty("consistencyToken"))
                                 object.consistencyToken = message.consistencyToken;
+                            if (message.standardReadRemoteWrites != null && message.hasOwnProperty("standardReadRemoteWrites")) {
+                                object.standardReadRemoteWrites = $root.google.bigtable.admin.v2.StandardReadRemoteWrites.toObject(message.standardReadRemoteWrites, options);
+                                if (options.oneofs)
+                                    object.mode = "standardReadRemoteWrites";
+                            }
+                            if (message.dataBoostReadLocalWrites != null && message.hasOwnProperty("dataBoostReadLocalWrites")) {
+                                object.dataBoostReadLocalWrites = $root.google.bigtable.admin.v2.DataBoostReadLocalWrites.toObject(message.dataBoostReadLocalWrites, options);
+                                if (options.oneofs)
+                                    object.mode = "dataBoostReadLocalWrites";
+                            }
                             return object;
                         };
     
@@ -17389,6 +17955,356 @@
                         };
     
                         return CheckConsistencyRequest;
+                    })();
+    
+                    v2.StandardReadRemoteWrites = (function() {
+    
+                        /**
+                         * Properties of a StandardReadRemoteWrites.
+                         * @memberof google.bigtable.admin.v2
+                         * @interface IStandardReadRemoteWrites
+                         */
+    
+                        /**
+                         * Constructs a new StandardReadRemoteWrites.
+                         * @memberof google.bigtable.admin.v2
+                         * @classdesc Represents a StandardReadRemoteWrites.
+                         * @implements IStandardReadRemoteWrites
+                         * @constructor
+                         * @param {google.bigtable.admin.v2.IStandardReadRemoteWrites=} [properties] Properties to set
+                         */
+                        function StandardReadRemoteWrites(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * Creates a new StandardReadRemoteWrites instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.admin.v2.StandardReadRemoteWrites
+                         * @static
+                         * @param {google.bigtable.admin.v2.IStandardReadRemoteWrites=} [properties] Properties to set
+                         * @returns {google.bigtable.admin.v2.StandardReadRemoteWrites} StandardReadRemoteWrites instance
+                         */
+                        StandardReadRemoteWrites.create = function create(properties) {
+                            return new StandardReadRemoteWrites(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified StandardReadRemoteWrites message. Does not implicitly {@link google.bigtable.admin.v2.StandardReadRemoteWrites.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.admin.v2.StandardReadRemoteWrites
+                         * @static
+                         * @param {google.bigtable.admin.v2.IStandardReadRemoteWrites} message StandardReadRemoteWrites message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        StandardReadRemoteWrites.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified StandardReadRemoteWrites message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.StandardReadRemoteWrites.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.admin.v2.StandardReadRemoteWrites
+                         * @static
+                         * @param {google.bigtable.admin.v2.IStandardReadRemoteWrites} message StandardReadRemoteWrites message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        StandardReadRemoteWrites.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes a StandardReadRemoteWrites message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.admin.v2.StandardReadRemoteWrites
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.admin.v2.StandardReadRemoteWrites} StandardReadRemoteWrites
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        StandardReadRemoteWrites.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.StandardReadRemoteWrites();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes a StandardReadRemoteWrites message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.admin.v2.StandardReadRemoteWrites
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.admin.v2.StandardReadRemoteWrites} StandardReadRemoteWrites
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        StandardReadRemoteWrites.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies a StandardReadRemoteWrites message.
+                         * @function verify
+                         * @memberof google.bigtable.admin.v2.StandardReadRemoteWrites
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        StandardReadRemoteWrites.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            return null;
+                        };
+    
+                        /**
+                         * Creates a StandardReadRemoteWrites message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.admin.v2.StandardReadRemoteWrites
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.admin.v2.StandardReadRemoteWrites} StandardReadRemoteWrites
+                         */
+                        StandardReadRemoteWrites.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.admin.v2.StandardReadRemoteWrites)
+                                return object;
+                            return new $root.google.bigtable.admin.v2.StandardReadRemoteWrites();
+                        };
+    
+                        /**
+                         * Creates a plain object from a StandardReadRemoteWrites message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.admin.v2.StandardReadRemoteWrites
+                         * @static
+                         * @param {google.bigtable.admin.v2.StandardReadRemoteWrites} message StandardReadRemoteWrites
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        StandardReadRemoteWrites.toObject = function toObject() {
+                            return {};
+                        };
+    
+                        /**
+                         * Converts this StandardReadRemoteWrites to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.admin.v2.StandardReadRemoteWrites
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        StandardReadRemoteWrites.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for StandardReadRemoteWrites
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.admin.v2.StandardReadRemoteWrites
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        StandardReadRemoteWrites.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.admin.v2.StandardReadRemoteWrites";
+                        };
+    
+                        return StandardReadRemoteWrites;
+                    })();
+    
+                    v2.DataBoostReadLocalWrites = (function() {
+    
+                        /**
+                         * Properties of a DataBoostReadLocalWrites.
+                         * @memberof google.bigtable.admin.v2
+                         * @interface IDataBoostReadLocalWrites
+                         */
+    
+                        /**
+                         * Constructs a new DataBoostReadLocalWrites.
+                         * @memberof google.bigtable.admin.v2
+                         * @classdesc Represents a DataBoostReadLocalWrites.
+                         * @implements IDataBoostReadLocalWrites
+                         * @constructor
+                         * @param {google.bigtable.admin.v2.IDataBoostReadLocalWrites=} [properties] Properties to set
+                         */
+                        function DataBoostReadLocalWrites(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * Creates a new DataBoostReadLocalWrites instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.admin.v2.DataBoostReadLocalWrites
+                         * @static
+                         * @param {google.bigtable.admin.v2.IDataBoostReadLocalWrites=} [properties] Properties to set
+                         * @returns {google.bigtable.admin.v2.DataBoostReadLocalWrites} DataBoostReadLocalWrites instance
+                         */
+                        DataBoostReadLocalWrites.create = function create(properties) {
+                            return new DataBoostReadLocalWrites(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified DataBoostReadLocalWrites message. Does not implicitly {@link google.bigtable.admin.v2.DataBoostReadLocalWrites.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.admin.v2.DataBoostReadLocalWrites
+                         * @static
+                         * @param {google.bigtable.admin.v2.IDataBoostReadLocalWrites} message DataBoostReadLocalWrites message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        DataBoostReadLocalWrites.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified DataBoostReadLocalWrites message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.DataBoostReadLocalWrites.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.admin.v2.DataBoostReadLocalWrites
+                         * @static
+                         * @param {google.bigtable.admin.v2.IDataBoostReadLocalWrites} message DataBoostReadLocalWrites message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        DataBoostReadLocalWrites.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes a DataBoostReadLocalWrites message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.admin.v2.DataBoostReadLocalWrites
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.admin.v2.DataBoostReadLocalWrites} DataBoostReadLocalWrites
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        DataBoostReadLocalWrites.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.DataBoostReadLocalWrites();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes a DataBoostReadLocalWrites message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.admin.v2.DataBoostReadLocalWrites
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.admin.v2.DataBoostReadLocalWrites} DataBoostReadLocalWrites
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        DataBoostReadLocalWrites.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies a DataBoostReadLocalWrites message.
+                         * @function verify
+                         * @memberof google.bigtable.admin.v2.DataBoostReadLocalWrites
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        DataBoostReadLocalWrites.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            return null;
+                        };
+    
+                        /**
+                         * Creates a DataBoostReadLocalWrites message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.admin.v2.DataBoostReadLocalWrites
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.admin.v2.DataBoostReadLocalWrites} DataBoostReadLocalWrites
+                         */
+                        DataBoostReadLocalWrites.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.admin.v2.DataBoostReadLocalWrites)
+                                return object;
+                            return new $root.google.bigtable.admin.v2.DataBoostReadLocalWrites();
+                        };
+    
+                        /**
+                         * Creates a plain object from a DataBoostReadLocalWrites message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.admin.v2.DataBoostReadLocalWrites
+                         * @static
+                         * @param {google.bigtable.admin.v2.DataBoostReadLocalWrites} message DataBoostReadLocalWrites
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        DataBoostReadLocalWrites.toObject = function toObject() {
+                            return {};
+                        };
+    
+                        /**
+                         * Converts this DataBoostReadLocalWrites to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.admin.v2.DataBoostReadLocalWrites
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        DataBoostReadLocalWrites.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for DataBoostReadLocalWrites
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.admin.v2.DataBoostReadLocalWrites
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        DataBoostReadLocalWrites.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.admin.v2.DataBoostReadLocalWrites";
+                        };
+    
+                        return DataBoostReadLocalWrites;
                     })();
     
                     v2.CheckConsistencyResponse = (function() {
@@ -21592,6 +22508,2084 @@
                         return CopyBackupMetadata;
                     })();
     
+                    v2.CreateAuthorizedViewRequest = (function() {
+    
+                        /**
+                         * Properties of a CreateAuthorizedViewRequest.
+                         * @memberof google.bigtable.admin.v2
+                         * @interface ICreateAuthorizedViewRequest
+                         * @property {string|null} [parent] CreateAuthorizedViewRequest parent
+                         * @property {string|null} [authorizedViewId] CreateAuthorizedViewRequest authorizedViewId
+                         * @property {google.bigtable.admin.v2.IAuthorizedView|null} [authorizedView] CreateAuthorizedViewRequest authorizedView
+                         */
+    
+                        /**
+                         * Constructs a new CreateAuthorizedViewRequest.
+                         * @memberof google.bigtable.admin.v2
+                         * @classdesc Represents a CreateAuthorizedViewRequest.
+                         * @implements ICreateAuthorizedViewRequest
+                         * @constructor
+                         * @param {google.bigtable.admin.v2.ICreateAuthorizedViewRequest=} [properties] Properties to set
+                         */
+                        function CreateAuthorizedViewRequest(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * CreateAuthorizedViewRequest parent.
+                         * @member {string} parent
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @instance
+                         */
+                        CreateAuthorizedViewRequest.prototype.parent = "";
+    
+                        /**
+                         * CreateAuthorizedViewRequest authorizedViewId.
+                         * @member {string} authorizedViewId
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @instance
+                         */
+                        CreateAuthorizedViewRequest.prototype.authorizedViewId = "";
+    
+                        /**
+                         * CreateAuthorizedViewRequest authorizedView.
+                         * @member {google.bigtable.admin.v2.IAuthorizedView|null|undefined} authorizedView
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @instance
+                         */
+                        CreateAuthorizedViewRequest.prototype.authorizedView = null;
+    
+                        /**
+                         * Creates a new CreateAuthorizedViewRequest instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.ICreateAuthorizedViewRequest=} [properties] Properties to set
+                         * @returns {google.bigtable.admin.v2.CreateAuthorizedViewRequest} CreateAuthorizedViewRequest instance
+                         */
+                        CreateAuthorizedViewRequest.create = function create(properties) {
+                            return new CreateAuthorizedViewRequest(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified CreateAuthorizedViewRequest message. Does not implicitly {@link google.bigtable.admin.v2.CreateAuthorizedViewRequest.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.ICreateAuthorizedViewRequest} message CreateAuthorizedViewRequest message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        CreateAuthorizedViewRequest.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.parent != null && Object.hasOwnProperty.call(message, "parent"))
+                                writer.uint32(/* id 1, wireType 2 =*/10).string(message.parent);
+                            if (message.authorizedViewId != null && Object.hasOwnProperty.call(message, "authorizedViewId"))
+                                writer.uint32(/* id 2, wireType 2 =*/18).string(message.authorizedViewId);
+                            if (message.authorizedView != null && Object.hasOwnProperty.call(message, "authorizedView"))
+                                $root.google.bigtable.admin.v2.AuthorizedView.encode(message.authorizedView, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified CreateAuthorizedViewRequest message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.CreateAuthorizedViewRequest.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.ICreateAuthorizedViewRequest} message CreateAuthorizedViewRequest message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        CreateAuthorizedViewRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes a CreateAuthorizedViewRequest message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.admin.v2.CreateAuthorizedViewRequest} CreateAuthorizedViewRequest
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        CreateAuthorizedViewRequest.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.CreateAuthorizedViewRequest();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        message.parent = reader.string();
+                                        break;
+                                    }
+                                case 2: {
+                                        message.authorizedViewId = reader.string();
+                                        break;
+                                    }
+                                case 3: {
+                                        message.authorizedView = $root.google.bigtable.admin.v2.AuthorizedView.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes a CreateAuthorizedViewRequest message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.admin.v2.CreateAuthorizedViewRequest} CreateAuthorizedViewRequest
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        CreateAuthorizedViewRequest.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies a CreateAuthorizedViewRequest message.
+                         * @function verify
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        CreateAuthorizedViewRequest.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            if (message.parent != null && message.hasOwnProperty("parent"))
+                                if (!$util.isString(message.parent))
+                                    return "parent: string expected";
+                            if (message.authorizedViewId != null && message.hasOwnProperty("authorizedViewId"))
+                                if (!$util.isString(message.authorizedViewId))
+                                    return "authorizedViewId: string expected";
+                            if (message.authorizedView != null && message.hasOwnProperty("authorizedView")) {
+                                var error = $root.google.bigtable.admin.v2.AuthorizedView.verify(message.authorizedView);
+                                if (error)
+                                    return "authorizedView." + error;
+                            }
+                            return null;
+                        };
+    
+                        /**
+                         * Creates a CreateAuthorizedViewRequest message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.admin.v2.CreateAuthorizedViewRequest} CreateAuthorizedViewRequest
+                         */
+                        CreateAuthorizedViewRequest.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.admin.v2.CreateAuthorizedViewRequest)
+                                return object;
+                            var message = new $root.google.bigtable.admin.v2.CreateAuthorizedViewRequest();
+                            if (object.parent != null)
+                                message.parent = String(object.parent);
+                            if (object.authorizedViewId != null)
+                                message.authorizedViewId = String(object.authorizedViewId);
+                            if (object.authorizedView != null) {
+                                if (typeof object.authorizedView !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.CreateAuthorizedViewRequest.authorizedView: object expected");
+                                message.authorizedView = $root.google.bigtable.admin.v2.AuthorizedView.fromObject(object.authorizedView);
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from a CreateAuthorizedViewRequest message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.CreateAuthorizedViewRequest} message CreateAuthorizedViewRequest
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        CreateAuthorizedViewRequest.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.defaults) {
+                                object.parent = "";
+                                object.authorizedViewId = "";
+                                object.authorizedView = null;
+                            }
+                            if (message.parent != null && message.hasOwnProperty("parent"))
+                                object.parent = message.parent;
+                            if (message.authorizedViewId != null && message.hasOwnProperty("authorizedViewId"))
+                                object.authorizedViewId = message.authorizedViewId;
+                            if (message.authorizedView != null && message.hasOwnProperty("authorizedView"))
+                                object.authorizedView = $root.google.bigtable.admin.v2.AuthorizedView.toObject(message.authorizedView, options);
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this CreateAuthorizedViewRequest to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        CreateAuthorizedViewRequest.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for CreateAuthorizedViewRequest
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewRequest
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        CreateAuthorizedViewRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.admin.v2.CreateAuthorizedViewRequest";
+                        };
+    
+                        return CreateAuthorizedViewRequest;
+                    })();
+    
+                    v2.CreateAuthorizedViewMetadata = (function() {
+    
+                        /**
+                         * Properties of a CreateAuthorizedViewMetadata.
+                         * @memberof google.bigtable.admin.v2
+                         * @interface ICreateAuthorizedViewMetadata
+                         * @property {google.bigtable.admin.v2.ICreateAuthorizedViewRequest|null} [originalRequest] CreateAuthorizedViewMetadata originalRequest
+                         * @property {google.protobuf.ITimestamp|null} [requestTime] CreateAuthorizedViewMetadata requestTime
+                         * @property {google.protobuf.ITimestamp|null} [finishTime] CreateAuthorizedViewMetadata finishTime
+                         */
+    
+                        /**
+                         * Constructs a new CreateAuthorizedViewMetadata.
+                         * @memberof google.bigtable.admin.v2
+                         * @classdesc Represents a CreateAuthorizedViewMetadata.
+                         * @implements ICreateAuthorizedViewMetadata
+                         * @constructor
+                         * @param {google.bigtable.admin.v2.ICreateAuthorizedViewMetadata=} [properties] Properties to set
+                         */
+                        function CreateAuthorizedViewMetadata(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * CreateAuthorizedViewMetadata originalRequest.
+                         * @member {google.bigtable.admin.v2.ICreateAuthorizedViewRequest|null|undefined} originalRequest
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @instance
+                         */
+                        CreateAuthorizedViewMetadata.prototype.originalRequest = null;
+    
+                        /**
+                         * CreateAuthorizedViewMetadata requestTime.
+                         * @member {google.protobuf.ITimestamp|null|undefined} requestTime
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @instance
+                         */
+                        CreateAuthorizedViewMetadata.prototype.requestTime = null;
+    
+                        /**
+                         * CreateAuthorizedViewMetadata finishTime.
+                         * @member {google.protobuf.ITimestamp|null|undefined} finishTime
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @instance
+                         */
+                        CreateAuthorizedViewMetadata.prototype.finishTime = null;
+    
+                        /**
+                         * Creates a new CreateAuthorizedViewMetadata instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @static
+                         * @param {google.bigtable.admin.v2.ICreateAuthorizedViewMetadata=} [properties] Properties to set
+                         * @returns {google.bigtable.admin.v2.CreateAuthorizedViewMetadata} CreateAuthorizedViewMetadata instance
+                         */
+                        CreateAuthorizedViewMetadata.create = function create(properties) {
+                            return new CreateAuthorizedViewMetadata(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified CreateAuthorizedViewMetadata message. Does not implicitly {@link google.bigtable.admin.v2.CreateAuthorizedViewMetadata.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @static
+                         * @param {google.bigtable.admin.v2.ICreateAuthorizedViewMetadata} message CreateAuthorizedViewMetadata message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        CreateAuthorizedViewMetadata.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.originalRequest != null && Object.hasOwnProperty.call(message, "originalRequest"))
+                                $root.google.bigtable.admin.v2.CreateAuthorizedViewRequest.encode(message.originalRequest, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                            if (message.requestTime != null && Object.hasOwnProperty.call(message, "requestTime"))
+                                $root.google.protobuf.Timestamp.encode(message.requestTime, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                            if (message.finishTime != null && Object.hasOwnProperty.call(message, "finishTime"))
+                                $root.google.protobuf.Timestamp.encode(message.finishTime, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified CreateAuthorizedViewMetadata message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.CreateAuthorizedViewMetadata.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @static
+                         * @param {google.bigtable.admin.v2.ICreateAuthorizedViewMetadata} message CreateAuthorizedViewMetadata message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        CreateAuthorizedViewMetadata.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes a CreateAuthorizedViewMetadata message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.admin.v2.CreateAuthorizedViewMetadata} CreateAuthorizedViewMetadata
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        CreateAuthorizedViewMetadata.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.CreateAuthorizedViewMetadata();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        message.originalRequest = $root.google.bigtable.admin.v2.CreateAuthorizedViewRequest.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 2: {
+                                        message.requestTime = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 3: {
+                                        message.finishTime = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes a CreateAuthorizedViewMetadata message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.admin.v2.CreateAuthorizedViewMetadata} CreateAuthorizedViewMetadata
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        CreateAuthorizedViewMetadata.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies a CreateAuthorizedViewMetadata message.
+                         * @function verify
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        CreateAuthorizedViewMetadata.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            if (message.originalRequest != null && message.hasOwnProperty("originalRequest")) {
+                                var error = $root.google.bigtable.admin.v2.CreateAuthorizedViewRequest.verify(message.originalRequest);
+                                if (error)
+                                    return "originalRequest." + error;
+                            }
+                            if (message.requestTime != null && message.hasOwnProperty("requestTime")) {
+                                var error = $root.google.protobuf.Timestamp.verify(message.requestTime);
+                                if (error)
+                                    return "requestTime." + error;
+                            }
+                            if (message.finishTime != null && message.hasOwnProperty("finishTime")) {
+                                var error = $root.google.protobuf.Timestamp.verify(message.finishTime);
+                                if (error)
+                                    return "finishTime." + error;
+                            }
+                            return null;
+                        };
+    
+                        /**
+                         * Creates a CreateAuthorizedViewMetadata message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.admin.v2.CreateAuthorizedViewMetadata} CreateAuthorizedViewMetadata
+                         */
+                        CreateAuthorizedViewMetadata.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.admin.v2.CreateAuthorizedViewMetadata)
+                                return object;
+                            var message = new $root.google.bigtable.admin.v2.CreateAuthorizedViewMetadata();
+                            if (object.originalRequest != null) {
+                                if (typeof object.originalRequest !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.CreateAuthorizedViewMetadata.originalRequest: object expected");
+                                message.originalRequest = $root.google.bigtable.admin.v2.CreateAuthorizedViewRequest.fromObject(object.originalRequest);
+                            }
+                            if (object.requestTime != null) {
+                                if (typeof object.requestTime !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.CreateAuthorizedViewMetadata.requestTime: object expected");
+                                message.requestTime = $root.google.protobuf.Timestamp.fromObject(object.requestTime);
+                            }
+                            if (object.finishTime != null) {
+                                if (typeof object.finishTime !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.CreateAuthorizedViewMetadata.finishTime: object expected");
+                                message.finishTime = $root.google.protobuf.Timestamp.fromObject(object.finishTime);
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from a CreateAuthorizedViewMetadata message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @static
+                         * @param {google.bigtable.admin.v2.CreateAuthorizedViewMetadata} message CreateAuthorizedViewMetadata
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        CreateAuthorizedViewMetadata.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.defaults) {
+                                object.originalRequest = null;
+                                object.requestTime = null;
+                                object.finishTime = null;
+                            }
+                            if (message.originalRequest != null && message.hasOwnProperty("originalRequest"))
+                                object.originalRequest = $root.google.bigtable.admin.v2.CreateAuthorizedViewRequest.toObject(message.originalRequest, options);
+                            if (message.requestTime != null && message.hasOwnProperty("requestTime"))
+                                object.requestTime = $root.google.protobuf.Timestamp.toObject(message.requestTime, options);
+                            if (message.finishTime != null && message.hasOwnProperty("finishTime"))
+                                object.finishTime = $root.google.protobuf.Timestamp.toObject(message.finishTime, options);
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this CreateAuthorizedViewMetadata to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        CreateAuthorizedViewMetadata.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for CreateAuthorizedViewMetadata
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.admin.v2.CreateAuthorizedViewMetadata
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        CreateAuthorizedViewMetadata.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.admin.v2.CreateAuthorizedViewMetadata";
+                        };
+    
+                        return CreateAuthorizedViewMetadata;
+                    })();
+    
+                    v2.ListAuthorizedViewsRequest = (function() {
+    
+                        /**
+                         * Properties of a ListAuthorizedViewsRequest.
+                         * @memberof google.bigtable.admin.v2
+                         * @interface IListAuthorizedViewsRequest
+                         * @property {string|null} [parent] ListAuthorizedViewsRequest parent
+                         * @property {number|null} [pageSize] ListAuthorizedViewsRequest pageSize
+                         * @property {string|null} [pageToken] ListAuthorizedViewsRequest pageToken
+                         * @property {google.bigtable.admin.v2.AuthorizedView.ResponseView|null} [view] ListAuthorizedViewsRequest view
+                         */
+    
+                        /**
+                         * Constructs a new ListAuthorizedViewsRequest.
+                         * @memberof google.bigtable.admin.v2
+                         * @classdesc Represents a ListAuthorizedViewsRequest.
+                         * @implements IListAuthorizedViewsRequest
+                         * @constructor
+                         * @param {google.bigtable.admin.v2.IListAuthorizedViewsRequest=} [properties] Properties to set
+                         */
+                        function ListAuthorizedViewsRequest(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * ListAuthorizedViewsRequest parent.
+                         * @member {string} parent
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @instance
+                         */
+                        ListAuthorizedViewsRequest.prototype.parent = "";
+    
+                        /**
+                         * ListAuthorizedViewsRequest pageSize.
+                         * @member {number} pageSize
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @instance
+                         */
+                        ListAuthorizedViewsRequest.prototype.pageSize = 0;
+    
+                        /**
+                         * ListAuthorizedViewsRequest pageToken.
+                         * @member {string} pageToken
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @instance
+                         */
+                        ListAuthorizedViewsRequest.prototype.pageToken = "";
+    
+                        /**
+                         * ListAuthorizedViewsRequest view.
+                         * @member {google.bigtable.admin.v2.AuthorizedView.ResponseView} view
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @instance
+                         */
+                        ListAuthorizedViewsRequest.prototype.view = 0;
+    
+                        /**
+                         * Creates a new ListAuthorizedViewsRequest instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.IListAuthorizedViewsRequest=} [properties] Properties to set
+                         * @returns {google.bigtable.admin.v2.ListAuthorizedViewsRequest} ListAuthorizedViewsRequest instance
+                         */
+                        ListAuthorizedViewsRequest.create = function create(properties) {
+                            return new ListAuthorizedViewsRequest(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified ListAuthorizedViewsRequest message. Does not implicitly {@link google.bigtable.admin.v2.ListAuthorizedViewsRequest.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.IListAuthorizedViewsRequest} message ListAuthorizedViewsRequest message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        ListAuthorizedViewsRequest.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.parent != null && Object.hasOwnProperty.call(message, "parent"))
+                                writer.uint32(/* id 1, wireType 2 =*/10).string(message.parent);
+                            if (message.pageSize != null && Object.hasOwnProperty.call(message, "pageSize"))
+                                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.pageSize);
+                            if (message.pageToken != null && Object.hasOwnProperty.call(message, "pageToken"))
+                                writer.uint32(/* id 3, wireType 2 =*/26).string(message.pageToken);
+                            if (message.view != null && Object.hasOwnProperty.call(message, "view"))
+                                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.view);
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified ListAuthorizedViewsRequest message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.ListAuthorizedViewsRequest.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.IListAuthorizedViewsRequest} message ListAuthorizedViewsRequest message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        ListAuthorizedViewsRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes a ListAuthorizedViewsRequest message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.admin.v2.ListAuthorizedViewsRequest} ListAuthorizedViewsRequest
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        ListAuthorizedViewsRequest.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.ListAuthorizedViewsRequest();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        message.parent = reader.string();
+                                        break;
+                                    }
+                                case 2: {
+                                        message.pageSize = reader.int32();
+                                        break;
+                                    }
+                                case 3: {
+                                        message.pageToken = reader.string();
+                                        break;
+                                    }
+                                case 4: {
+                                        message.view = reader.int32();
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes a ListAuthorizedViewsRequest message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.admin.v2.ListAuthorizedViewsRequest} ListAuthorizedViewsRequest
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        ListAuthorizedViewsRequest.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies a ListAuthorizedViewsRequest message.
+                         * @function verify
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        ListAuthorizedViewsRequest.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            if (message.parent != null && message.hasOwnProperty("parent"))
+                                if (!$util.isString(message.parent))
+                                    return "parent: string expected";
+                            if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                                if (!$util.isInteger(message.pageSize))
+                                    return "pageSize: integer expected";
+                            if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                                if (!$util.isString(message.pageToken))
+                                    return "pageToken: string expected";
+                            if (message.view != null && message.hasOwnProperty("view"))
+                                switch (message.view) {
+                                default:
+                                    return "view: enum value expected";
+                                case 0:
+                                case 1:
+                                case 2:
+                                case 3:
+                                    break;
+                                }
+                            return null;
+                        };
+    
+                        /**
+                         * Creates a ListAuthorizedViewsRequest message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.admin.v2.ListAuthorizedViewsRequest} ListAuthorizedViewsRequest
+                         */
+                        ListAuthorizedViewsRequest.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.admin.v2.ListAuthorizedViewsRequest)
+                                return object;
+                            var message = new $root.google.bigtable.admin.v2.ListAuthorizedViewsRequest();
+                            if (object.parent != null)
+                                message.parent = String(object.parent);
+                            if (object.pageSize != null)
+                                message.pageSize = object.pageSize | 0;
+                            if (object.pageToken != null)
+                                message.pageToken = String(object.pageToken);
+                            switch (object.view) {
+                            default:
+                                if (typeof object.view === "number") {
+                                    message.view = object.view;
+                                    break;
+                                }
+                                break;
+                            case "RESPONSE_VIEW_UNSPECIFIED":
+                            case 0:
+                                message.view = 0;
+                                break;
+                            case "NAME_ONLY":
+                            case 1:
+                                message.view = 1;
+                                break;
+                            case "BASIC":
+                            case 2:
+                                message.view = 2;
+                                break;
+                            case "FULL":
+                            case 3:
+                                message.view = 3;
+                                break;
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from a ListAuthorizedViewsRequest message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.ListAuthorizedViewsRequest} message ListAuthorizedViewsRequest
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        ListAuthorizedViewsRequest.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.defaults) {
+                                object.parent = "";
+                                object.pageSize = 0;
+                                object.pageToken = "";
+                                object.view = options.enums === String ? "RESPONSE_VIEW_UNSPECIFIED" : 0;
+                            }
+                            if (message.parent != null && message.hasOwnProperty("parent"))
+                                object.parent = message.parent;
+                            if (message.pageSize != null && message.hasOwnProperty("pageSize"))
+                                object.pageSize = message.pageSize;
+                            if (message.pageToken != null && message.hasOwnProperty("pageToken"))
+                                object.pageToken = message.pageToken;
+                            if (message.view != null && message.hasOwnProperty("view"))
+                                object.view = options.enums === String ? $root.google.bigtable.admin.v2.AuthorizedView.ResponseView[message.view] === undefined ? message.view : $root.google.bigtable.admin.v2.AuthorizedView.ResponseView[message.view] : message.view;
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this ListAuthorizedViewsRequest to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        ListAuthorizedViewsRequest.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for ListAuthorizedViewsRequest
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsRequest
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        ListAuthorizedViewsRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.admin.v2.ListAuthorizedViewsRequest";
+                        };
+    
+                        return ListAuthorizedViewsRequest;
+                    })();
+    
+                    v2.ListAuthorizedViewsResponse = (function() {
+    
+                        /**
+                         * Properties of a ListAuthorizedViewsResponse.
+                         * @memberof google.bigtable.admin.v2
+                         * @interface IListAuthorizedViewsResponse
+                         * @property {Array.<google.bigtable.admin.v2.IAuthorizedView>|null} [authorizedViews] ListAuthorizedViewsResponse authorizedViews
+                         * @property {string|null} [nextPageToken] ListAuthorizedViewsResponse nextPageToken
+                         */
+    
+                        /**
+                         * Constructs a new ListAuthorizedViewsResponse.
+                         * @memberof google.bigtable.admin.v2
+                         * @classdesc Represents a ListAuthorizedViewsResponse.
+                         * @implements IListAuthorizedViewsResponse
+                         * @constructor
+                         * @param {google.bigtable.admin.v2.IListAuthorizedViewsResponse=} [properties] Properties to set
+                         */
+                        function ListAuthorizedViewsResponse(properties) {
+                            this.authorizedViews = [];
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * ListAuthorizedViewsResponse authorizedViews.
+                         * @member {Array.<google.bigtable.admin.v2.IAuthorizedView>} authorizedViews
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsResponse
+                         * @instance
+                         */
+                        ListAuthorizedViewsResponse.prototype.authorizedViews = $util.emptyArray;
+    
+                        /**
+                         * ListAuthorizedViewsResponse nextPageToken.
+                         * @member {string} nextPageToken
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsResponse
+                         * @instance
+                         */
+                        ListAuthorizedViewsResponse.prototype.nextPageToken = "";
+    
+                        /**
+                         * Creates a new ListAuthorizedViewsResponse instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsResponse
+                         * @static
+                         * @param {google.bigtable.admin.v2.IListAuthorizedViewsResponse=} [properties] Properties to set
+                         * @returns {google.bigtable.admin.v2.ListAuthorizedViewsResponse} ListAuthorizedViewsResponse instance
+                         */
+                        ListAuthorizedViewsResponse.create = function create(properties) {
+                            return new ListAuthorizedViewsResponse(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified ListAuthorizedViewsResponse message. Does not implicitly {@link google.bigtable.admin.v2.ListAuthorizedViewsResponse.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsResponse
+                         * @static
+                         * @param {google.bigtable.admin.v2.IListAuthorizedViewsResponse} message ListAuthorizedViewsResponse message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        ListAuthorizedViewsResponse.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.authorizedViews != null && message.authorizedViews.length)
+                                for (var i = 0; i < message.authorizedViews.length; ++i)
+                                    $root.google.bigtable.admin.v2.AuthorizedView.encode(message.authorizedViews[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                            if (message.nextPageToken != null && Object.hasOwnProperty.call(message, "nextPageToken"))
+                                writer.uint32(/* id 2, wireType 2 =*/18).string(message.nextPageToken);
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified ListAuthorizedViewsResponse message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.ListAuthorizedViewsResponse.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsResponse
+                         * @static
+                         * @param {google.bigtable.admin.v2.IListAuthorizedViewsResponse} message ListAuthorizedViewsResponse message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        ListAuthorizedViewsResponse.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes a ListAuthorizedViewsResponse message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsResponse
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.admin.v2.ListAuthorizedViewsResponse} ListAuthorizedViewsResponse
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        ListAuthorizedViewsResponse.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.ListAuthorizedViewsResponse();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        if (!(message.authorizedViews && message.authorizedViews.length))
+                                            message.authorizedViews = [];
+                                        message.authorizedViews.push($root.google.bigtable.admin.v2.AuthorizedView.decode(reader, reader.uint32()));
+                                        break;
+                                    }
+                                case 2: {
+                                        message.nextPageToken = reader.string();
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes a ListAuthorizedViewsResponse message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsResponse
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.admin.v2.ListAuthorizedViewsResponse} ListAuthorizedViewsResponse
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        ListAuthorizedViewsResponse.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies a ListAuthorizedViewsResponse message.
+                         * @function verify
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsResponse
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        ListAuthorizedViewsResponse.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            if (message.authorizedViews != null && message.hasOwnProperty("authorizedViews")) {
+                                if (!Array.isArray(message.authorizedViews))
+                                    return "authorizedViews: array expected";
+                                for (var i = 0; i < message.authorizedViews.length; ++i) {
+                                    var error = $root.google.bigtable.admin.v2.AuthorizedView.verify(message.authorizedViews[i]);
+                                    if (error)
+                                        return "authorizedViews." + error;
+                                }
+                            }
+                            if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                                if (!$util.isString(message.nextPageToken))
+                                    return "nextPageToken: string expected";
+                            return null;
+                        };
+    
+                        /**
+                         * Creates a ListAuthorizedViewsResponse message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsResponse
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.admin.v2.ListAuthorizedViewsResponse} ListAuthorizedViewsResponse
+                         */
+                        ListAuthorizedViewsResponse.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.admin.v2.ListAuthorizedViewsResponse)
+                                return object;
+                            var message = new $root.google.bigtable.admin.v2.ListAuthorizedViewsResponse();
+                            if (object.authorizedViews) {
+                                if (!Array.isArray(object.authorizedViews))
+                                    throw TypeError(".google.bigtable.admin.v2.ListAuthorizedViewsResponse.authorizedViews: array expected");
+                                message.authorizedViews = [];
+                                for (var i = 0; i < object.authorizedViews.length; ++i) {
+                                    if (typeof object.authorizedViews[i] !== "object")
+                                        throw TypeError(".google.bigtable.admin.v2.ListAuthorizedViewsResponse.authorizedViews: object expected");
+                                    message.authorizedViews[i] = $root.google.bigtable.admin.v2.AuthorizedView.fromObject(object.authorizedViews[i]);
+                                }
+                            }
+                            if (object.nextPageToken != null)
+                                message.nextPageToken = String(object.nextPageToken);
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from a ListAuthorizedViewsResponse message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsResponse
+                         * @static
+                         * @param {google.bigtable.admin.v2.ListAuthorizedViewsResponse} message ListAuthorizedViewsResponse
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        ListAuthorizedViewsResponse.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.arrays || options.defaults)
+                                object.authorizedViews = [];
+                            if (options.defaults)
+                                object.nextPageToken = "";
+                            if (message.authorizedViews && message.authorizedViews.length) {
+                                object.authorizedViews = [];
+                                for (var j = 0; j < message.authorizedViews.length; ++j)
+                                    object.authorizedViews[j] = $root.google.bigtable.admin.v2.AuthorizedView.toObject(message.authorizedViews[j], options);
+                            }
+                            if (message.nextPageToken != null && message.hasOwnProperty("nextPageToken"))
+                                object.nextPageToken = message.nextPageToken;
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this ListAuthorizedViewsResponse to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsResponse
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        ListAuthorizedViewsResponse.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for ListAuthorizedViewsResponse
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.admin.v2.ListAuthorizedViewsResponse
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        ListAuthorizedViewsResponse.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.admin.v2.ListAuthorizedViewsResponse";
+                        };
+    
+                        return ListAuthorizedViewsResponse;
+                    })();
+    
+                    v2.GetAuthorizedViewRequest = (function() {
+    
+                        /**
+                         * Properties of a GetAuthorizedViewRequest.
+                         * @memberof google.bigtable.admin.v2
+                         * @interface IGetAuthorizedViewRequest
+                         * @property {string|null} [name] GetAuthorizedViewRequest name
+                         * @property {google.bigtable.admin.v2.AuthorizedView.ResponseView|null} [view] GetAuthorizedViewRequest view
+                         */
+    
+                        /**
+                         * Constructs a new GetAuthorizedViewRequest.
+                         * @memberof google.bigtable.admin.v2
+                         * @classdesc Represents a GetAuthorizedViewRequest.
+                         * @implements IGetAuthorizedViewRequest
+                         * @constructor
+                         * @param {google.bigtable.admin.v2.IGetAuthorizedViewRequest=} [properties] Properties to set
+                         */
+                        function GetAuthorizedViewRequest(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * GetAuthorizedViewRequest name.
+                         * @member {string} name
+                         * @memberof google.bigtable.admin.v2.GetAuthorizedViewRequest
+                         * @instance
+                         */
+                        GetAuthorizedViewRequest.prototype.name = "";
+    
+                        /**
+                         * GetAuthorizedViewRequest view.
+                         * @member {google.bigtable.admin.v2.AuthorizedView.ResponseView} view
+                         * @memberof google.bigtable.admin.v2.GetAuthorizedViewRequest
+                         * @instance
+                         */
+                        GetAuthorizedViewRequest.prototype.view = 0;
+    
+                        /**
+                         * Creates a new GetAuthorizedViewRequest instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.admin.v2.GetAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.IGetAuthorizedViewRequest=} [properties] Properties to set
+                         * @returns {google.bigtable.admin.v2.GetAuthorizedViewRequest} GetAuthorizedViewRequest instance
+                         */
+                        GetAuthorizedViewRequest.create = function create(properties) {
+                            return new GetAuthorizedViewRequest(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified GetAuthorizedViewRequest message. Does not implicitly {@link google.bigtable.admin.v2.GetAuthorizedViewRequest.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.admin.v2.GetAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.IGetAuthorizedViewRequest} message GetAuthorizedViewRequest message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        GetAuthorizedViewRequest.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                                writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+                            if (message.view != null && Object.hasOwnProperty.call(message, "view"))
+                                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.view);
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified GetAuthorizedViewRequest message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.GetAuthorizedViewRequest.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.admin.v2.GetAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.IGetAuthorizedViewRequest} message GetAuthorizedViewRequest message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        GetAuthorizedViewRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes a GetAuthorizedViewRequest message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.admin.v2.GetAuthorizedViewRequest
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.admin.v2.GetAuthorizedViewRequest} GetAuthorizedViewRequest
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        GetAuthorizedViewRequest.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.GetAuthorizedViewRequest();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        message.name = reader.string();
+                                        break;
+                                    }
+                                case 2: {
+                                        message.view = reader.int32();
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes a GetAuthorizedViewRequest message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.admin.v2.GetAuthorizedViewRequest
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.admin.v2.GetAuthorizedViewRequest} GetAuthorizedViewRequest
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        GetAuthorizedViewRequest.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies a GetAuthorizedViewRequest message.
+                         * @function verify
+                         * @memberof google.bigtable.admin.v2.GetAuthorizedViewRequest
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        GetAuthorizedViewRequest.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            if (message.name != null && message.hasOwnProperty("name"))
+                                if (!$util.isString(message.name))
+                                    return "name: string expected";
+                            if (message.view != null && message.hasOwnProperty("view"))
+                                switch (message.view) {
+                                default:
+                                    return "view: enum value expected";
+                                case 0:
+                                case 1:
+                                case 2:
+                                case 3:
+                                    break;
+                                }
+                            return null;
+                        };
+    
+                        /**
+                         * Creates a GetAuthorizedViewRequest message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.admin.v2.GetAuthorizedViewRequest
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.admin.v2.GetAuthorizedViewRequest} GetAuthorizedViewRequest
+                         */
+                        GetAuthorizedViewRequest.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.admin.v2.GetAuthorizedViewRequest)
+                                return object;
+                            var message = new $root.google.bigtable.admin.v2.GetAuthorizedViewRequest();
+                            if (object.name != null)
+                                message.name = String(object.name);
+                            switch (object.view) {
+                            default:
+                                if (typeof object.view === "number") {
+                                    message.view = object.view;
+                                    break;
+                                }
+                                break;
+                            case "RESPONSE_VIEW_UNSPECIFIED":
+                            case 0:
+                                message.view = 0;
+                                break;
+                            case "NAME_ONLY":
+                            case 1:
+                                message.view = 1;
+                                break;
+                            case "BASIC":
+                            case 2:
+                                message.view = 2;
+                                break;
+                            case "FULL":
+                            case 3:
+                                message.view = 3;
+                                break;
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from a GetAuthorizedViewRequest message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.admin.v2.GetAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.GetAuthorizedViewRequest} message GetAuthorizedViewRequest
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        GetAuthorizedViewRequest.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.defaults) {
+                                object.name = "";
+                                object.view = options.enums === String ? "RESPONSE_VIEW_UNSPECIFIED" : 0;
+                            }
+                            if (message.name != null && message.hasOwnProperty("name"))
+                                object.name = message.name;
+                            if (message.view != null && message.hasOwnProperty("view"))
+                                object.view = options.enums === String ? $root.google.bigtable.admin.v2.AuthorizedView.ResponseView[message.view] === undefined ? message.view : $root.google.bigtable.admin.v2.AuthorizedView.ResponseView[message.view] : message.view;
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this GetAuthorizedViewRequest to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.admin.v2.GetAuthorizedViewRequest
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        GetAuthorizedViewRequest.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for GetAuthorizedViewRequest
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.admin.v2.GetAuthorizedViewRequest
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        GetAuthorizedViewRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.admin.v2.GetAuthorizedViewRequest";
+                        };
+    
+                        return GetAuthorizedViewRequest;
+                    })();
+    
+                    v2.UpdateAuthorizedViewRequest = (function() {
+    
+                        /**
+                         * Properties of an UpdateAuthorizedViewRequest.
+                         * @memberof google.bigtable.admin.v2
+                         * @interface IUpdateAuthorizedViewRequest
+                         * @property {google.bigtable.admin.v2.IAuthorizedView|null} [authorizedView] UpdateAuthorizedViewRequest authorizedView
+                         * @property {google.protobuf.IFieldMask|null} [updateMask] UpdateAuthorizedViewRequest updateMask
+                         * @property {boolean|null} [ignoreWarnings] UpdateAuthorizedViewRequest ignoreWarnings
+                         */
+    
+                        /**
+                         * Constructs a new UpdateAuthorizedViewRequest.
+                         * @memberof google.bigtable.admin.v2
+                         * @classdesc Represents an UpdateAuthorizedViewRequest.
+                         * @implements IUpdateAuthorizedViewRequest
+                         * @constructor
+                         * @param {google.bigtable.admin.v2.IUpdateAuthorizedViewRequest=} [properties] Properties to set
+                         */
+                        function UpdateAuthorizedViewRequest(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * UpdateAuthorizedViewRequest authorizedView.
+                         * @member {google.bigtable.admin.v2.IAuthorizedView|null|undefined} authorizedView
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @instance
+                         */
+                        UpdateAuthorizedViewRequest.prototype.authorizedView = null;
+    
+                        /**
+                         * UpdateAuthorizedViewRequest updateMask.
+                         * @member {google.protobuf.IFieldMask|null|undefined} updateMask
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @instance
+                         */
+                        UpdateAuthorizedViewRequest.prototype.updateMask = null;
+    
+                        /**
+                         * UpdateAuthorizedViewRequest ignoreWarnings.
+                         * @member {boolean} ignoreWarnings
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @instance
+                         */
+                        UpdateAuthorizedViewRequest.prototype.ignoreWarnings = false;
+    
+                        /**
+                         * Creates a new UpdateAuthorizedViewRequest instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.IUpdateAuthorizedViewRequest=} [properties] Properties to set
+                         * @returns {google.bigtable.admin.v2.UpdateAuthorizedViewRequest} UpdateAuthorizedViewRequest instance
+                         */
+                        UpdateAuthorizedViewRequest.create = function create(properties) {
+                            return new UpdateAuthorizedViewRequest(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified UpdateAuthorizedViewRequest message. Does not implicitly {@link google.bigtable.admin.v2.UpdateAuthorizedViewRequest.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.IUpdateAuthorizedViewRequest} message UpdateAuthorizedViewRequest message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        UpdateAuthorizedViewRequest.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.authorizedView != null && Object.hasOwnProperty.call(message, "authorizedView"))
+                                $root.google.bigtable.admin.v2.AuthorizedView.encode(message.authorizedView, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                            if (message.updateMask != null && Object.hasOwnProperty.call(message, "updateMask"))
+                                $root.google.protobuf.FieldMask.encode(message.updateMask, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                            if (message.ignoreWarnings != null && Object.hasOwnProperty.call(message, "ignoreWarnings"))
+                                writer.uint32(/* id 3, wireType 0 =*/24).bool(message.ignoreWarnings);
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified UpdateAuthorizedViewRequest message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.UpdateAuthorizedViewRequest.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.IUpdateAuthorizedViewRequest} message UpdateAuthorizedViewRequest message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        UpdateAuthorizedViewRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes an UpdateAuthorizedViewRequest message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.admin.v2.UpdateAuthorizedViewRequest} UpdateAuthorizedViewRequest
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        UpdateAuthorizedViewRequest.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.UpdateAuthorizedViewRequest();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        message.authorizedView = $root.google.bigtable.admin.v2.AuthorizedView.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 2: {
+                                        message.updateMask = $root.google.protobuf.FieldMask.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 3: {
+                                        message.ignoreWarnings = reader.bool();
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes an UpdateAuthorizedViewRequest message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.admin.v2.UpdateAuthorizedViewRequest} UpdateAuthorizedViewRequest
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        UpdateAuthorizedViewRequest.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies an UpdateAuthorizedViewRequest message.
+                         * @function verify
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        UpdateAuthorizedViewRequest.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            if (message.authorizedView != null && message.hasOwnProperty("authorizedView")) {
+                                var error = $root.google.bigtable.admin.v2.AuthorizedView.verify(message.authorizedView);
+                                if (error)
+                                    return "authorizedView." + error;
+                            }
+                            if (message.updateMask != null && message.hasOwnProperty("updateMask")) {
+                                var error = $root.google.protobuf.FieldMask.verify(message.updateMask);
+                                if (error)
+                                    return "updateMask." + error;
+                            }
+                            if (message.ignoreWarnings != null && message.hasOwnProperty("ignoreWarnings"))
+                                if (typeof message.ignoreWarnings !== "boolean")
+                                    return "ignoreWarnings: boolean expected";
+                            return null;
+                        };
+    
+                        /**
+                         * Creates an UpdateAuthorizedViewRequest message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.admin.v2.UpdateAuthorizedViewRequest} UpdateAuthorizedViewRequest
+                         */
+                        UpdateAuthorizedViewRequest.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.admin.v2.UpdateAuthorizedViewRequest)
+                                return object;
+                            var message = new $root.google.bigtable.admin.v2.UpdateAuthorizedViewRequest();
+                            if (object.authorizedView != null) {
+                                if (typeof object.authorizedView !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.UpdateAuthorizedViewRequest.authorizedView: object expected");
+                                message.authorizedView = $root.google.bigtable.admin.v2.AuthorizedView.fromObject(object.authorizedView);
+                            }
+                            if (object.updateMask != null) {
+                                if (typeof object.updateMask !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.UpdateAuthorizedViewRequest.updateMask: object expected");
+                                message.updateMask = $root.google.protobuf.FieldMask.fromObject(object.updateMask);
+                            }
+                            if (object.ignoreWarnings != null)
+                                message.ignoreWarnings = Boolean(object.ignoreWarnings);
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from an UpdateAuthorizedViewRequest message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.UpdateAuthorizedViewRequest} message UpdateAuthorizedViewRequest
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        UpdateAuthorizedViewRequest.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.defaults) {
+                                object.authorizedView = null;
+                                object.updateMask = null;
+                                object.ignoreWarnings = false;
+                            }
+                            if (message.authorizedView != null && message.hasOwnProperty("authorizedView"))
+                                object.authorizedView = $root.google.bigtable.admin.v2.AuthorizedView.toObject(message.authorizedView, options);
+                            if (message.updateMask != null && message.hasOwnProperty("updateMask"))
+                                object.updateMask = $root.google.protobuf.FieldMask.toObject(message.updateMask, options);
+                            if (message.ignoreWarnings != null && message.hasOwnProperty("ignoreWarnings"))
+                                object.ignoreWarnings = message.ignoreWarnings;
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this UpdateAuthorizedViewRequest to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        UpdateAuthorizedViewRequest.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for UpdateAuthorizedViewRequest
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewRequest
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        UpdateAuthorizedViewRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.admin.v2.UpdateAuthorizedViewRequest";
+                        };
+    
+                        return UpdateAuthorizedViewRequest;
+                    })();
+    
+                    v2.UpdateAuthorizedViewMetadata = (function() {
+    
+                        /**
+                         * Properties of an UpdateAuthorizedViewMetadata.
+                         * @memberof google.bigtable.admin.v2
+                         * @interface IUpdateAuthorizedViewMetadata
+                         * @property {google.bigtable.admin.v2.IUpdateAuthorizedViewRequest|null} [originalRequest] UpdateAuthorizedViewMetadata originalRequest
+                         * @property {google.protobuf.ITimestamp|null} [requestTime] UpdateAuthorizedViewMetadata requestTime
+                         * @property {google.protobuf.ITimestamp|null} [finishTime] UpdateAuthorizedViewMetadata finishTime
+                         */
+    
+                        /**
+                         * Constructs a new UpdateAuthorizedViewMetadata.
+                         * @memberof google.bigtable.admin.v2
+                         * @classdesc Represents an UpdateAuthorizedViewMetadata.
+                         * @implements IUpdateAuthorizedViewMetadata
+                         * @constructor
+                         * @param {google.bigtable.admin.v2.IUpdateAuthorizedViewMetadata=} [properties] Properties to set
+                         */
+                        function UpdateAuthorizedViewMetadata(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * UpdateAuthorizedViewMetadata originalRequest.
+                         * @member {google.bigtable.admin.v2.IUpdateAuthorizedViewRequest|null|undefined} originalRequest
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @instance
+                         */
+                        UpdateAuthorizedViewMetadata.prototype.originalRequest = null;
+    
+                        /**
+                         * UpdateAuthorizedViewMetadata requestTime.
+                         * @member {google.protobuf.ITimestamp|null|undefined} requestTime
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @instance
+                         */
+                        UpdateAuthorizedViewMetadata.prototype.requestTime = null;
+    
+                        /**
+                         * UpdateAuthorizedViewMetadata finishTime.
+                         * @member {google.protobuf.ITimestamp|null|undefined} finishTime
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @instance
+                         */
+                        UpdateAuthorizedViewMetadata.prototype.finishTime = null;
+    
+                        /**
+                         * Creates a new UpdateAuthorizedViewMetadata instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @static
+                         * @param {google.bigtable.admin.v2.IUpdateAuthorizedViewMetadata=} [properties] Properties to set
+                         * @returns {google.bigtable.admin.v2.UpdateAuthorizedViewMetadata} UpdateAuthorizedViewMetadata instance
+                         */
+                        UpdateAuthorizedViewMetadata.create = function create(properties) {
+                            return new UpdateAuthorizedViewMetadata(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified UpdateAuthorizedViewMetadata message. Does not implicitly {@link google.bigtable.admin.v2.UpdateAuthorizedViewMetadata.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @static
+                         * @param {google.bigtable.admin.v2.IUpdateAuthorizedViewMetadata} message UpdateAuthorizedViewMetadata message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        UpdateAuthorizedViewMetadata.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.originalRequest != null && Object.hasOwnProperty.call(message, "originalRequest"))
+                                $root.google.bigtable.admin.v2.UpdateAuthorizedViewRequest.encode(message.originalRequest, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                            if (message.requestTime != null && Object.hasOwnProperty.call(message, "requestTime"))
+                                $root.google.protobuf.Timestamp.encode(message.requestTime, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                            if (message.finishTime != null && Object.hasOwnProperty.call(message, "finishTime"))
+                                $root.google.protobuf.Timestamp.encode(message.finishTime, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified UpdateAuthorizedViewMetadata message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.UpdateAuthorizedViewMetadata.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @static
+                         * @param {google.bigtable.admin.v2.IUpdateAuthorizedViewMetadata} message UpdateAuthorizedViewMetadata message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        UpdateAuthorizedViewMetadata.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes an UpdateAuthorizedViewMetadata message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.admin.v2.UpdateAuthorizedViewMetadata} UpdateAuthorizedViewMetadata
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        UpdateAuthorizedViewMetadata.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.UpdateAuthorizedViewMetadata();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        message.originalRequest = $root.google.bigtable.admin.v2.UpdateAuthorizedViewRequest.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 2: {
+                                        message.requestTime = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 3: {
+                                        message.finishTime = $root.google.protobuf.Timestamp.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes an UpdateAuthorizedViewMetadata message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.admin.v2.UpdateAuthorizedViewMetadata} UpdateAuthorizedViewMetadata
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        UpdateAuthorizedViewMetadata.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies an UpdateAuthorizedViewMetadata message.
+                         * @function verify
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        UpdateAuthorizedViewMetadata.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            if (message.originalRequest != null && message.hasOwnProperty("originalRequest")) {
+                                var error = $root.google.bigtable.admin.v2.UpdateAuthorizedViewRequest.verify(message.originalRequest);
+                                if (error)
+                                    return "originalRequest." + error;
+                            }
+                            if (message.requestTime != null && message.hasOwnProperty("requestTime")) {
+                                var error = $root.google.protobuf.Timestamp.verify(message.requestTime);
+                                if (error)
+                                    return "requestTime." + error;
+                            }
+                            if (message.finishTime != null && message.hasOwnProperty("finishTime")) {
+                                var error = $root.google.protobuf.Timestamp.verify(message.finishTime);
+                                if (error)
+                                    return "finishTime." + error;
+                            }
+                            return null;
+                        };
+    
+                        /**
+                         * Creates an UpdateAuthorizedViewMetadata message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.admin.v2.UpdateAuthorizedViewMetadata} UpdateAuthorizedViewMetadata
+                         */
+                        UpdateAuthorizedViewMetadata.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.admin.v2.UpdateAuthorizedViewMetadata)
+                                return object;
+                            var message = new $root.google.bigtable.admin.v2.UpdateAuthorizedViewMetadata();
+                            if (object.originalRequest != null) {
+                                if (typeof object.originalRequest !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.UpdateAuthorizedViewMetadata.originalRequest: object expected");
+                                message.originalRequest = $root.google.bigtable.admin.v2.UpdateAuthorizedViewRequest.fromObject(object.originalRequest);
+                            }
+                            if (object.requestTime != null) {
+                                if (typeof object.requestTime !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.UpdateAuthorizedViewMetadata.requestTime: object expected");
+                                message.requestTime = $root.google.protobuf.Timestamp.fromObject(object.requestTime);
+                            }
+                            if (object.finishTime != null) {
+                                if (typeof object.finishTime !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.UpdateAuthorizedViewMetadata.finishTime: object expected");
+                                message.finishTime = $root.google.protobuf.Timestamp.fromObject(object.finishTime);
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from an UpdateAuthorizedViewMetadata message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @static
+                         * @param {google.bigtable.admin.v2.UpdateAuthorizedViewMetadata} message UpdateAuthorizedViewMetadata
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        UpdateAuthorizedViewMetadata.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.defaults) {
+                                object.originalRequest = null;
+                                object.requestTime = null;
+                                object.finishTime = null;
+                            }
+                            if (message.originalRequest != null && message.hasOwnProperty("originalRequest"))
+                                object.originalRequest = $root.google.bigtable.admin.v2.UpdateAuthorizedViewRequest.toObject(message.originalRequest, options);
+                            if (message.requestTime != null && message.hasOwnProperty("requestTime"))
+                                object.requestTime = $root.google.protobuf.Timestamp.toObject(message.requestTime, options);
+                            if (message.finishTime != null && message.hasOwnProperty("finishTime"))
+                                object.finishTime = $root.google.protobuf.Timestamp.toObject(message.finishTime, options);
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this UpdateAuthorizedViewMetadata to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        UpdateAuthorizedViewMetadata.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for UpdateAuthorizedViewMetadata
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.admin.v2.UpdateAuthorizedViewMetadata
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        UpdateAuthorizedViewMetadata.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.admin.v2.UpdateAuthorizedViewMetadata";
+                        };
+    
+                        return UpdateAuthorizedViewMetadata;
+                    })();
+    
+                    v2.DeleteAuthorizedViewRequest = (function() {
+    
+                        /**
+                         * Properties of a DeleteAuthorizedViewRequest.
+                         * @memberof google.bigtable.admin.v2
+                         * @interface IDeleteAuthorizedViewRequest
+                         * @property {string|null} [name] DeleteAuthorizedViewRequest name
+                         * @property {string|null} [etag] DeleteAuthorizedViewRequest etag
+                         */
+    
+                        /**
+                         * Constructs a new DeleteAuthorizedViewRequest.
+                         * @memberof google.bigtable.admin.v2
+                         * @classdesc Represents a DeleteAuthorizedViewRequest.
+                         * @implements IDeleteAuthorizedViewRequest
+                         * @constructor
+                         * @param {google.bigtable.admin.v2.IDeleteAuthorizedViewRequest=} [properties] Properties to set
+                         */
+                        function DeleteAuthorizedViewRequest(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * DeleteAuthorizedViewRequest name.
+                         * @member {string} name
+                         * @memberof google.bigtable.admin.v2.DeleteAuthorizedViewRequest
+                         * @instance
+                         */
+                        DeleteAuthorizedViewRequest.prototype.name = "";
+    
+                        /**
+                         * DeleteAuthorizedViewRequest etag.
+                         * @member {string} etag
+                         * @memberof google.bigtable.admin.v2.DeleteAuthorizedViewRequest
+                         * @instance
+                         */
+                        DeleteAuthorizedViewRequest.prototype.etag = "";
+    
+                        /**
+                         * Creates a new DeleteAuthorizedViewRequest instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.admin.v2.DeleteAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.IDeleteAuthorizedViewRequest=} [properties] Properties to set
+                         * @returns {google.bigtable.admin.v2.DeleteAuthorizedViewRequest} DeleteAuthorizedViewRequest instance
+                         */
+                        DeleteAuthorizedViewRequest.create = function create(properties) {
+                            return new DeleteAuthorizedViewRequest(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified DeleteAuthorizedViewRequest message. Does not implicitly {@link google.bigtable.admin.v2.DeleteAuthorizedViewRequest.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.admin.v2.DeleteAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.IDeleteAuthorizedViewRequest} message DeleteAuthorizedViewRequest message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        DeleteAuthorizedViewRequest.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                                writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+                            if (message.etag != null && Object.hasOwnProperty.call(message, "etag"))
+                                writer.uint32(/* id 2, wireType 2 =*/18).string(message.etag);
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified DeleteAuthorizedViewRequest message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.DeleteAuthorizedViewRequest.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.admin.v2.DeleteAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.IDeleteAuthorizedViewRequest} message DeleteAuthorizedViewRequest message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        DeleteAuthorizedViewRequest.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes a DeleteAuthorizedViewRequest message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.admin.v2.DeleteAuthorizedViewRequest
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.admin.v2.DeleteAuthorizedViewRequest} DeleteAuthorizedViewRequest
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        DeleteAuthorizedViewRequest.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.DeleteAuthorizedViewRequest();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        message.name = reader.string();
+                                        break;
+                                    }
+                                case 2: {
+                                        message.etag = reader.string();
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes a DeleteAuthorizedViewRequest message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.admin.v2.DeleteAuthorizedViewRequest
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.admin.v2.DeleteAuthorizedViewRequest} DeleteAuthorizedViewRequest
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        DeleteAuthorizedViewRequest.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies a DeleteAuthorizedViewRequest message.
+                         * @function verify
+                         * @memberof google.bigtable.admin.v2.DeleteAuthorizedViewRequest
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        DeleteAuthorizedViewRequest.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            if (message.name != null && message.hasOwnProperty("name"))
+                                if (!$util.isString(message.name))
+                                    return "name: string expected";
+                            if (message.etag != null && message.hasOwnProperty("etag"))
+                                if (!$util.isString(message.etag))
+                                    return "etag: string expected";
+                            return null;
+                        };
+    
+                        /**
+                         * Creates a DeleteAuthorizedViewRequest message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.admin.v2.DeleteAuthorizedViewRequest
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.admin.v2.DeleteAuthorizedViewRequest} DeleteAuthorizedViewRequest
+                         */
+                        DeleteAuthorizedViewRequest.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.admin.v2.DeleteAuthorizedViewRequest)
+                                return object;
+                            var message = new $root.google.bigtable.admin.v2.DeleteAuthorizedViewRequest();
+                            if (object.name != null)
+                                message.name = String(object.name);
+                            if (object.etag != null)
+                                message.etag = String(object.etag);
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from a DeleteAuthorizedViewRequest message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.admin.v2.DeleteAuthorizedViewRequest
+                         * @static
+                         * @param {google.bigtable.admin.v2.DeleteAuthorizedViewRequest} message DeleteAuthorizedViewRequest
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        DeleteAuthorizedViewRequest.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.defaults) {
+                                object.name = "";
+                                object.etag = "";
+                            }
+                            if (message.name != null && message.hasOwnProperty("name"))
+                                object.name = message.name;
+                            if (message.etag != null && message.hasOwnProperty("etag"))
+                                object.etag = message.etag;
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this DeleteAuthorizedViewRequest to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.admin.v2.DeleteAuthorizedViewRequest
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        DeleteAuthorizedViewRequest.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for DeleteAuthorizedViewRequest
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.admin.v2.DeleteAuthorizedViewRequest
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        DeleteAuthorizedViewRequest.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.admin.v2.DeleteAuthorizedViewRequest";
+                        };
+    
+                        return DeleteAuthorizedViewRequest;
+                    })();
+    
                     v2.RestoreInfo = (function() {
     
                         /**
@@ -22083,6 +25077,7 @@
                          * @property {google.bigtable.admin.v2.IRestoreInfo|null} [restoreInfo] Table restoreInfo
                          * @property {google.bigtable.admin.v2.IChangeStreamConfig|null} [changeStreamConfig] Table changeStreamConfig
                          * @property {boolean|null} [deletionProtection] Table deletionProtection
+                         * @property {google.bigtable.admin.v2.Table.IAutomatedBackupPolicy|null} [automatedBackupPolicy] Table automatedBackupPolicy
                          */
     
                         /**
@@ -22159,6 +25154,28 @@
                         Table.prototype.deletionProtection = false;
     
                         /**
+                         * Table automatedBackupPolicy.
+                         * @member {google.bigtable.admin.v2.Table.IAutomatedBackupPolicy|null|undefined} automatedBackupPolicy
+                         * @memberof google.bigtable.admin.v2.Table
+                         * @instance
+                         */
+                        Table.prototype.automatedBackupPolicy = null;
+    
+                        // OneOf field names bound to virtual getters and setters
+                        var $oneOfFields;
+    
+                        /**
+                         * Table automatedBackupConfig.
+                         * @member {"automatedBackupPolicy"|undefined} automatedBackupConfig
+                         * @memberof google.bigtable.admin.v2.Table
+                         * @instance
+                         */
+                        Object.defineProperty(Table.prototype, "automatedBackupConfig", {
+                            get: $util.oneOfGetter($oneOfFields = ["automatedBackupPolicy"]),
+                            set: $util.oneOfSetter($oneOfFields)
+                        });
+    
+                        /**
                          * Creates a new Table instance using the specified properties.
                          * @function create
                          * @memberof google.bigtable.admin.v2.Table
@@ -22202,6 +25219,8 @@
                                 $root.google.bigtable.admin.v2.ChangeStreamConfig.encode(message.changeStreamConfig, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
                             if (message.deletionProtection != null && Object.hasOwnProperty.call(message, "deletionProtection"))
                                 writer.uint32(/* id 9, wireType 0 =*/72).bool(message.deletionProtection);
+                            if (message.automatedBackupPolicy != null && Object.hasOwnProperty.call(message, "automatedBackupPolicy"))
+                                $root.google.bigtable.admin.v2.Table.AutomatedBackupPolicy.encode(message.automatedBackupPolicy, writer.uint32(/* id 13, wireType 2 =*/106).fork()).ldelim();
                             return writer;
                         };
     
@@ -22302,6 +25321,10 @@
                                         message.deletionProtection = reader.bool();
                                         break;
                                     }
+                                case 13: {
+                                        message.automatedBackupPolicy = $root.google.bigtable.admin.v2.Table.AutomatedBackupPolicy.decode(reader, reader.uint32());
+                                        break;
+                                    }
                                 default:
                                     reader.skipType(tag & 7);
                                     break;
@@ -22337,6 +25360,7 @@
                         Table.verify = function verify(message) {
                             if (typeof message !== "object" || message === null)
                                 return "object expected";
+                            var properties = {};
                             if (message.name != null && message.hasOwnProperty("name"))
                                 if (!$util.isString(message.name))
                                     return "name: string expected";
@@ -22381,6 +25405,14 @@
                             if (message.deletionProtection != null && message.hasOwnProperty("deletionProtection"))
                                 if (typeof message.deletionProtection !== "boolean")
                                     return "deletionProtection: boolean expected";
+                            if (message.automatedBackupPolicy != null && message.hasOwnProperty("automatedBackupPolicy")) {
+                                properties.automatedBackupConfig = 1;
+                                {
+                                    var error = $root.google.bigtable.admin.v2.Table.AutomatedBackupPolicy.verify(message.automatedBackupPolicy);
+                                    if (error)
+                                        return "automatedBackupPolicy." + error;
+                                }
+                            }
                             return null;
                         };
     
@@ -22446,6 +25478,11 @@
                             }
                             if (object.deletionProtection != null)
                                 message.deletionProtection = Boolean(object.deletionProtection);
+                            if (object.automatedBackupPolicy != null) {
+                                if (typeof object.automatedBackupPolicy !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.Table.automatedBackupPolicy: object expected");
+                                message.automatedBackupPolicy = $root.google.bigtable.admin.v2.Table.AutomatedBackupPolicy.fromObject(object.automatedBackupPolicy);
+                            }
                             return message;
                         };
     
@@ -22494,6 +25531,11 @@
                                 object.changeStreamConfig = $root.google.bigtable.admin.v2.ChangeStreamConfig.toObject(message.changeStreamConfig, options);
                             if (message.deletionProtection != null && message.hasOwnProperty("deletionProtection"))
                                 object.deletionProtection = message.deletionProtection;
+                            if (message.automatedBackupPolicy != null && message.hasOwnProperty("automatedBackupPolicy")) {
+                                object.automatedBackupPolicy = $root.google.bigtable.admin.v2.Table.AutomatedBackupPolicy.toObject(message.automatedBackupPolicy, options);
+                                if (options.oneofs)
+                                    object.automatedBackupConfig = "automatedBackupPolicy";
+                            }
                             return object;
                         };
     
@@ -22868,7 +25910,1113 @@
                             return values;
                         })();
     
+                        Table.AutomatedBackupPolicy = (function() {
+    
+                            /**
+                             * Properties of an AutomatedBackupPolicy.
+                             * @memberof google.bigtable.admin.v2.Table
+                             * @interface IAutomatedBackupPolicy
+                             * @property {google.protobuf.IDuration|null} [retentionPeriod] AutomatedBackupPolicy retentionPeriod
+                             * @property {google.protobuf.IDuration|null} [frequency] AutomatedBackupPolicy frequency
+                             */
+    
+                            /**
+                             * Constructs a new AutomatedBackupPolicy.
+                             * @memberof google.bigtable.admin.v2.Table
+                             * @classdesc Represents an AutomatedBackupPolicy.
+                             * @implements IAutomatedBackupPolicy
+                             * @constructor
+                             * @param {google.bigtable.admin.v2.Table.IAutomatedBackupPolicy=} [properties] Properties to set
+                             */
+                            function AutomatedBackupPolicy(properties) {
+                                if (properties)
+                                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                        if (properties[keys[i]] != null)
+                                            this[keys[i]] = properties[keys[i]];
+                            }
+    
+                            /**
+                             * AutomatedBackupPolicy retentionPeriod.
+                             * @member {google.protobuf.IDuration|null|undefined} retentionPeriod
+                             * @memberof google.bigtable.admin.v2.Table.AutomatedBackupPolicy
+                             * @instance
+                             */
+                            AutomatedBackupPolicy.prototype.retentionPeriod = null;
+    
+                            /**
+                             * AutomatedBackupPolicy frequency.
+                             * @member {google.protobuf.IDuration|null|undefined} frequency
+                             * @memberof google.bigtable.admin.v2.Table.AutomatedBackupPolicy
+                             * @instance
+                             */
+                            AutomatedBackupPolicy.prototype.frequency = null;
+    
+                            /**
+                             * Creates a new AutomatedBackupPolicy instance using the specified properties.
+                             * @function create
+                             * @memberof google.bigtable.admin.v2.Table.AutomatedBackupPolicy
+                             * @static
+                             * @param {google.bigtable.admin.v2.Table.IAutomatedBackupPolicy=} [properties] Properties to set
+                             * @returns {google.bigtable.admin.v2.Table.AutomatedBackupPolicy} AutomatedBackupPolicy instance
+                             */
+                            AutomatedBackupPolicy.create = function create(properties) {
+                                return new AutomatedBackupPolicy(properties);
+                            };
+    
+                            /**
+                             * Encodes the specified AutomatedBackupPolicy message. Does not implicitly {@link google.bigtable.admin.v2.Table.AutomatedBackupPolicy.verify|verify} messages.
+                             * @function encode
+                             * @memberof google.bigtable.admin.v2.Table.AutomatedBackupPolicy
+                             * @static
+                             * @param {google.bigtable.admin.v2.Table.IAutomatedBackupPolicy} message AutomatedBackupPolicy message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            AutomatedBackupPolicy.encode = function encode(message, writer) {
+                                if (!writer)
+                                    writer = $Writer.create();
+                                if (message.retentionPeriod != null && Object.hasOwnProperty.call(message, "retentionPeriod"))
+                                    $root.google.protobuf.Duration.encode(message.retentionPeriod, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                                if (message.frequency != null && Object.hasOwnProperty.call(message, "frequency"))
+                                    $root.google.protobuf.Duration.encode(message.frequency, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                                return writer;
+                            };
+    
+                            /**
+                             * Encodes the specified AutomatedBackupPolicy message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Table.AutomatedBackupPolicy.verify|verify} messages.
+                             * @function encodeDelimited
+                             * @memberof google.bigtable.admin.v2.Table.AutomatedBackupPolicy
+                             * @static
+                             * @param {google.bigtable.admin.v2.Table.IAutomatedBackupPolicy} message AutomatedBackupPolicy message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            AutomatedBackupPolicy.encodeDelimited = function encodeDelimited(message, writer) {
+                                return this.encode(message, writer).ldelim();
+                            };
+    
+                            /**
+                             * Decodes an AutomatedBackupPolicy message from the specified reader or buffer.
+                             * @function decode
+                             * @memberof google.bigtable.admin.v2.Table.AutomatedBackupPolicy
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @param {number} [length] Message length if known beforehand
+                             * @returns {google.bigtable.admin.v2.Table.AutomatedBackupPolicy} AutomatedBackupPolicy
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            AutomatedBackupPolicy.decode = function decode(reader, length) {
+                                if (!(reader instanceof $Reader))
+                                    reader = $Reader.create(reader);
+                                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Table.AutomatedBackupPolicy();
+                                while (reader.pos < end) {
+                                    var tag = reader.uint32();
+                                    switch (tag >>> 3) {
+                                    case 1: {
+                                            message.retentionPeriod = $root.google.protobuf.Duration.decode(reader, reader.uint32());
+                                            break;
+                                        }
+                                    case 2: {
+                                            message.frequency = $root.google.protobuf.Duration.decode(reader, reader.uint32());
+                                            break;
+                                        }
+                                    default:
+                                        reader.skipType(tag & 7);
+                                        break;
+                                    }
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Decodes an AutomatedBackupPolicy message from the specified reader or buffer, length delimited.
+                             * @function decodeDelimited
+                             * @memberof google.bigtable.admin.v2.Table.AutomatedBackupPolicy
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @returns {google.bigtable.admin.v2.Table.AutomatedBackupPolicy} AutomatedBackupPolicy
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            AutomatedBackupPolicy.decodeDelimited = function decodeDelimited(reader) {
+                                if (!(reader instanceof $Reader))
+                                    reader = new $Reader(reader);
+                                return this.decode(reader, reader.uint32());
+                            };
+    
+                            /**
+                             * Verifies an AutomatedBackupPolicy message.
+                             * @function verify
+                             * @memberof google.bigtable.admin.v2.Table.AutomatedBackupPolicy
+                             * @static
+                             * @param {Object.<string,*>} message Plain object to verify
+                             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                             */
+                            AutomatedBackupPolicy.verify = function verify(message) {
+                                if (typeof message !== "object" || message === null)
+                                    return "object expected";
+                                if (message.retentionPeriod != null && message.hasOwnProperty("retentionPeriod")) {
+                                    var error = $root.google.protobuf.Duration.verify(message.retentionPeriod);
+                                    if (error)
+                                        return "retentionPeriod." + error;
+                                }
+                                if (message.frequency != null && message.hasOwnProperty("frequency")) {
+                                    var error = $root.google.protobuf.Duration.verify(message.frequency);
+                                    if (error)
+                                        return "frequency." + error;
+                                }
+                                return null;
+                            };
+    
+                            /**
+                             * Creates an AutomatedBackupPolicy message from a plain object. Also converts values to their respective internal types.
+                             * @function fromObject
+                             * @memberof google.bigtable.admin.v2.Table.AutomatedBackupPolicy
+                             * @static
+                             * @param {Object.<string,*>} object Plain object
+                             * @returns {google.bigtable.admin.v2.Table.AutomatedBackupPolicy} AutomatedBackupPolicy
+                             */
+                            AutomatedBackupPolicy.fromObject = function fromObject(object) {
+                                if (object instanceof $root.google.bigtable.admin.v2.Table.AutomatedBackupPolicy)
+                                    return object;
+                                var message = new $root.google.bigtable.admin.v2.Table.AutomatedBackupPolicy();
+                                if (object.retentionPeriod != null) {
+                                    if (typeof object.retentionPeriod !== "object")
+                                        throw TypeError(".google.bigtable.admin.v2.Table.AutomatedBackupPolicy.retentionPeriod: object expected");
+                                    message.retentionPeriod = $root.google.protobuf.Duration.fromObject(object.retentionPeriod);
+                                }
+                                if (object.frequency != null) {
+                                    if (typeof object.frequency !== "object")
+                                        throw TypeError(".google.bigtable.admin.v2.Table.AutomatedBackupPolicy.frequency: object expected");
+                                    message.frequency = $root.google.protobuf.Duration.fromObject(object.frequency);
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Creates a plain object from an AutomatedBackupPolicy message. Also converts values to other types if specified.
+                             * @function toObject
+                             * @memberof google.bigtable.admin.v2.Table.AutomatedBackupPolicy
+                             * @static
+                             * @param {google.bigtable.admin.v2.Table.AutomatedBackupPolicy} message AutomatedBackupPolicy
+                             * @param {$protobuf.IConversionOptions} [options] Conversion options
+                             * @returns {Object.<string,*>} Plain object
+                             */
+                            AutomatedBackupPolicy.toObject = function toObject(message, options) {
+                                if (!options)
+                                    options = {};
+                                var object = {};
+                                if (options.defaults) {
+                                    object.retentionPeriod = null;
+                                    object.frequency = null;
+                                }
+                                if (message.retentionPeriod != null && message.hasOwnProperty("retentionPeriod"))
+                                    object.retentionPeriod = $root.google.protobuf.Duration.toObject(message.retentionPeriod, options);
+                                if (message.frequency != null && message.hasOwnProperty("frequency"))
+                                    object.frequency = $root.google.protobuf.Duration.toObject(message.frequency, options);
+                                return object;
+                            };
+    
+                            /**
+                             * Converts this AutomatedBackupPolicy to JSON.
+                             * @function toJSON
+                             * @memberof google.bigtable.admin.v2.Table.AutomatedBackupPolicy
+                             * @instance
+                             * @returns {Object.<string,*>} JSON object
+                             */
+                            AutomatedBackupPolicy.prototype.toJSON = function toJSON() {
+                                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            };
+    
+                            /**
+                             * Gets the default type url for AutomatedBackupPolicy
+                             * @function getTypeUrl
+                             * @memberof google.bigtable.admin.v2.Table.AutomatedBackupPolicy
+                             * @static
+                             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                             * @returns {string} The default type url
+                             */
+                            AutomatedBackupPolicy.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                if (typeUrlPrefix === undefined) {
+                                    typeUrlPrefix = "type.googleapis.com";
+                                }
+                                return typeUrlPrefix + "/google.bigtable.admin.v2.Table.AutomatedBackupPolicy";
+                            };
+    
+                            return AutomatedBackupPolicy;
+                        })();
+    
                         return Table;
+                    })();
+    
+                    v2.AuthorizedView = (function() {
+    
+                        /**
+                         * Properties of an AuthorizedView.
+                         * @memberof google.bigtable.admin.v2
+                         * @interface IAuthorizedView
+                         * @property {string|null} [name] AuthorizedView name
+                         * @property {google.bigtable.admin.v2.AuthorizedView.ISubsetView|null} [subsetView] AuthorizedView subsetView
+                         * @property {string|null} [etag] AuthorizedView etag
+                         * @property {boolean|null} [deletionProtection] AuthorizedView deletionProtection
+                         */
+    
+                        /**
+                         * Constructs a new AuthorizedView.
+                         * @memberof google.bigtable.admin.v2
+                         * @classdesc Represents an AuthorizedView.
+                         * @implements IAuthorizedView
+                         * @constructor
+                         * @param {google.bigtable.admin.v2.IAuthorizedView=} [properties] Properties to set
+                         */
+                        function AuthorizedView(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * AuthorizedView name.
+                         * @member {string} name
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @instance
+                         */
+                        AuthorizedView.prototype.name = "";
+    
+                        /**
+                         * AuthorizedView subsetView.
+                         * @member {google.bigtable.admin.v2.AuthorizedView.ISubsetView|null|undefined} subsetView
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @instance
+                         */
+                        AuthorizedView.prototype.subsetView = null;
+    
+                        /**
+                         * AuthorizedView etag.
+                         * @member {string} etag
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @instance
+                         */
+                        AuthorizedView.prototype.etag = "";
+    
+                        /**
+                         * AuthorizedView deletionProtection.
+                         * @member {boolean} deletionProtection
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @instance
+                         */
+                        AuthorizedView.prototype.deletionProtection = false;
+    
+                        // OneOf field names bound to virtual getters and setters
+                        var $oneOfFields;
+    
+                        /**
+                         * AuthorizedView authorizedView.
+                         * @member {"subsetView"|undefined} authorizedView
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @instance
+                         */
+                        Object.defineProperty(AuthorizedView.prototype, "authorizedView", {
+                            get: $util.oneOfGetter($oneOfFields = ["subsetView"]),
+                            set: $util.oneOfSetter($oneOfFields)
+                        });
+    
+                        /**
+                         * Creates a new AuthorizedView instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @static
+                         * @param {google.bigtable.admin.v2.IAuthorizedView=} [properties] Properties to set
+                         * @returns {google.bigtable.admin.v2.AuthorizedView} AuthorizedView instance
+                         */
+                        AuthorizedView.create = function create(properties) {
+                            return new AuthorizedView(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified AuthorizedView message. Does not implicitly {@link google.bigtable.admin.v2.AuthorizedView.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @static
+                         * @param {google.bigtable.admin.v2.IAuthorizedView} message AuthorizedView message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        AuthorizedView.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.name != null && Object.hasOwnProperty.call(message, "name"))
+                                writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
+                            if (message.subsetView != null && Object.hasOwnProperty.call(message, "subsetView"))
+                                $root.google.bigtable.admin.v2.AuthorizedView.SubsetView.encode(message.subsetView, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                            if (message.etag != null && Object.hasOwnProperty.call(message, "etag"))
+                                writer.uint32(/* id 3, wireType 2 =*/26).string(message.etag);
+                            if (message.deletionProtection != null && Object.hasOwnProperty.call(message, "deletionProtection"))
+                                writer.uint32(/* id 4, wireType 0 =*/32).bool(message.deletionProtection);
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified AuthorizedView message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.AuthorizedView.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @static
+                         * @param {google.bigtable.admin.v2.IAuthorizedView} message AuthorizedView message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        AuthorizedView.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes an AuthorizedView message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.admin.v2.AuthorizedView} AuthorizedView
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        AuthorizedView.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.AuthorizedView();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        message.name = reader.string();
+                                        break;
+                                    }
+                                case 2: {
+                                        message.subsetView = $root.google.bigtable.admin.v2.AuthorizedView.SubsetView.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 3: {
+                                        message.etag = reader.string();
+                                        break;
+                                    }
+                                case 4: {
+                                        message.deletionProtection = reader.bool();
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes an AuthorizedView message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.admin.v2.AuthorizedView} AuthorizedView
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        AuthorizedView.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies an AuthorizedView message.
+                         * @function verify
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        AuthorizedView.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            var properties = {};
+                            if (message.name != null && message.hasOwnProperty("name"))
+                                if (!$util.isString(message.name))
+                                    return "name: string expected";
+                            if (message.subsetView != null && message.hasOwnProperty("subsetView")) {
+                                properties.authorizedView = 1;
+                                {
+                                    var error = $root.google.bigtable.admin.v2.AuthorizedView.SubsetView.verify(message.subsetView);
+                                    if (error)
+                                        return "subsetView." + error;
+                                }
+                            }
+                            if (message.etag != null && message.hasOwnProperty("etag"))
+                                if (!$util.isString(message.etag))
+                                    return "etag: string expected";
+                            if (message.deletionProtection != null && message.hasOwnProperty("deletionProtection"))
+                                if (typeof message.deletionProtection !== "boolean")
+                                    return "deletionProtection: boolean expected";
+                            return null;
+                        };
+    
+                        /**
+                         * Creates an AuthorizedView message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.admin.v2.AuthorizedView} AuthorizedView
+                         */
+                        AuthorizedView.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.admin.v2.AuthorizedView)
+                                return object;
+                            var message = new $root.google.bigtable.admin.v2.AuthorizedView();
+                            if (object.name != null)
+                                message.name = String(object.name);
+                            if (object.subsetView != null) {
+                                if (typeof object.subsetView !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.AuthorizedView.subsetView: object expected");
+                                message.subsetView = $root.google.bigtable.admin.v2.AuthorizedView.SubsetView.fromObject(object.subsetView);
+                            }
+                            if (object.etag != null)
+                                message.etag = String(object.etag);
+                            if (object.deletionProtection != null)
+                                message.deletionProtection = Boolean(object.deletionProtection);
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from an AuthorizedView message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @static
+                         * @param {google.bigtable.admin.v2.AuthorizedView} message AuthorizedView
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        AuthorizedView.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.defaults) {
+                                object.name = "";
+                                object.etag = "";
+                                object.deletionProtection = false;
+                            }
+                            if (message.name != null && message.hasOwnProperty("name"))
+                                object.name = message.name;
+                            if (message.subsetView != null && message.hasOwnProperty("subsetView")) {
+                                object.subsetView = $root.google.bigtable.admin.v2.AuthorizedView.SubsetView.toObject(message.subsetView, options);
+                                if (options.oneofs)
+                                    object.authorizedView = "subsetView";
+                            }
+                            if (message.etag != null && message.hasOwnProperty("etag"))
+                                object.etag = message.etag;
+                            if (message.deletionProtection != null && message.hasOwnProperty("deletionProtection"))
+                                object.deletionProtection = message.deletionProtection;
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this AuthorizedView to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        AuthorizedView.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for AuthorizedView
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.admin.v2.AuthorizedView
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        AuthorizedView.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.admin.v2.AuthorizedView";
+                        };
+    
+                        AuthorizedView.FamilySubsets = (function() {
+    
+                            /**
+                             * Properties of a FamilySubsets.
+                             * @memberof google.bigtable.admin.v2.AuthorizedView
+                             * @interface IFamilySubsets
+                             * @property {Array.<Uint8Array>|null} [qualifiers] FamilySubsets qualifiers
+                             * @property {Array.<Uint8Array>|null} [qualifierPrefixes] FamilySubsets qualifierPrefixes
+                             */
+    
+                            /**
+                             * Constructs a new FamilySubsets.
+                             * @memberof google.bigtable.admin.v2.AuthorizedView
+                             * @classdesc Represents a FamilySubsets.
+                             * @implements IFamilySubsets
+                             * @constructor
+                             * @param {google.bigtable.admin.v2.AuthorizedView.IFamilySubsets=} [properties] Properties to set
+                             */
+                            function FamilySubsets(properties) {
+                                this.qualifiers = [];
+                                this.qualifierPrefixes = [];
+                                if (properties)
+                                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                        if (properties[keys[i]] != null)
+                                            this[keys[i]] = properties[keys[i]];
+                            }
+    
+                            /**
+                             * FamilySubsets qualifiers.
+                             * @member {Array.<Uint8Array>} qualifiers
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.FamilySubsets
+                             * @instance
+                             */
+                            FamilySubsets.prototype.qualifiers = $util.emptyArray;
+    
+                            /**
+                             * FamilySubsets qualifierPrefixes.
+                             * @member {Array.<Uint8Array>} qualifierPrefixes
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.FamilySubsets
+                             * @instance
+                             */
+                            FamilySubsets.prototype.qualifierPrefixes = $util.emptyArray;
+    
+                            /**
+                             * Creates a new FamilySubsets instance using the specified properties.
+                             * @function create
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.FamilySubsets
+                             * @static
+                             * @param {google.bigtable.admin.v2.AuthorizedView.IFamilySubsets=} [properties] Properties to set
+                             * @returns {google.bigtable.admin.v2.AuthorizedView.FamilySubsets} FamilySubsets instance
+                             */
+                            FamilySubsets.create = function create(properties) {
+                                return new FamilySubsets(properties);
+                            };
+    
+                            /**
+                             * Encodes the specified FamilySubsets message. Does not implicitly {@link google.bigtable.admin.v2.AuthorizedView.FamilySubsets.verify|verify} messages.
+                             * @function encode
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.FamilySubsets
+                             * @static
+                             * @param {google.bigtable.admin.v2.AuthorizedView.IFamilySubsets} message FamilySubsets message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            FamilySubsets.encode = function encode(message, writer) {
+                                if (!writer)
+                                    writer = $Writer.create();
+                                if (message.qualifiers != null && message.qualifiers.length)
+                                    for (var i = 0; i < message.qualifiers.length; ++i)
+                                        writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.qualifiers[i]);
+                                if (message.qualifierPrefixes != null && message.qualifierPrefixes.length)
+                                    for (var i = 0; i < message.qualifierPrefixes.length; ++i)
+                                        writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.qualifierPrefixes[i]);
+                                return writer;
+                            };
+    
+                            /**
+                             * Encodes the specified FamilySubsets message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.AuthorizedView.FamilySubsets.verify|verify} messages.
+                             * @function encodeDelimited
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.FamilySubsets
+                             * @static
+                             * @param {google.bigtable.admin.v2.AuthorizedView.IFamilySubsets} message FamilySubsets message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            FamilySubsets.encodeDelimited = function encodeDelimited(message, writer) {
+                                return this.encode(message, writer).ldelim();
+                            };
+    
+                            /**
+                             * Decodes a FamilySubsets message from the specified reader or buffer.
+                             * @function decode
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.FamilySubsets
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @param {number} [length] Message length if known beforehand
+                             * @returns {google.bigtable.admin.v2.AuthorizedView.FamilySubsets} FamilySubsets
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            FamilySubsets.decode = function decode(reader, length) {
+                                if (!(reader instanceof $Reader))
+                                    reader = $Reader.create(reader);
+                                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.AuthorizedView.FamilySubsets();
+                                while (reader.pos < end) {
+                                    var tag = reader.uint32();
+                                    switch (tag >>> 3) {
+                                    case 1: {
+                                            if (!(message.qualifiers && message.qualifiers.length))
+                                                message.qualifiers = [];
+                                            message.qualifiers.push(reader.bytes());
+                                            break;
+                                        }
+                                    case 2: {
+                                            if (!(message.qualifierPrefixes && message.qualifierPrefixes.length))
+                                                message.qualifierPrefixes = [];
+                                            message.qualifierPrefixes.push(reader.bytes());
+                                            break;
+                                        }
+                                    default:
+                                        reader.skipType(tag & 7);
+                                        break;
+                                    }
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Decodes a FamilySubsets message from the specified reader or buffer, length delimited.
+                             * @function decodeDelimited
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.FamilySubsets
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @returns {google.bigtable.admin.v2.AuthorizedView.FamilySubsets} FamilySubsets
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            FamilySubsets.decodeDelimited = function decodeDelimited(reader) {
+                                if (!(reader instanceof $Reader))
+                                    reader = new $Reader(reader);
+                                return this.decode(reader, reader.uint32());
+                            };
+    
+                            /**
+                             * Verifies a FamilySubsets message.
+                             * @function verify
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.FamilySubsets
+                             * @static
+                             * @param {Object.<string,*>} message Plain object to verify
+                             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                             */
+                            FamilySubsets.verify = function verify(message) {
+                                if (typeof message !== "object" || message === null)
+                                    return "object expected";
+                                if (message.qualifiers != null && message.hasOwnProperty("qualifiers")) {
+                                    if (!Array.isArray(message.qualifiers))
+                                        return "qualifiers: array expected";
+                                    for (var i = 0; i < message.qualifiers.length; ++i)
+                                        if (!(message.qualifiers[i] && typeof message.qualifiers[i].length === "number" || $util.isString(message.qualifiers[i])))
+                                            return "qualifiers: buffer[] expected";
+                                }
+                                if (message.qualifierPrefixes != null && message.hasOwnProperty("qualifierPrefixes")) {
+                                    if (!Array.isArray(message.qualifierPrefixes))
+                                        return "qualifierPrefixes: array expected";
+                                    for (var i = 0; i < message.qualifierPrefixes.length; ++i)
+                                        if (!(message.qualifierPrefixes[i] && typeof message.qualifierPrefixes[i].length === "number" || $util.isString(message.qualifierPrefixes[i])))
+                                            return "qualifierPrefixes: buffer[] expected";
+                                }
+                                return null;
+                            };
+    
+                            /**
+                             * Creates a FamilySubsets message from a plain object. Also converts values to their respective internal types.
+                             * @function fromObject
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.FamilySubsets
+                             * @static
+                             * @param {Object.<string,*>} object Plain object
+                             * @returns {google.bigtable.admin.v2.AuthorizedView.FamilySubsets} FamilySubsets
+                             */
+                            FamilySubsets.fromObject = function fromObject(object) {
+                                if (object instanceof $root.google.bigtable.admin.v2.AuthorizedView.FamilySubsets)
+                                    return object;
+                                var message = new $root.google.bigtable.admin.v2.AuthorizedView.FamilySubsets();
+                                if (object.qualifiers) {
+                                    if (!Array.isArray(object.qualifiers))
+                                        throw TypeError(".google.bigtable.admin.v2.AuthorizedView.FamilySubsets.qualifiers: array expected");
+                                    message.qualifiers = [];
+                                    for (var i = 0; i < object.qualifiers.length; ++i)
+                                        if (typeof object.qualifiers[i] === "string")
+                                            $util.base64.decode(object.qualifiers[i], message.qualifiers[i] = $util.newBuffer($util.base64.length(object.qualifiers[i])), 0);
+                                        else if (object.qualifiers[i].length >= 0)
+                                            message.qualifiers[i] = object.qualifiers[i];
+                                }
+                                if (object.qualifierPrefixes) {
+                                    if (!Array.isArray(object.qualifierPrefixes))
+                                        throw TypeError(".google.bigtable.admin.v2.AuthorizedView.FamilySubsets.qualifierPrefixes: array expected");
+                                    message.qualifierPrefixes = [];
+                                    for (var i = 0; i < object.qualifierPrefixes.length; ++i)
+                                        if (typeof object.qualifierPrefixes[i] === "string")
+                                            $util.base64.decode(object.qualifierPrefixes[i], message.qualifierPrefixes[i] = $util.newBuffer($util.base64.length(object.qualifierPrefixes[i])), 0);
+                                        else if (object.qualifierPrefixes[i].length >= 0)
+                                            message.qualifierPrefixes[i] = object.qualifierPrefixes[i];
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Creates a plain object from a FamilySubsets message. Also converts values to other types if specified.
+                             * @function toObject
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.FamilySubsets
+                             * @static
+                             * @param {google.bigtable.admin.v2.AuthorizedView.FamilySubsets} message FamilySubsets
+                             * @param {$protobuf.IConversionOptions} [options] Conversion options
+                             * @returns {Object.<string,*>} Plain object
+                             */
+                            FamilySubsets.toObject = function toObject(message, options) {
+                                if (!options)
+                                    options = {};
+                                var object = {};
+                                if (options.arrays || options.defaults) {
+                                    object.qualifiers = [];
+                                    object.qualifierPrefixes = [];
+                                }
+                                if (message.qualifiers && message.qualifiers.length) {
+                                    object.qualifiers = [];
+                                    for (var j = 0; j < message.qualifiers.length; ++j)
+                                        object.qualifiers[j] = options.bytes === String ? $util.base64.encode(message.qualifiers[j], 0, message.qualifiers[j].length) : options.bytes === Array ? Array.prototype.slice.call(message.qualifiers[j]) : message.qualifiers[j];
+                                }
+                                if (message.qualifierPrefixes && message.qualifierPrefixes.length) {
+                                    object.qualifierPrefixes = [];
+                                    for (var j = 0; j < message.qualifierPrefixes.length; ++j)
+                                        object.qualifierPrefixes[j] = options.bytes === String ? $util.base64.encode(message.qualifierPrefixes[j], 0, message.qualifierPrefixes[j].length) : options.bytes === Array ? Array.prototype.slice.call(message.qualifierPrefixes[j]) : message.qualifierPrefixes[j];
+                                }
+                                return object;
+                            };
+    
+                            /**
+                             * Converts this FamilySubsets to JSON.
+                             * @function toJSON
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.FamilySubsets
+                             * @instance
+                             * @returns {Object.<string,*>} JSON object
+                             */
+                            FamilySubsets.prototype.toJSON = function toJSON() {
+                                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            };
+    
+                            /**
+                             * Gets the default type url for FamilySubsets
+                             * @function getTypeUrl
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.FamilySubsets
+                             * @static
+                             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                             * @returns {string} The default type url
+                             */
+                            FamilySubsets.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                if (typeUrlPrefix === undefined) {
+                                    typeUrlPrefix = "type.googleapis.com";
+                                }
+                                return typeUrlPrefix + "/google.bigtable.admin.v2.AuthorizedView.FamilySubsets";
+                            };
+    
+                            return FamilySubsets;
+                        })();
+    
+                        AuthorizedView.SubsetView = (function() {
+    
+                            /**
+                             * Properties of a SubsetView.
+                             * @memberof google.bigtable.admin.v2.AuthorizedView
+                             * @interface ISubsetView
+                             * @property {Array.<Uint8Array>|null} [rowPrefixes] SubsetView rowPrefixes
+                             * @property {Object.<string,google.bigtable.admin.v2.AuthorizedView.IFamilySubsets>|null} [familySubsets] SubsetView familySubsets
+                             */
+    
+                            /**
+                             * Constructs a new SubsetView.
+                             * @memberof google.bigtable.admin.v2.AuthorizedView
+                             * @classdesc Represents a SubsetView.
+                             * @implements ISubsetView
+                             * @constructor
+                             * @param {google.bigtable.admin.v2.AuthorizedView.ISubsetView=} [properties] Properties to set
+                             */
+                            function SubsetView(properties) {
+                                this.rowPrefixes = [];
+                                this.familySubsets = {};
+                                if (properties)
+                                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                        if (properties[keys[i]] != null)
+                                            this[keys[i]] = properties[keys[i]];
+                            }
+    
+                            /**
+                             * SubsetView rowPrefixes.
+                             * @member {Array.<Uint8Array>} rowPrefixes
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.SubsetView
+                             * @instance
+                             */
+                            SubsetView.prototype.rowPrefixes = $util.emptyArray;
+    
+                            /**
+                             * SubsetView familySubsets.
+                             * @member {Object.<string,google.bigtable.admin.v2.AuthorizedView.IFamilySubsets>} familySubsets
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.SubsetView
+                             * @instance
+                             */
+                            SubsetView.prototype.familySubsets = $util.emptyObject;
+    
+                            /**
+                             * Creates a new SubsetView instance using the specified properties.
+                             * @function create
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.SubsetView
+                             * @static
+                             * @param {google.bigtable.admin.v2.AuthorizedView.ISubsetView=} [properties] Properties to set
+                             * @returns {google.bigtable.admin.v2.AuthorizedView.SubsetView} SubsetView instance
+                             */
+                            SubsetView.create = function create(properties) {
+                                return new SubsetView(properties);
+                            };
+    
+                            /**
+                             * Encodes the specified SubsetView message. Does not implicitly {@link google.bigtable.admin.v2.AuthorizedView.SubsetView.verify|verify} messages.
+                             * @function encode
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.SubsetView
+                             * @static
+                             * @param {google.bigtable.admin.v2.AuthorizedView.ISubsetView} message SubsetView message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            SubsetView.encode = function encode(message, writer) {
+                                if (!writer)
+                                    writer = $Writer.create();
+                                if (message.rowPrefixes != null && message.rowPrefixes.length)
+                                    for (var i = 0; i < message.rowPrefixes.length; ++i)
+                                        writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.rowPrefixes[i]);
+                                if (message.familySubsets != null && Object.hasOwnProperty.call(message, "familySubsets"))
+                                    for (var keys = Object.keys(message.familySubsets), i = 0; i < keys.length; ++i) {
+                                        writer.uint32(/* id 2, wireType 2 =*/18).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]);
+                                        $root.google.bigtable.admin.v2.AuthorizedView.FamilySubsets.encode(message.familySubsets[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
+                                    }
+                                return writer;
+                            };
+    
+                            /**
+                             * Encodes the specified SubsetView message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.AuthorizedView.SubsetView.verify|verify} messages.
+                             * @function encodeDelimited
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.SubsetView
+                             * @static
+                             * @param {google.bigtable.admin.v2.AuthorizedView.ISubsetView} message SubsetView message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            SubsetView.encodeDelimited = function encodeDelimited(message, writer) {
+                                return this.encode(message, writer).ldelim();
+                            };
+    
+                            /**
+                             * Decodes a SubsetView message from the specified reader or buffer.
+                             * @function decode
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.SubsetView
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @param {number} [length] Message length if known beforehand
+                             * @returns {google.bigtable.admin.v2.AuthorizedView.SubsetView} SubsetView
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            SubsetView.decode = function decode(reader, length) {
+                                if (!(reader instanceof $Reader))
+                                    reader = $Reader.create(reader);
+                                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.AuthorizedView.SubsetView(), key, value;
+                                while (reader.pos < end) {
+                                    var tag = reader.uint32();
+                                    switch (tag >>> 3) {
+                                    case 1: {
+                                            if (!(message.rowPrefixes && message.rowPrefixes.length))
+                                                message.rowPrefixes = [];
+                                            message.rowPrefixes.push(reader.bytes());
+                                            break;
+                                        }
+                                    case 2: {
+                                            if (message.familySubsets === $util.emptyObject)
+                                                message.familySubsets = {};
+                                            var end2 = reader.uint32() + reader.pos;
+                                            key = "";
+                                            value = null;
+                                            while (reader.pos < end2) {
+                                                var tag2 = reader.uint32();
+                                                switch (tag2 >>> 3) {
+                                                case 1:
+                                                    key = reader.string();
+                                                    break;
+                                                case 2:
+                                                    value = $root.google.bigtable.admin.v2.AuthorizedView.FamilySubsets.decode(reader, reader.uint32());
+                                                    break;
+                                                default:
+                                                    reader.skipType(tag2 & 7);
+                                                    break;
+                                                }
+                                            }
+                                            message.familySubsets[key] = value;
+                                            break;
+                                        }
+                                    default:
+                                        reader.skipType(tag & 7);
+                                        break;
+                                    }
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Decodes a SubsetView message from the specified reader or buffer, length delimited.
+                             * @function decodeDelimited
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.SubsetView
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @returns {google.bigtable.admin.v2.AuthorizedView.SubsetView} SubsetView
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            SubsetView.decodeDelimited = function decodeDelimited(reader) {
+                                if (!(reader instanceof $Reader))
+                                    reader = new $Reader(reader);
+                                return this.decode(reader, reader.uint32());
+                            };
+    
+                            /**
+                             * Verifies a SubsetView message.
+                             * @function verify
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.SubsetView
+                             * @static
+                             * @param {Object.<string,*>} message Plain object to verify
+                             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                             */
+                            SubsetView.verify = function verify(message) {
+                                if (typeof message !== "object" || message === null)
+                                    return "object expected";
+                                if (message.rowPrefixes != null && message.hasOwnProperty("rowPrefixes")) {
+                                    if (!Array.isArray(message.rowPrefixes))
+                                        return "rowPrefixes: array expected";
+                                    for (var i = 0; i < message.rowPrefixes.length; ++i)
+                                        if (!(message.rowPrefixes[i] && typeof message.rowPrefixes[i].length === "number" || $util.isString(message.rowPrefixes[i])))
+                                            return "rowPrefixes: buffer[] expected";
+                                }
+                                if (message.familySubsets != null && message.hasOwnProperty("familySubsets")) {
+                                    if (!$util.isObject(message.familySubsets))
+                                        return "familySubsets: object expected";
+                                    var key = Object.keys(message.familySubsets);
+                                    for (var i = 0; i < key.length; ++i) {
+                                        var error = $root.google.bigtable.admin.v2.AuthorizedView.FamilySubsets.verify(message.familySubsets[key[i]]);
+                                        if (error)
+                                            return "familySubsets." + error;
+                                    }
+                                }
+                                return null;
+                            };
+    
+                            /**
+                             * Creates a SubsetView message from a plain object. Also converts values to their respective internal types.
+                             * @function fromObject
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.SubsetView
+                             * @static
+                             * @param {Object.<string,*>} object Plain object
+                             * @returns {google.bigtable.admin.v2.AuthorizedView.SubsetView} SubsetView
+                             */
+                            SubsetView.fromObject = function fromObject(object) {
+                                if (object instanceof $root.google.bigtable.admin.v2.AuthorizedView.SubsetView)
+                                    return object;
+                                var message = new $root.google.bigtable.admin.v2.AuthorizedView.SubsetView();
+                                if (object.rowPrefixes) {
+                                    if (!Array.isArray(object.rowPrefixes))
+                                        throw TypeError(".google.bigtable.admin.v2.AuthorizedView.SubsetView.rowPrefixes: array expected");
+                                    message.rowPrefixes = [];
+                                    for (var i = 0; i < object.rowPrefixes.length; ++i)
+                                        if (typeof object.rowPrefixes[i] === "string")
+                                            $util.base64.decode(object.rowPrefixes[i], message.rowPrefixes[i] = $util.newBuffer($util.base64.length(object.rowPrefixes[i])), 0);
+                                        else if (object.rowPrefixes[i].length >= 0)
+                                            message.rowPrefixes[i] = object.rowPrefixes[i];
+                                }
+                                if (object.familySubsets) {
+                                    if (typeof object.familySubsets !== "object")
+                                        throw TypeError(".google.bigtable.admin.v2.AuthorizedView.SubsetView.familySubsets: object expected");
+                                    message.familySubsets = {};
+                                    for (var keys = Object.keys(object.familySubsets), i = 0; i < keys.length; ++i) {
+                                        if (typeof object.familySubsets[keys[i]] !== "object")
+                                            throw TypeError(".google.bigtable.admin.v2.AuthorizedView.SubsetView.familySubsets: object expected");
+                                        message.familySubsets[keys[i]] = $root.google.bigtable.admin.v2.AuthorizedView.FamilySubsets.fromObject(object.familySubsets[keys[i]]);
+                                    }
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Creates a plain object from a SubsetView message. Also converts values to other types if specified.
+                             * @function toObject
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.SubsetView
+                             * @static
+                             * @param {google.bigtable.admin.v2.AuthorizedView.SubsetView} message SubsetView
+                             * @param {$protobuf.IConversionOptions} [options] Conversion options
+                             * @returns {Object.<string,*>} Plain object
+                             */
+                            SubsetView.toObject = function toObject(message, options) {
+                                if (!options)
+                                    options = {};
+                                var object = {};
+                                if (options.arrays || options.defaults)
+                                    object.rowPrefixes = [];
+                                if (options.objects || options.defaults)
+                                    object.familySubsets = {};
+                                if (message.rowPrefixes && message.rowPrefixes.length) {
+                                    object.rowPrefixes = [];
+                                    for (var j = 0; j < message.rowPrefixes.length; ++j)
+                                        object.rowPrefixes[j] = options.bytes === String ? $util.base64.encode(message.rowPrefixes[j], 0, message.rowPrefixes[j].length) : options.bytes === Array ? Array.prototype.slice.call(message.rowPrefixes[j]) : message.rowPrefixes[j];
+                                }
+                                var keys2;
+                                if (message.familySubsets && (keys2 = Object.keys(message.familySubsets)).length) {
+                                    object.familySubsets = {};
+                                    for (var j = 0; j < keys2.length; ++j)
+                                        object.familySubsets[keys2[j]] = $root.google.bigtable.admin.v2.AuthorizedView.FamilySubsets.toObject(message.familySubsets[keys2[j]], options);
+                                }
+                                return object;
+                            };
+    
+                            /**
+                             * Converts this SubsetView to JSON.
+                             * @function toJSON
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.SubsetView
+                             * @instance
+                             * @returns {Object.<string,*>} JSON object
+                             */
+                            SubsetView.prototype.toJSON = function toJSON() {
+                                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            };
+    
+                            /**
+                             * Gets the default type url for SubsetView
+                             * @function getTypeUrl
+                             * @memberof google.bigtable.admin.v2.AuthorizedView.SubsetView
+                             * @static
+                             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                             * @returns {string} The default type url
+                             */
+                            SubsetView.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                if (typeUrlPrefix === undefined) {
+                                    typeUrlPrefix = "type.googleapis.com";
+                                }
+                                return typeUrlPrefix + "/google.bigtable.admin.v2.AuthorizedView.SubsetView";
+                            };
+    
+                            return SubsetView;
+                        })();
+    
+                        /**
+                         * ResponseView enum.
+                         * @name google.bigtable.admin.v2.AuthorizedView.ResponseView
+                         * @enum {number}
+                         * @property {number} RESPONSE_VIEW_UNSPECIFIED=0 RESPONSE_VIEW_UNSPECIFIED value
+                         * @property {number} NAME_ONLY=1 NAME_ONLY value
+                         * @property {number} BASIC=2 BASIC value
+                         * @property {number} FULL=3 FULL value
+                         */
+                        AuthorizedView.ResponseView = (function() {
+                            var valuesById = {}, values = Object.create(valuesById);
+                            values[valuesById[0] = "RESPONSE_VIEW_UNSPECIFIED"] = 0;
+                            values[valuesById[1] = "NAME_ONLY"] = 1;
+                            values[valuesById[2] = "BASIC"] = 2;
+                            values[valuesById[3] = "FULL"] = 3;
+                            return values;
+                        })();
+    
+                        return AuthorizedView;
                     })();
     
                     v2.ColumnFamily = (function() {
@@ -22878,6 +27026,7 @@
                          * @memberof google.bigtable.admin.v2
                          * @interface IColumnFamily
                          * @property {google.bigtable.admin.v2.IGcRule|null} [gcRule] ColumnFamily gcRule
+                         * @property {google.bigtable.admin.v2.IType|null} [valueType] ColumnFamily valueType
                          */
     
                         /**
@@ -22902,6 +27051,14 @@
                          * @instance
                          */
                         ColumnFamily.prototype.gcRule = null;
+    
+                        /**
+                         * ColumnFamily valueType.
+                         * @member {google.bigtable.admin.v2.IType|null|undefined} valueType
+                         * @memberof google.bigtable.admin.v2.ColumnFamily
+                         * @instance
+                         */
+                        ColumnFamily.prototype.valueType = null;
     
                         /**
                          * Creates a new ColumnFamily instance using the specified properties.
@@ -22929,6 +27086,8 @@
                                 writer = $Writer.create();
                             if (message.gcRule != null && Object.hasOwnProperty.call(message, "gcRule"))
                                 $root.google.bigtable.admin.v2.GcRule.encode(message.gcRule, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                            if (message.valueType != null && Object.hasOwnProperty.call(message, "valueType"))
+                                $root.google.bigtable.admin.v2.Type.encode(message.valueType, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                             return writer;
                         };
     
@@ -22965,6 +27124,10 @@
                                 switch (tag >>> 3) {
                                 case 1: {
                                         message.gcRule = $root.google.bigtable.admin.v2.GcRule.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 3: {
+                                        message.valueType = $root.google.bigtable.admin.v2.Type.decode(reader, reader.uint32());
                                         break;
                                     }
                                 default:
@@ -23007,6 +27170,11 @@
                                 if (error)
                                     return "gcRule." + error;
                             }
+                            if (message.valueType != null && message.hasOwnProperty("valueType")) {
+                                var error = $root.google.bigtable.admin.v2.Type.verify(message.valueType);
+                                if (error)
+                                    return "valueType." + error;
+                            }
                             return null;
                         };
     
@@ -23027,6 +27195,11 @@
                                     throw TypeError(".google.bigtable.admin.v2.ColumnFamily.gcRule: object expected");
                                 message.gcRule = $root.google.bigtable.admin.v2.GcRule.fromObject(object.gcRule);
                             }
+                            if (object.valueType != null) {
+                                if (typeof object.valueType !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.ColumnFamily.valueType: object expected");
+                                message.valueType = $root.google.bigtable.admin.v2.Type.fromObject(object.valueType);
+                            }
                             return message;
                         };
     
@@ -23043,10 +27216,14 @@
                             if (!options)
                                 options = {};
                             var object = {};
-                            if (options.defaults)
+                            if (options.defaults) {
                                 object.gcRule = null;
+                                object.valueType = null;
+                            }
                             if (message.gcRule != null && message.hasOwnProperty("gcRule"))
                                 object.gcRule = $root.google.bigtable.admin.v2.GcRule.toObject(message.gcRule, options);
+                            if (message.valueType != null && message.hasOwnProperty("valueType"))
+                                object.valueType = $root.google.bigtable.admin.v2.Type.toObject(message.valueType, options);
                             return object;
                         };
     
@@ -25341,6 +29518,2016 @@
                         return values;
                     })();
     
+                    v2.Type = (function() {
+    
+                        /**
+                         * Properties of a Type.
+                         * @memberof google.bigtable.admin.v2
+                         * @interface IType
+                         * @property {google.bigtable.admin.v2.Type.IBytes|null} [bytesType] Type bytesType
+                         * @property {google.bigtable.admin.v2.Type.IInt64|null} [int64Type] Type int64Type
+                         * @property {google.bigtable.admin.v2.Type.IAggregate|null} [aggregateType] Type aggregateType
+                         */
+    
+                        /**
+                         * Constructs a new Type.
+                         * @memberof google.bigtable.admin.v2
+                         * @classdesc Represents a Type.
+                         * @implements IType
+                         * @constructor
+                         * @param {google.bigtable.admin.v2.IType=} [properties] Properties to set
+                         */
+                        function Type(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * Type bytesType.
+                         * @member {google.bigtable.admin.v2.Type.IBytes|null|undefined} bytesType
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @instance
+                         */
+                        Type.prototype.bytesType = null;
+    
+                        /**
+                         * Type int64Type.
+                         * @member {google.bigtable.admin.v2.Type.IInt64|null|undefined} int64Type
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @instance
+                         */
+                        Type.prototype.int64Type = null;
+    
+                        /**
+                         * Type aggregateType.
+                         * @member {google.bigtable.admin.v2.Type.IAggregate|null|undefined} aggregateType
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @instance
+                         */
+                        Type.prototype.aggregateType = null;
+    
+                        // OneOf field names bound to virtual getters and setters
+                        var $oneOfFields;
+    
+                        /**
+                         * Type kind.
+                         * @member {"bytesType"|"int64Type"|"aggregateType"|undefined} kind
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @instance
+                         */
+                        Object.defineProperty(Type.prototype, "kind", {
+                            get: $util.oneOfGetter($oneOfFields = ["bytesType", "int64Type", "aggregateType"]),
+                            set: $util.oneOfSetter($oneOfFields)
+                        });
+    
+                        /**
+                         * Creates a new Type instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @static
+                         * @param {google.bigtable.admin.v2.IType=} [properties] Properties to set
+                         * @returns {google.bigtable.admin.v2.Type} Type instance
+                         */
+                        Type.create = function create(properties) {
+                            return new Type(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified Type message. Does not implicitly {@link google.bigtable.admin.v2.Type.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @static
+                         * @param {google.bigtable.admin.v2.IType} message Type message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        Type.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.bytesType != null && Object.hasOwnProperty.call(message, "bytesType"))
+                                $root.google.bigtable.admin.v2.Type.Bytes.encode(message.bytesType, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                            if (message.int64Type != null && Object.hasOwnProperty.call(message, "int64Type"))
+                                $root.google.bigtable.admin.v2.Type.Int64.encode(message.int64Type, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                            if (message.aggregateType != null && Object.hasOwnProperty.call(message, "aggregateType"))
+                                $root.google.bigtable.admin.v2.Type.Aggregate.encode(message.aggregateType, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified Type message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Type.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @static
+                         * @param {google.bigtable.admin.v2.IType} message Type message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        Type.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes a Type message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.admin.v2.Type} Type
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        Type.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Type();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        message.bytesType = $root.google.bigtable.admin.v2.Type.Bytes.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 5: {
+                                        message.int64Type = $root.google.bigtable.admin.v2.Type.Int64.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 6: {
+                                        message.aggregateType = $root.google.bigtable.admin.v2.Type.Aggregate.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes a Type message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.admin.v2.Type} Type
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        Type.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies a Type message.
+                         * @function verify
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        Type.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            var properties = {};
+                            if (message.bytesType != null && message.hasOwnProperty("bytesType")) {
+                                properties.kind = 1;
+                                {
+                                    var error = $root.google.bigtable.admin.v2.Type.Bytes.verify(message.bytesType);
+                                    if (error)
+                                        return "bytesType." + error;
+                                }
+                            }
+                            if (message.int64Type != null && message.hasOwnProperty("int64Type")) {
+                                if (properties.kind === 1)
+                                    return "kind: multiple values";
+                                properties.kind = 1;
+                                {
+                                    var error = $root.google.bigtable.admin.v2.Type.Int64.verify(message.int64Type);
+                                    if (error)
+                                        return "int64Type." + error;
+                                }
+                            }
+                            if (message.aggregateType != null && message.hasOwnProperty("aggregateType")) {
+                                if (properties.kind === 1)
+                                    return "kind: multiple values";
+                                properties.kind = 1;
+                                {
+                                    var error = $root.google.bigtable.admin.v2.Type.Aggregate.verify(message.aggregateType);
+                                    if (error)
+                                        return "aggregateType." + error;
+                                }
+                            }
+                            return null;
+                        };
+    
+                        /**
+                         * Creates a Type message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.admin.v2.Type} Type
+                         */
+                        Type.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.admin.v2.Type)
+                                return object;
+                            var message = new $root.google.bigtable.admin.v2.Type();
+                            if (object.bytesType != null) {
+                                if (typeof object.bytesType !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.Type.bytesType: object expected");
+                                message.bytesType = $root.google.bigtable.admin.v2.Type.Bytes.fromObject(object.bytesType);
+                            }
+                            if (object.int64Type != null) {
+                                if (typeof object.int64Type !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.Type.int64Type: object expected");
+                                message.int64Type = $root.google.bigtable.admin.v2.Type.Int64.fromObject(object.int64Type);
+                            }
+                            if (object.aggregateType != null) {
+                                if (typeof object.aggregateType !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.Type.aggregateType: object expected");
+                                message.aggregateType = $root.google.bigtable.admin.v2.Type.Aggregate.fromObject(object.aggregateType);
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from a Type message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @static
+                         * @param {google.bigtable.admin.v2.Type} message Type
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        Type.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (message.bytesType != null && message.hasOwnProperty("bytesType")) {
+                                object.bytesType = $root.google.bigtable.admin.v2.Type.Bytes.toObject(message.bytesType, options);
+                                if (options.oneofs)
+                                    object.kind = "bytesType";
+                            }
+                            if (message.int64Type != null && message.hasOwnProperty("int64Type")) {
+                                object.int64Type = $root.google.bigtable.admin.v2.Type.Int64.toObject(message.int64Type, options);
+                                if (options.oneofs)
+                                    object.kind = "int64Type";
+                            }
+                            if (message.aggregateType != null && message.hasOwnProperty("aggregateType")) {
+                                object.aggregateType = $root.google.bigtable.admin.v2.Type.Aggregate.toObject(message.aggregateType, options);
+                                if (options.oneofs)
+                                    object.kind = "aggregateType";
+                            }
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this Type to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        Type.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for Type
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        Type.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.admin.v2.Type";
+                        };
+    
+                        Type.Bytes = (function() {
+    
+                            /**
+                             * Properties of a Bytes.
+                             * @memberof google.bigtable.admin.v2.Type
+                             * @interface IBytes
+                             * @property {google.bigtable.admin.v2.Type.Bytes.IEncoding|null} [encoding] Bytes encoding
+                             */
+    
+                            /**
+                             * Constructs a new Bytes.
+                             * @memberof google.bigtable.admin.v2.Type
+                             * @classdesc Represents a Bytes.
+                             * @implements IBytes
+                             * @constructor
+                             * @param {google.bigtable.admin.v2.Type.IBytes=} [properties] Properties to set
+                             */
+                            function Bytes(properties) {
+                                if (properties)
+                                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                        if (properties[keys[i]] != null)
+                                            this[keys[i]] = properties[keys[i]];
+                            }
+    
+                            /**
+                             * Bytes encoding.
+                             * @member {google.bigtable.admin.v2.Type.Bytes.IEncoding|null|undefined} encoding
+                             * @memberof google.bigtable.admin.v2.Type.Bytes
+                             * @instance
+                             */
+                            Bytes.prototype.encoding = null;
+    
+                            /**
+                             * Creates a new Bytes instance using the specified properties.
+                             * @function create
+                             * @memberof google.bigtable.admin.v2.Type.Bytes
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.IBytes=} [properties] Properties to set
+                             * @returns {google.bigtable.admin.v2.Type.Bytes} Bytes instance
+                             */
+                            Bytes.create = function create(properties) {
+                                return new Bytes(properties);
+                            };
+    
+                            /**
+                             * Encodes the specified Bytes message. Does not implicitly {@link google.bigtable.admin.v2.Type.Bytes.verify|verify} messages.
+                             * @function encode
+                             * @memberof google.bigtable.admin.v2.Type.Bytes
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.IBytes} message Bytes message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            Bytes.encode = function encode(message, writer) {
+                                if (!writer)
+                                    writer = $Writer.create();
+                                if (message.encoding != null && Object.hasOwnProperty.call(message, "encoding"))
+                                    $root.google.bigtable.admin.v2.Type.Bytes.Encoding.encode(message.encoding, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                                return writer;
+                            };
+    
+                            /**
+                             * Encodes the specified Bytes message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Type.Bytes.verify|verify} messages.
+                             * @function encodeDelimited
+                             * @memberof google.bigtable.admin.v2.Type.Bytes
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.IBytes} message Bytes message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            Bytes.encodeDelimited = function encodeDelimited(message, writer) {
+                                return this.encode(message, writer).ldelim();
+                            };
+    
+                            /**
+                             * Decodes a Bytes message from the specified reader or buffer.
+                             * @function decode
+                             * @memberof google.bigtable.admin.v2.Type.Bytes
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @param {number} [length] Message length if known beforehand
+                             * @returns {google.bigtable.admin.v2.Type.Bytes} Bytes
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            Bytes.decode = function decode(reader, length) {
+                                if (!(reader instanceof $Reader))
+                                    reader = $Reader.create(reader);
+                                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Type.Bytes();
+                                while (reader.pos < end) {
+                                    var tag = reader.uint32();
+                                    switch (tag >>> 3) {
+                                    case 1: {
+                                            message.encoding = $root.google.bigtable.admin.v2.Type.Bytes.Encoding.decode(reader, reader.uint32());
+                                            break;
+                                        }
+                                    default:
+                                        reader.skipType(tag & 7);
+                                        break;
+                                    }
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Decodes a Bytes message from the specified reader or buffer, length delimited.
+                             * @function decodeDelimited
+                             * @memberof google.bigtable.admin.v2.Type.Bytes
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @returns {google.bigtable.admin.v2.Type.Bytes} Bytes
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            Bytes.decodeDelimited = function decodeDelimited(reader) {
+                                if (!(reader instanceof $Reader))
+                                    reader = new $Reader(reader);
+                                return this.decode(reader, reader.uint32());
+                            };
+    
+                            /**
+                             * Verifies a Bytes message.
+                             * @function verify
+                             * @memberof google.bigtable.admin.v2.Type.Bytes
+                             * @static
+                             * @param {Object.<string,*>} message Plain object to verify
+                             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                             */
+                            Bytes.verify = function verify(message) {
+                                if (typeof message !== "object" || message === null)
+                                    return "object expected";
+                                if (message.encoding != null && message.hasOwnProperty("encoding")) {
+                                    var error = $root.google.bigtable.admin.v2.Type.Bytes.Encoding.verify(message.encoding);
+                                    if (error)
+                                        return "encoding." + error;
+                                }
+                                return null;
+                            };
+    
+                            /**
+                             * Creates a Bytes message from a plain object. Also converts values to their respective internal types.
+                             * @function fromObject
+                             * @memberof google.bigtable.admin.v2.Type.Bytes
+                             * @static
+                             * @param {Object.<string,*>} object Plain object
+                             * @returns {google.bigtable.admin.v2.Type.Bytes} Bytes
+                             */
+                            Bytes.fromObject = function fromObject(object) {
+                                if (object instanceof $root.google.bigtable.admin.v2.Type.Bytes)
+                                    return object;
+                                var message = new $root.google.bigtable.admin.v2.Type.Bytes();
+                                if (object.encoding != null) {
+                                    if (typeof object.encoding !== "object")
+                                        throw TypeError(".google.bigtable.admin.v2.Type.Bytes.encoding: object expected");
+                                    message.encoding = $root.google.bigtable.admin.v2.Type.Bytes.Encoding.fromObject(object.encoding);
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Creates a plain object from a Bytes message. Also converts values to other types if specified.
+                             * @function toObject
+                             * @memberof google.bigtable.admin.v2.Type.Bytes
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.Bytes} message Bytes
+                             * @param {$protobuf.IConversionOptions} [options] Conversion options
+                             * @returns {Object.<string,*>} Plain object
+                             */
+                            Bytes.toObject = function toObject(message, options) {
+                                if (!options)
+                                    options = {};
+                                var object = {};
+                                if (options.defaults)
+                                    object.encoding = null;
+                                if (message.encoding != null && message.hasOwnProperty("encoding"))
+                                    object.encoding = $root.google.bigtable.admin.v2.Type.Bytes.Encoding.toObject(message.encoding, options);
+                                return object;
+                            };
+    
+                            /**
+                             * Converts this Bytes to JSON.
+                             * @function toJSON
+                             * @memberof google.bigtable.admin.v2.Type.Bytes
+                             * @instance
+                             * @returns {Object.<string,*>} JSON object
+                             */
+                            Bytes.prototype.toJSON = function toJSON() {
+                                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            };
+    
+                            /**
+                             * Gets the default type url for Bytes
+                             * @function getTypeUrl
+                             * @memberof google.bigtable.admin.v2.Type.Bytes
+                             * @static
+                             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                             * @returns {string} The default type url
+                             */
+                            Bytes.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                if (typeUrlPrefix === undefined) {
+                                    typeUrlPrefix = "type.googleapis.com";
+                                }
+                                return typeUrlPrefix + "/google.bigtable.admin.v2.Type.Bytes";
+                            };
+    
+                            Bytes.Encoding = (function() {
+    
+                                /**
+                                 * Properties of an Encoding.
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes
+                                 * @interface IEncoding
+                                 * @property {google.bigtable.admin.v2.Type.Bytes.Encoding.IRaw|null} [raw] Encoding raw
+                                 */
+    
+                                /**
+                                 * Constructs a new Encoding.
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes
+                                 * @classdesc Represents an Encoding.
+                                 * @implements IEncoding
+                                 * @constructor
+                                 * @param {google.bigtable.admin.v2.Type.Bytes.IEncoding=} [properties] Properties to set
+                                 */
+                                function Encoding(properties) {
+                                    if (properties)
+                                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                            if (properties[keys[i]] != null)
+                                                this[keys[i]] = properties[keys[i]];
+                                }
+    
+                                /**
+                                 * Encoding raw.
+                                 * @member {google.bigtable.admin.v2.Type.Bytes.Encoding.IRaw|null|undefined} raw
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                 * @instance
+                                 */
+                                Encoding.prototype.raw = null;
+    
+                                // OneOf field names bound to virtual getters and setters
+                                var $oneOfFields;
+    
+                                /**
+                                 * Encoding encoding.
+                                 * @member {"raw"|undefined} encoding
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                 * @instance
+                                 */
+                                Object.defineProperty(Encoding.prototype, "encoding", {
+                                    get: $util.oneOfGetter($oneOfFields = ["raw"]),
+                                    set: $util.oneOfSetter($oneOfFields)
+                                });
+    
+                                /**
+                                 * Creates a new Encoding instance using the specified properties.
+                                 * @function create
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.Bytes.IEncoding=} [properties] Properties to set
+                                 * @returns {google.bigtable.admin.v2.Type.Bytes.Encoding} Encoding instance
+                                 */
+                                Encoding.create = function create(properties) {
+                                    return new Encoding(properties);
+                                };
+    
+                                /**
+                                 * Encodes the specified Encoding message. Does not implicitly {@link google.bigtable.admin.v2.Type.Bytes.Encoding.verify|verify} messages.
+                                 * @function encode
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.Bytes.IEncoding} message Encoding message or plain object to encode
+                                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                                 * @returns {$protobuf.Writer} Writer
+                                 */
+                                Encoding.encode = function encode(message, writer) {
+                                    if (!writer)
+                                        writer = $Writer.create();
+                                    if (message.raw != null && Object.hasOwnProperty.call(message, "raw"))
+                                        $root.google.bigtable.admin.v2.Type.Bytes.Encoding.Raw.encode(message.raw, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                                    return writer;
+                                };
+    
+                                /**
+                                 * Encodes the specified Encoding message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Type.Bytes.Encoding.verify|verify} messages.
+                                 * @function encodeDelimited
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.Bytes.IEncoding} message Encoding message or plain object to encode
+                                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                                 * @returns {$protobuf.Writer} Writer
+                                 */
+                                Encoding.encodeDelimited = function encodeDelimited(message, writer) {
+                                    return this.encode(message, writer).ldelim();
+                                };
+    
+                                /**
+                                 * Decodes an Encoding message from the specified reader or buffer.
+                                 * @function decode
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                 * @static
+                                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                 * @param {number} [length] Message length if known beforehand
+                                 * @returns {google.bigtable.admin.v2.Type.Bytes.Encoding} Encoding
+                                 * @throws {Error} If the payload is not a reader or valid buffer
+                                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                 */
+                                Encoding.decode = function decode(reader, length) {
+                                    if (!(reader instanceof $Reader))
+                                        reader = $Reader.create(reader);
+                                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Type.Bytes.Encoding();
+                                    while (reader.pos < end) {
+                                        var tag = reader.uint32();
+                                        switch (tag >>> 3) {
+                                        case 1: {
+                                                message.raw = $root.google.bigtable.admin.v2.Type.Bytes.Encoding.Raw.decode(reader, reader.uint32());
+                                                break;
+                                            }
+                                        default:
+                                            reader.skipType(tag & 7);
+                                            break;
+                                        }
+                                    }
+                                    return message;
+                                };
+    
+                                /**
+                                 * Decodes an Encoding message from the specified reader or buffer, length delimited.
+                                 * @function decodeDelimited
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                 * @static
+                                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                 * @returns {google.bigtable.admin.v2.Type.Bytes.Encoding} Encoding
+                                 * @throws {Error} If the payload is not a reader or valid buffer
+                                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                 */
+                                Encoding.decodeDelimited = function decodeDelimited(reader) {
+                                    if (!(reader instanceof $Reader))
+                                        reader = new $Reader(reader);
+                                    return this.decode(reader, reader.uint32());
+                                };
+    
+                                /**
+                                 * Verifies an Encoding message.
+                                 * @function verify
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                 * @static
+                                 * @param {Object.<string,*>} message Plain object to verify
+                                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                                 */
+                                Encoding.verify = function verify(message) {
+                                    if (typeof message !== "object" || message === null)
+                                        return "object expected";
+                                    var properties = {};
+                                    if (message.raw != null && message.hasOwnProperty("raw")) {
+                                        properties.encoding = 1;
+                                        {
+                                            var error = $root.google.bigtable.admin.v2.Type.Bytes.Encoding.Raw.verify(message.raw);
+                                            if (error)
+                                                return "raw." + error;
+                                        }
+                                    }
+                                    return null;
+                                };
+    
+                                /**
+                                 * Creates an Encoding message from a plain object. Also converts values to their respective internal types.
+                                 * @function fromObject
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                 * @static
+                                 * @param {Object.<string,*>} object Plain object
+                                 * @returns {google.bigtable.admin.v2.Type.Bytes.Encoding} Encoding
+                                 */
+                                Encoding.fromObject = function fromObject(object) {
+                                    if (object instanceof $root.google.bigtable.admin.v2.Type.Bytes.Encoding)
+                                        return object;
+                                    var message = new $root.google.bigtable.admin.v2.Type.Bytes.Encoding();
+                                    if (object.raw != null) {
+                                        if (typeof object.raw !== "object")
+                                            throw TypeError(".google.bigtable.admin.v2.Type.Bytes.Encoding.raw: object expected");
+                                        message.raw = $root.google.bigtable.admin.v2.Type.Bytes.Encoding.Raw.fromObject(object.raw);
+                                    }
+                                    return message;
+                                };
+    
+                                /**
+                                 * Creates a plain object from an Encoding message. Also converts values to other types if specified.
+                                 * @function toObject
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.Bytes.Encoding} message Encoding
+                                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                                 * @returns {Object.<string,*>} Plain object
+                                 */
+                                Encoding.toObject = function toObject(message, options) {
+                                    if (!options)
+                                        options = {};
+                                    var object = {};
+                                    if (message.raw != null && message.hasOwnProperty("raw")) {
+                                        object.raw = $root.google.bigtable.admin.v2.Type.Bytes.Encoding.Raw.toObject(message.raw, options);
+                                        if (options.oneofs)
+                                            object.encoding = "raw";
+                                    }
+                                    return object;
+                                };
+    
+                                /**
+                                 * Converts this Encoding to JSON.
+                                 * @function toJSON
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                 * @instance
+                                 * @returns {Object.<string,*>} JSON object
+                                 */
+                                Encoding.prototype.toJSON = function toJSON() {
+                                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                                };
+    
+                                /**
+                                 * Gets the default type url for Encoding
+                                 * @function getTypeUrl
+                                 * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                 * @static
+                                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                                 * @returns {string} The default type url
+                                 */
+                                Encoding.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                    if (typeUrlPrefix === undefined) {
+                                        typeUrlPrefix = "type.googleapis.com";
+                                    }
+                                    return typeUrlPrefix + "/google.bigtable.admin.v2.Type.Bytes.Encoding";
+                                };
+    
+                                Encoding.Raw = (function() {
+    
+                                    /**
+                                     * Properties of a Raw.
+                                     * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                     * @interface IRaw
+                                     */
+    
+                                    /**
+                                     * Constructs a new Raw.
+                                     * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding
+                                     * @classdesc Represents a Raw.
+                                     * @implements IRaw
+                                     * @constructor
+                                     * @param {google.bigtable.admin.v2.Type.Bytes.Encoding.IRaw=} [properties] Properties to set
+                                     */
+                                    function Raw(properties) {
+                                        if (properties)
+                                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                                if (properties[keys[i]] != null)
+                                                    this[keys[i]] = properties[keys[i]];
+                                    }
+    
+                                    /**
+                                     * Creates a new Raw instance using the specified properties.
+                                     * @function create
+                                     * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding.Raw
+                                     * @static
+                                     * @param {google.bigtable.admin.v2.Type.Bytes.Encoding.IRaw=} [properties] Properties to set
+                                     * @returns {google.bigtable.admin.v2.Type.Bytes.Encoding.Raw} Raw instance
+                                     */
+                                    Raw.create = function create(properties) {
+                                        return new Raw(properties);
+                                    };
+    
+                                    /**
+                                     * Encodes the specified Raw message. Does not implicitly {@link google.bigtable.admin.v2.Type.Bytes.Encoding.Raw.verify|verify} messages.
+                                     * @function encode
+                                     * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding.Raw
+                                     * @static
+                                     * @param {google.bigtable.admin.v2.Type.Bytes.Encoding.IRaw} message Raw message or plain object to encode
+                                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                                     * @returns {$protobuf.Writer} Writer
+                                     */
+                                    Raw.encode = function encode(message, writer) {
+                                        if (!writer)
+                                            writer = $Writer.create();
+                                        return writer;
+                                    };
+    
+                                    /**
+                                     * Encodes the specified Raw message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Type.Bytes.Encoding.Raw.verify|verify} messages.
+                                     * @function encodeDelimited
+                                     * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding.Raw
+                                     * @static
+                                     * @param {google.bigtable.admin.v2.Type.Bytes.Encoding.IRaw} message Raw message or plain object to encode
+                                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                                     * @returns {$protobuf.Writer} Writer
+                                     */
+                                    Raw.encodeDelimited = function encodeDelimited(message, writer) {
+                                        return this.encode(message, writer).ldelim();
+                                    };
+    
+                                    /**
+                                     * Decodes a Raw message from the specified reader or buffer.
+                                     * @function decode
+                                     * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding.Raw
+                                     * @static
+                                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                     * @param {number} [length] Message length if known beforehand
+                                     * @returns {google.bigtable.admin.v2.Type.Bytes.Encoding.Raw} Raw
+                                     * @throws {Error} If the payload is not a reader or valid buffer
+                                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                     */
+                                    Raw.decode = function decode(reader, length) {
+                                        if (!(reader instanceof $Reader))
+                                            reader = $Reader.create(reader);
+                                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Type.Bytes.Encoding.Raw();
+                                        while (reader.pos < end) {
+                                            var tag = reader.uint32();
+                                            switch (tag >>> 3) {
+                                            default:
+                                                reader.skipType(tag & 7);
+                                                break;
+                                            }
+                                        }
+                                        return message;
+                                    };
+    
+                                    /**
+                                     * Decodes a Raw message from the specified reader or buffer, length delimited.
+                                     * @function decodeDelimited
+                                     * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding.Raw
+                                     * @static
+                                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                     * @returns {google.bigtable.admin.v2.Type.Bytes.Encoding.Raw} Raw
+                                     * @throws {Error} If the payload is not a reader or valid buffer
+                                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                     */
+                                    Raw.decodeDelimited = function decodeDelimited(reader) {
+                                        if (!(reader instanceof $Reader))
+                                            reader = new $Reader(reader);
+                                        return this.decode(reader, reader.uint32());
+                                    };
+    
+                                    /**
+                                     * Verifies a Raw message.
+                                     * @function verify
+                                     * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding.Raw
+                                     * @static
+                                     * @param {Object.<string,*>} message Plain object to verify
+                                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                                     */
+                                    Raw.verify = function verify(message) {
+                                        if (typeof message !== "object" || message === null)
+                                            return "object expected";
+                                        return null;
+                                    };
+    
+                                    /**
+                                     * Creates a Raw message from a plain object. Also converts values to their respective internal types.
+                                     * @function fromObject
+                                     * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding.Raw
+                                     * @static
+                                     * @param {Object.<string,*>} object Plain object
+                                     * @returns {google.bigtable.admin.v2.Type.Bytes.Encoding.Raw} Raw
+                                     */
+                                    Raw.fromObject = function fromObject(object) {
+                                        if (object instanceof $root.google.bigtable.admin.v2.Type.Bytes.Encoding.Raw)
+                                            return object;
+                                        return new $root.google.bigtable.admin.v2.Type.Bytes.Encoding.Raw();
+                                    };
+    
+                                    /**
+                                     * Creates a plain object from a Raw message. Also converts values to other types if specified.
+                                     * @function toObject
+                                     * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding.Raw
+                                     * @static
+                                     * @param {google.bigtable.admin.v2.Type.Bytes.Encoding.Raw} message Raw
+                                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                                     * @returns {Object.<string,*>} Plain object
+                                     */
+                                    Raw.toObject = function toObject() {
+                                        return {};
+                                    };
+    
+                                    /**
+                                     * Converts this Raw to JSON.
+                                     * @function toJSON
+                                     * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding.Raw
+                                     * @instance
+                                     * @returns {Object.<string,*>} JSON object
+                                     */
+                                    Raw.prototype.toJSON = function toJSON() {
+                                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                                    };
+    
+                                    /**
+                                     * Gets the default type url for Raw
+                                     * @function getTypeUrl
+                                     * @memberof google.bigtable.admin.v2.Type.Bytes.Encoding.Raw
+                                     * @static
+                                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                                     * @returns {string} The default type url
+                                     */
+                                    Raw.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                        if (typeUrlPrefix === undefined) {
+                                            typeUrlPrefix = "type.googleapis.com";
+                                        }
+                                        return typeUrlPrefix + "/google.bigtable.admin.v2.Type.Bytes.Encoding.Raw";
+                                    };
+    
+                                    return Raw;
+                                })();
+    
+                                return Encoding;
+                            })();
+    
+                            return Bytes;
+                        })();
+    
+                        Type.Int64 = (function() {
+    
+                            /**
+                             * Properties of an Int64.
+                             * @memberof google.bigtable.admin.v2.Type
+                             * @interface IInt64
+                             * @property {google.bigtable.admin.v2.Type.Int64.IEncoding|null} [encoding] Int64 encoding
+                             */
+    
+                            /**
+                             * Constructs a new Int64.
+                             * @memberof google.bigtable.admin.v2.Type
+                             * @classdesc Represents an Int64.
+                             * @implements IInt64
+                             * @constructor
+                             * @param {google.bigtable.admin.v2.Type.IInt64=} [properties] Properties to set
+                             */
+                            function Int64(properties) {
+                                if (properties)
+                                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                        if (properties[keys[i]] != null)
+                                            this[keys[i]] = properties[keys[i]];
+                            }
+    
+                            /**
+                             * Int64 encoding.
+                             * @member {google.bigtable.admin.v2.Type.Int64.IEncoding|null|undefined} encoding
+                             * @memberof google.bigtable.admin.v2.Type.Int64
+                             * @instance
+                             */
+                            Int64.prototype.encoding = null;
+    
+                            /**
+                             * Creates a new Int64 instance using the specified properties.
+                             * @function create
+                             * @memberof google.bigtable.admin.v2.Type.Int64
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.IInt64=} [properties] Properties to set
+                             * @returns {google.bigtable.admin.v2.Type.Int64} Int64 instance
+                             */
+                            Int64.create = function create(properties) {
+                                return new Int64(properties);
+                            };
+    
+                            /**
+                             * Encodes the specified Int64 message. Does not implicitly {@link google.bigtable.admin.v2.Type.Int64.verify|verify} messages.
+                             * @function encode
+                             * @memberof google.bigtable.admin.v2.Type.Int64
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.IInt64} message Int64 message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            Int64.encode = function encode(message, writer) {
+                                if (!writer)
+                                    writer = $Writer.create();
+                                if (message.encoding != null && Object.hasOwnProperty.call(message, "encoding"))
+                                    $root.google.bigtable.admin.v2.Type.Int64.Encoding.encode(message.encoding, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                                return writer;
+                            };
+    
+                            /**
+                             * Encodes the specified Int64 message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Type.Int64.verify|verify} messages.
+                             * @function encodeDelimited
+                             * @memberof google.bigtable.admin.v2.Type.Int64
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.IInt64} message Int64 message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            Int64.encodeDelimited = function encodeDelimited(message, writer) {
+                                return this.encode(message, writer).ldelim();
+                            };
+    
+                            /**
+                             * Decodes an Int64 message from the specified reader or buffer.
+                             * @function decode
+                             * @memberof google.bigtable.admin.v2.Type.Int64
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @param {number} [length] Message length if known beforehand
+                             * @returns {google.bigtable.admin.v2.Type.Int64} Int64
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            Int64.decode = function decode(reader, length) {
+                                if (!(reader instanceof $Reader))
+                                    reader = $Reader.create(reader);
+                                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Type.Int64();
+                                while (reader.pos < end) {
+                                    var tag = reader.uint32();
+                                    switch (tag >>> 3) {
+                                    case 1: {
+                                            message.encoding = $root.google.bigtable.admin.v2.Type.Int64.Encoding.decode(reader, reader.uint32());
+                                            break;
+                                        }
+                                    default:
+                                        reader.skipType(tag & 7);
+                                        break;
+                                    }
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Decodes an Int64 message from the specified reader or buffer, length delimited.
+                             * @function decodeDelimited
+                             * @memberof google.bigtable.admin.v2.Type.Int64
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @returns {google.bigtable.admin.v2.Type.Int64} Int64
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            Int64.decodeDelimited = function decodeDelimited(reader) {
+                                if (!(reader instanceof $Reader))
+                                    reader = new $Reader(reader);
+                                return this.decode(reader, reader.uint32());
+                            };
+    
+                            /**
+                             * Verifies an Int64 message.
+                             * @function verify
+                             * @memberof google.bigtable.admin.v2.Type.Int64
+                             * @static
+                             * @param {Object.<string,*>} message Plain object to verify
+                             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                             */
+                            Int64.verify = function verify(message) {
+                                if (typeof message !== "object" || message === null)
+                                    return "object expected";
+                                if (message.encoding != null && message.hasOwnProperty("encoding")) {
+                                    var error = $root.google.bigtable.admin.v2.Type.Int64.Encoding.verify(message.encoding);
+                                    if (error)
+                                        return "encoding." + error;
+                                }
+                                return null;
+                            };
+    
+                            /**
+                             * Creates an Int64 message from a plain object. Also converts values to their respective internal types.
+                             * @function fromObject
+                             * @memberof google.bigtable.admin.v2.Type.Int64
+                             * @static
+                             * @param {Object.<string,*>} object Plain object
+                             * @returns {google.bigtable.admin.v2.Type.Int64} Int64
+                             */
+                            Int64.fromObject = function fromObject(object) {
+                                if (object instanceof $root.google.bigtable.admin.v2.Type.Int64)
+                                    return object;
+                                var message = new $root.google.bigtable.admin.v2.Type.Int64();
+                                if (object.encoding != null) {
+                                    if (typeof object.encoding !== "object")
+                                        throw TypeError(".google.bigtable.admin.v2.Type.Int64.encoding: object expected");
+                                    message.encoding = $root.google.bigtable.admin.v2.Type.Int64.Encoding.fromObject(object.encoding);
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Creates a plain object from an Int64 message. Also converts values to other types if specified.
+                             * @function toObject
+                             * @memberof google.bigtable.admin.v2.Type.Int64
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.Int64} message Int64
+                             * @param {$protobuf.IConversionOptions} [options] Conversion options
+                             * @returns {Object.<string,*>} Plain object
+                             */
+                            Int64.toObject = function toObject(message, options) {
+                                if (!options)
+                                    options = {};
+                                var object = {};
+                                if (options.defaults)
+                                    object.encoding = null;
+                                if (message.encoding != null && message.hasOwnProperty("encoding"))
+                                    object.encoding = $root.google.bigtable.admin.v2.Type.Int64.Encoding.toObject(message.encoding, options);
+                                return object;
+                            };
+    
+                            /**
+                             * Converts this Int64 to JSON.
+                             * @function toJSON
+                             * @memberof google.bigtable.admin.v2.Type.Int64
+                             * @instance
+                             * @returns {Object.<string,*>} JSON object
+                             */
+                            Int64.prototype.toJSON = function toJSON() {
+                                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            };
+    
+                            /**
+                             * Gets the default type url for Int64
+                             * @function getTypeUrl
+                             * @memberof google.bigtable.admin.v2.Type.Int64
+                             * @static
+                             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                             * @returns {string} The default type url
+                             */
+                            Int64.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                if (typeUrlPrefix === undefined) {
+                                    typeUrlPrefix = "type.googleapis.com";
+                                }
+                                return typeUrlPrefix + "/google.bigtable.admin.v2.Type.Int64";
+                            };
+    
+                            Int64.Encoding = (function() {
+    
+                                /**
+                                 * Properties of an Encoding.
+                                 * @memberof google.bigtable.admin.v2.Type.Int64
+                                 * @interface IEncoding
+                                 * @property {google.bigtable.admin.v2.Type.Int64.Encoding.IBigEndianBytes|null} [bigEndianBytes] Encoding bigEndianBytes
+                                 */
+    
+                                /**
+                                 * Constructs a new Encoding.
+                                 * @memberof google.bigtable.admin.v2.Type.Int64
+                                 * @classdesc Represents an Encoding.
+                                 * @implements IEncoding
+                                 * @constructor
+                                 * @param {google.bigtable.admin.v2.Type.Int64.IEncoding=} [properties] Properties to set
+                                 */
+                                function Encoding(properties) {
+                                    if (properties)
+                                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                            if (properties[keys[i]] != null)
+                                                this[keys[i]] = properties[keys[i]];
+                                }
+    
+                                /**
+                                 * Encoding bigEndianBytes.
+                                 * @member {google.bigtable.admin.v2.Type.Int64.Encoding.IBigEndianBytes|null|undefined} bigEndianBytes
+                                 * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                 * @instance
+                                 */
+                                Encoding.prototype.bigEndianBytes = null;
+    
+                                // OneOf field names bound to virtual getters and setters
+                                var $oneOfFields;
+    
+                                /**
+                                 * Encoding encoding.
+                                 * @member {"bigEndianBytes"|undefined} encoding
+                                 * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                 * @instance
+                                 */
+                                Object.defineProperty(Encoding.prototype, "encoding", {
+                                    get: $util.oneOfGetter($oneOfFields = ["bigEndianBytes"]),
+                                    set: $util.oneOfSetter($oneOfFields)
+                                });
+    
+                                /**
+                                 * Creates a new Encoding instance using the specified properties.
+                                 * @function create
+                                 * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.Int64.IEncoding=} [properties] Properties to set
+                                 * @returns {google.bigtable.admin.v2.Type.Int64.Encoding} Encoding instance
+                                 */
+                                Encoding.create = function create(properties) {
+                                    return new Encoding(properties);
+                                };
+    
+                                /**
+                                 * Encodes the specified Encoding message. Does not implicitly {@link google.bigtable.admin.v2.Type.Int64.Encoding.verify|verify} messages.
+                                 * @function encode
+                                 * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.Int64.IEncoding} message Encoding message or plain object to encode
+                                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                                 * @returns {$protobuf.Writer} Writer
+                                 */
+                                Encoding.encode = function encode(message, writer) {
+                                    if (!writer)
+                                        writer = $Writer.create();
+                                    if (message.bigEndianBytes != null && Object.hasOwnProperty.call(message, "bigEndianBytes"))
+                                        $root.google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes.encode(message.bigEndianBytes, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                                    return writer;
+                                };
+    
+                                /**
+                                 * Encodes the specified Encoding message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Type.Int64.Encoding.verify|verify} messages.
+                                 * @function encodeDelimited
+                                 * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.Int64.IEncoding} message Encoding message or plain object to encode
+                                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                                 * @returns {$protobuf.Writer} Writer
+                                 */
+                                Encoding.encodeDelimited = function encodeDelimited(message, writer) {
+                                    return this.encode(message, writer).ldelim();
+                                };
+    
+                                /**
+                                 * Decodes an Encoding message from the specified reader or buffer.
+                                 * @function decode
+                                 * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                 * @static
+                                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                 * @param {number} [length] Message length if known beforehand
+                                 * @returns {google.bigtable.admin.v2.Type.Int64.Encoding} Encoding
+                                 * @throws {Error} If the payload is not a reader or valid buffer
+                                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                 */
+                                Encoding.decode = function decode(reader, length) {
+                                    if (!(reader instanceof $Reader))
+                                        reader = $Reader.create(reader);
+                                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Type.Int64.Encoding();
+                                    while (reader.pos < end) {
+                                        var tag = reader.uint32();
+                                        switch (tag >>> 3) {
+                                        case 1: {
+                                                message.bigEndianBytes = $root.google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes.decode(reader, reader.uint32());
+                                                break;
+                                            }
+                                        default:
+                                            reader.skipType(tag & 7);
+                                            break;
+                                        }
+                                    }
+                                    return message;
+                                };
+    
+                                /**
+                                 * Decodes an Encoding message from the specified reader or buffer, length delimited.
+                                 * @function decodeDelimited
+                                 * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                 * @static
+                                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                 * @returns {google.bigtable.admin.v2.Type.Int64.Encoding} Encoding
+                                 * @throws {Error} If the payload is not a reader or valid buffer
+                                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                 */
+                                Encoding.decodeDelimited = function decodeDelimited(reader) {
+                                    if (!(reader instanceof $Reader))
+                                        reader = new $Reader(reader);
+                                    return this.decode(reader, reader.uint32());
+                                };
+    
+                                /**
+                                 * Verifies an Encoding message.
+                                 * @function verify
+                                 * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                 * @static
+                                 * @param {Object.<string,*>} message Plain object to verify
+                                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                                 */
+                                Encoding.verify = function verify(message) {
+                                    if (typeof message !== "object" || message === null)
+                                        return "object expected";
+                                    var properties = {};
+                                    if (message.bigEndianBytes != null && message.hasOwnProperty("bigEndianBytes")) {
+                                        properties.encoding = 1;
+                                        {
+                                            var error = $root.google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes.verify(message.bigEndianBytes);
+                                            if (error)
+                                                return "bigEndianBytes." + error;
+                                        }
+                                    }
+                                    return null;
+                                };
+    
+                                /**
+                                 * Creates an Encoding message from a plain object. Also converts values to their respective internal types.
+                                 * @function fromObject
+                                 * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                 * @static
+                                 * @param {Object.<string,*>} object Plain object
+                                 * @returns {google.bigtable.admin.v2.Type.Int64.Encoding} Encoding
+                                 */
+                                Encoding.fromObject = function fromObject(object) {
+                                    if (object instanceof $root.google.bigtable.admin.v2.Type.Int64.Encoding)
+                                        return object;
+                                    var message = new $root.google.bigtable.admin.v2.Type.Int64.Encoding();
+                                    if (object.bigEndianBytes != null) {
+                                        if (typeof object.bigEndianBytes !== "object")
+                                            throw TypeError(".google.bigtable.admin.v2.Type.Int64.Encoding.bigEndianBytes: object expected");
+                                        message.bigEndianBytes = $root.google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes.fromObject(object.bigEndianBytes);
+                                    }
+                                    return message;
+                                };
+    
+                                /**
+                                 * Creates a plain object from an Encoding message. Also converts values to other types if specified.
+                                 * @function toObject
+                                 * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.Int64.Encoding} message Encoding
+                                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                                 * @returns {Object.<string,*>} Plain object
+                                 */
+                                Encoding.toObject = function toObject(message, options) {
+                                    if (!options)
+                                        options = {};
+                                    var object = {};
+                                    if (message.bigEndianBytes != null && message.hasOwnProperty("bigEndianBytes")) {
+                                        object.bigEndianBytes = $root.google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes.toObject(message.bigEndianBytes, options);
+                                        if (options.oneofs)
+                                            object.encoding = "bigEndianBytes";
+                                    }
+                                    return object;
+                                };
+    
+                                /**
+                                 * Converts this Encoding to JSON.
+                                 * @function toJSON
+                                 * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                 * @instance
+                                 * @returns {Object.<string,*>} JSON object
+                                 */
+                                Encoding.prototype.toJSON = function toJSON() {
+                                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                                };
+    
+                                /**
+                                 * Gets the default type url for Encoding
+                                 * @function getTypeUrl
+                                 * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                 * @static
+                                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                                 * @returns {string} The default type url
+                                 */
+                                Encoding.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                    if (typeUrlPrefix === undefined) {
+                                        typeUrlPrefix = "type.googleapis.com";
+                                    }
+                                    return typeUrlPrefix + "/google.bigtable.admin.v2.Type.Int64.Encoding";
+                                };
+    
+                                Encoding.BigEndianBytes = (function() {
+    
+                                    /**
+                                     * Properties of a BigEndianBytes.
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                     * @interface IBigEndianBytes
+                                     * @property {google.bigtable.admin.v2.Type.IBytes|null} [bytesType] BigEndianBytes bytesType
+                                     */
+    
+                                    /**
+                                     * Constructs a new BigEndianBytes.
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding
+                                     * @classdesc Represents a BigEndianBytes.
+                                     * @implements IBigEndianBytes
+                                     * @constructor
+                                     * @param {google.bigtable.admin.v2.Type.Int64.Encoding.IBigEndianBytes=} [properties] Properties to set
+                                     */
+                                    function BigEndianBytes(properties) {
+                                        if (properties)
+                                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                                if (properties[keys[i]] != null)
+                                                    this[keys[i]] = properties[keys[i]];
+                                    }
+    
+                                    /**
+                                     * BigEndianBytes bytesType.
+                                     * @member {google.bigtable.admin.v2.Type.IBytes|null|undefined} bytesType
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes
+                                     * @instance
+                                     */
+                                    BigEndianBytes.prototype.bytesType = null;
+    
+                                    /**
+                                     * Creates a new BigEndianBytes instance using the specified properties.
+                                     * @function create
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes
+                                     * @static
+                                     * @param {google.bigtable.admin.v2.Type.Int64.Encoding.IBigEndianBytes=} [properties] Properties to set
+                                     * @returns {google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes} BigEndianBytes instance
+                                     */
+                                    BigEndianBytes.create = function create(properties) {
+                                        return new BigEndianBytes(properties);
+                                    };
+    
+                                    /**
+                                     * Encodes the specified BigEndianBytes message. Does not implicitly {@link google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes.verify|verify} messages.
+                                     * @function encode
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes
+                                     * @static
+                                     * @param {google.bigtable.admin.v2.Type.Int64.Encoding.IBigEndianBytes} message BigEndianBytes message or plain object to encode
+                                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                                     * @returns {$protobuf.Writer} Writer
+                                     */
+                                    BigEndianBytes.encode = function encode(message, writer) {
+                                        if (!writer)
+                                            writer = $Writer.create();
+                                        if (message.bytesType != null && Object.hasOwnProperty.call(message, "bytesType"))
+                                            $root.google.bigtable.admin.v2.Type.Bytes.encode(message.bytesType, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                                        return writer;
+                                    };
+    
+                                    /**
+                                     * Encodes the specified BigEndianBytes message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes.verify|verify} messages.
+                                     * @function encodeDelimited
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes
+                                     * @static
+                                     * @param {google.bigtable.admin.v2.Type.Int64.Encoding.IBigEndianBytes} message BigEndianBytes message or plain object to encode
+                                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                                     * @returns {$protobuf.Writer} Writer
+                                     */
+                                    BigEndianBytes.encodeDelimited = function encodeDelimited(message, writer) {
+                                        return this.encode(message, writer).ldelim();
+                                    };
+    
+                                    /**
+                                     * Decodes a BigEndianBytes message from the specified reader or buffer.
+                                     * @function decode
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes
+                                     * @static
+                                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                     * @param {number} [length] Message length if known beforehand
+                                     * @returns {google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes} BigEndianBytes
+                                     * @throws {Error} If the payload is not a reader or valid buffer
+                                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                     */
+                                    BigEndianBytes.decode = function decode(reader, length) {
+                                        if (!(reader instanceof $Reader))
+                                            reader = $Reader.create(reader);
+                                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes();
+                                        while (reader.pos < end) {
+                                            var tag = reader.uint32();
+                                            switch (tag >>> 3) {
+                                            case 1: {
+                                                    message.bytesType = $root.google.bigtable.admin.v2.Type.Bytes.decode(reader, reader.uint32());
+                                                    break;
+                                                }
+                                            default:
+                                                reader.skipType(tag & 7);
+                                                break;
+                                            }
+                                        }
+                                        return message;
+                                    };
+    
+                                    /**
+                                     * Decodes a BigEndianBytes message from the specified reader or buffer, length delimited.
+                                     * @function decodeDelimited
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes
+                                     * @static
+                                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                     * @returns {google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes} BigEndianBytes
+                                     * @throws {Error} If the payload is not a reader or valid buffer
+                                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                     */
+                                    BigEndianBytes.decodeDelimited = function decodeDelimited(reader) {
+                                        if (!(reader instanceof $Reader))
+                                            reader = new $Reader(reader);
+                                        return this.decode(reader, reader.uint32());
+                                    };
+    
+                                    /**
+                                     * Verifies a BigEndianBytes message.
+                                     * @function verify
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes
+                                     * @static
+                                     * @param {Object.<string,*>} message Plain object to verify
+                                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                                     */
+                                    BigEndianBytes.verify = function verify(message) {
+                                        if (typeof message !== "object" || message === null)
+                                            return "object expected";
+                                        if (message.bytesType != null && message.hasOwnProperty("bytesType")) {
+                                            var error = $root.google.bigtable.admin.v2.Type.Bytes.verify(message.bytesType);
+                                            if (error)
+                                                return "bytesType." + error;
+                                        }
+                                        return null;
+                                    };
+    
+                                    /**
+                                     * Creates a BigEndianBytes message from a plain object. Also converts values to their respective internal types.
+                                     * @function fromObject
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes
+                                     * @static
+                                     * @param {Object.<string,*>} object Plain object
+                                     * @returns {google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes} BigEndianBytes
+                                     */
+                                    BigEndianBytes.fromObject = function fromObject(object) {
+                                        if (object instanceof $root.google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes)
+                                            return object;
+                                        var message = new $root.google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes();
+                                        if (object.bytesType != null) {
+                                            if (typeof object.bytesType !== "object")
+                                                throw TypeError(".google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes.bytesType: object expected");
+                                            message.bytesType = $root.google.bigtable.admin.v2.Type.Bytes.fromObject(object.bytesType);
+                                        }
+                                        return message;
+                                    };
+    
+                                    /**
+                                     * Creates a plain object from a BigEndianBytes message. Also converts values to other types if specified.
+                                     * @function toObject
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes
+                                     * @static
+                                     * @param {google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes} message BigEndianBytes
+                                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                                     * @returns {Object.<string,*>} Plain object
+                                     */
+                                    BigEndianBytes.toObject = function toObject(message, options) {
+                                        if (!options)
+                                            options = {};
+                                        var object = {};
+                                        if (options.defaults)
+                                            object.bytesType = null;
+                                        if (message.bytesType != null && message.hasOwnProperty("bytesType"))
+                                            object.bytesType = $root.google.bigtable.admin.v2.Type.Bytes.toObject(message.bytesType, options);
+                                        return object;
+                                    };
+    
+                                    /**
+                                     * Converts this BigEndianBytes to JSON.
+                                     * @function toJSON
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes
+                                     * @instance
+                                     * @returns {Object.<string,*>} JSON object
+                                     */
+                                    BigEndianBytes.prototype.toJSON = function toJSON() {
+                                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                                    };
+    
+                                    /**
+                                     * Gets the default type url for BigEndianBytes
+                                     * @function getTypeUrl
+                                     * @memberof google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes
+                                     * @static
+                                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                                     * @returns {string} The default type url
+                                     */
+                                    BigEndianBytes.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                        if (typeUrlPrefix === undefined) {
+                                            typeUrlPrefix = "type.googleapis.com";
+                                        }
+                                        return typeUrlPrefix + "/google.bigtable.admin.v2.Type.Int64.Encoding.BigEndianBytes";
+                                    };
+    
+                                    return BigEndianBytes;
+                                })();
+    
+                                return Encoding;
+                            })();
+    
+                            return Int64;
+                        })();
+    
+                        Type.Aggregate = (function() {
+    
+                            /**
+                             * Properties of an Aggregate.
+                             * @memberof google.bigtable.admin.v2.Type
+                             * @interface IAggregate
+                             * @property {google.bigtable.admin.v2.IType|null} [inputType] Aggregate inputType
+                             * @property {google.bigtable.admin.v2.IType|null} [stateType] Aggregate stateType
+                             * @property {google.bigtable.admin.v2.Type.Aggregate.ISum|null} [sum] Aggregate sum
+                             */
+    
+                            /**
+                             * Constructs a new Aggregate.
+                             * @memberof google.bigtable.admin.v2.Type
+                             * @classdesc Represents an Aggregate.
+                             * @implements IAggregate
+                             * @constructor
+                             * @param {google.bigtable.admin.v2.Type.IAggregate=} [properties] Properties to set
+                             */
+                            function Aggregate(properties) {
+                                if (properties)
+                                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                        if (properties[keys[i]] != null)
+                                            this[keys[i]] = properties[keys[i]];
+                            }
+    
+                            /**
+                             * Aggregate inputType.
+                             * @member {google.bigtable.admin.v2.IType|null|undefined} inputType
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @instance
+                             */
+                            Aggregate.prototype.inputType = null;
+    
+                            /**
+                             * Aggregate stateType.
+                             * @member {google.bigtable.admin.v2.IType|null|undefined} stateType
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @instance
+                             */
+                            Aggregate.prototype.stateType = null;
+    
+                            /**
+                             * Aggregate sum.
+                             * @member {google.bigtable.admin.v2.Type.Aggregate.ISum|null|undefined} sum
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @instance
+                             */
+                            Aggregate.prototype.sum = null;
+    
+                            // OneOf field names bound to virtual getters and setters
+                            var $oneOfFields;
+    
+                            /**
+                             * Aggregate aggregator.
+                             * @member {"sum"|undefined} aggregator
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @instance
+                             */
+                            Object.defineProperty(Aggregate.prototype, "aggregator", {
+                                get: $util.oneOfGetter($oneOfFields = ["sum"]),
+                                set: $util.oneOfSetter($oneOfFields)
+                            });
+    
+                            /**
+                             * Creates a new Aggregate instance using the specified properties.
+                             * @function create
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.IAggregate=} [properties] Properties to set
+                             * @returns {google.bigtable.admin.v2.Type.Aggregate} Aggregate instance
+                             */
+                            Aggregate.create = function create(properties) {
+                                return new Aggregate(properties);
+                            };
+    
+                            /**
+                             * Encodes the specified Aggregate message. Does not implicitly {@link google.bigtable.admin.v2.Type.Aggregate.verify|verify} messages.
+                             * @function encode
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.IAggregate} message Aggregate message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            Aggregate.encode = function encode(message, writer) {
+                                if (!writer)
+                                    writer = $Writer.create();
+                                if (message.inputType != null && Object.hasOwnProperty.call(message, "inputType"))
+                                    $root.google.bigtable.admin.v2.Type.encode(message.inputType, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                                if (message.stateType != null && Object.hasOwnProperty.call(message, "stateType"))
+                                    $root.google.bigtable.admin.v2.Type.encode(message.stateType, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                                if (message.sum != null && Object.hasOwnProperty.call(message, "sum"))
+                                    $root.google.bigtable.admin.v2.Type.Aggregate.Sum.encode(message.sum, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                                return writer;
+                            };
+    
+                            /**
+                             * Encodes the specified Aggregate message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Type.Aggregate.verify|verify} messages.
+                             * @function encodeDelimited
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.IAggregate} message Aggregate message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            Aggregate.encodeDelimited = function encodeDelimited(message, writer) {
+                                return this.encode(message, writer).ldelim();
+                            };
+    
+                            /**
+                             * Decodes an Aggregate message from the specified reader or buffer.
+                             * @function decode
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @param {number} [length] Message length if known beforehand
+                             * @returns {google.bigtable.admin.v2.Type.Aggregate} Aggregate
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            Aggregate.decode = function decode(reader, length) {
+                                if (!(reader instanceof $Reader))
+                                    reader = $Reader.create(reader);
+                                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Type.Aggregate();
+                                while (reader.pos < end) {
+                                    var tag = reader.uint32();
+                                    switch (tag >>> 3) {
+                                    case 1: {
+                                            message.inputType = $root.google.bigtable.admin.v2.Type.decode(reader, reader.uint32());
+                                            break;
+                                        }
+                                    case 2: {
+                                            message.stateType = $root.google.bigtable.admin.v2.Type.decode(reader, reader.uint32());
+                                            break;
+                                        }
+                                    case 4: {
+                                            message.sum = $root.google.bigtable.admin.v2.Type.Aggregate.Sum.decode(reader, reader.uint32());
+                                            break;
+                                        }
+                                    default:
+                                        reader.skipType(tag & 7);
+                                        break;
+                                    }
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Decodes an Aggregate message from the specified reader or buffer, length delimited.
+                             * @function decodeDelimited
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @returns {google.bigtable.admin.v2.Type.Aggregate} Aggregate
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            Aggregate.decodeDelimited = function decodeDelimited(reader) {
+                                if (!(reader instanceof $Reader))
+                                    reader = new $Reader(reader);
+                                return this.decode(reader, reader.uint32());
+                            };
+    
+                            /**
+                             * Verifies an Aggregate message.
+                             * @function verify
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @static
+                             * @param {Object.<string,*>} message Plain object to verify
+                             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                             */
+                            Aggregate.verify = function verify(message) {
+                                if (typeof message !== "object" || message === null)
+                                    return "object expected";
+                                var properties = {};
+                                if (message.inputType != null && message.hasOwnProperty("inputType")) {
+                                    var error = $root.google.bigtable.admin.v2.Type.verify(message.inputType);
+                                    if (error)
+                                        return "inputType." + error;
+                                }
+                                if (message.stateType != null && message.hasOwnProperty("stateType")) {
+                                    var error = $root.google.bigtable.admin.v2.Type.verify(message.stateType);
+                                    if (error)
+                                        return "stateType." + error;
+                                }
+                                if (message.sum != null && message.hasOwnProperty("sum")) {
+                                    properties.aggregator = 1;
+                                    {
+                                        var error = $root.google.bigtable.admin.v2.Type.Aggregate.Sum.verify(message.sum);
+                                        if (error)
+                                            return "sum." + error;
+                                    }
+                                }
+                                return null;
+                            };
+    
+                            /**
+                             * Creates an Aggregate message from a plain object. Also converts values to their respective internal types.
+                             * @function fromObject
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @static
+                             * @param {Object.<string,*>} object Plain object
+                             * @returns {google.bigtable.admin.v2.Type.Aggregate} Aggregate
+                             */
+                            Aggregate.fromObject = function fromObject(object) {
+                                if (object instanceof $root.google.bigtable.admin.v2.Type.Aggregate)
+                                    return object;
+                                var message = new $root.google.bigtable.admin.v2.Type.Aggregate();
+                                if (object.inputType != null) {
+                                    if (typeof object.inputType !== "object")
+                                        throw TypeError(".google.bigtable.admin.v2.Type.Aggregate.inputType: object expected");
+                                    message.inputType = $root.google.bigtable.admin.v2.Type.fromObject(object.inputType);
+                                }
+                                if (object.stateType != null) {
+                                    if (typeof object.stateType !== "object")
+                                        throw TypeError(".google.bigtable.admin.v2.Type.Aggregate.stateType: object expected");
+                                    message.stateType = $root.google.bigtable.admin.v2.Type.fromObject(object.stateType);
+                                }
+                                if (object.sum != null) {
+                                    if (typeof object.sum !== "object")
+                                        throw TypeError(".google.bigtable.admin.v2.Type.Aggregate.sum: object expected");
+                                    message.sum = $root.google.bigtable.admin.v2.Type.Aggregate.Sum.fromObject(object.sum);
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Creates a plain object from an Aggregate message. Also converts values to other types if specified.
+                             * @function toObject
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.Aggregate} message Aggregate
+                             * @param {$protobuf.IConversionOptions} [options] Conversion options
+                             * @returns {Object.<string,*>} Plain object
+                             */
+                            Aggregate.toObject = function toObject(message, options) {
+                                if (!options)
+                                    options = {};
+                                var object = {};
+                                if (options.defaults) {
+                                    object.inputType = null;
+                                    object.stateType = null;
+                                }
+                                if (message.inputType != null && message.hasOwnProperty("inputType"))
+                                    object.inputType = $root.google.bigtable.admin.v2.Type.toObject(message.inputType, options);
+                                if (message.stateType != null && message.hasOwnProperty("stateType"))
+                                    object.stateType = $root.google.bigtable.admin.v2.Type.toObject(message.stateType, options);
+                                if (message.sum != null && message.hasOwnProperty("sum")) {
+                                    object.sum = $root.google.bigtable.admin.v2.Type.Aggregate.Sum.toObject(message.sum, options);
+                                    if (options.oneofs)
+                                        object.aggregator = "sum";
+                                }
+                                return object;
+                            };
+    
+                            /**
+                             * Converts this Aggregate to JSON.
+                             * @function toJSON
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @instance
+                             * @returns {Object.<string,*>} JSON object
+                             */
+                            Aggregate.prototype.toJSON = function toJSON() {
+                                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            };
+    
+                            /**
+                             * Gets the default type url for Aggregate
+                             * @function getTypeUrl
+                             * @memberof google.bigtable.admin.v2.Type.Aggregate
+                             * @static
+                             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                             * @returns {string} The default type url
+                             */
+                            Aggregate.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                if (typeUrlPrefix === undefined) {
+                                    typeUrlPrefix = "type.googleapis.com";
+                                }
+                                return typeUrlPrefix + "/google.bigtable.admin.v2.Type.Aggregate";
+                            };
+    
+                            Aggregate.Sum = (function() {
+    
+                                /**
+                                 * Properties of a Sum.
+                                 * @memberof google.bigtable.admin.v2.Type.Aggregate
+                                 * @interface ISum
+                                 */
+    
+                                /**
+                                 * Constructs a new Sum.
+                                 * @memberof google.bigtable.admin.v2.Type.Aggregate
+                                 * @classdesc Represents a Sum.
+                                 * @implements ISum
+                                 * @constructor
+                                 * @param {google.bigtable.admin.v2.Type.Aggregate.ISum=} [properties] Properties to set
+                                 */
+                                function Sum(properties) {
+                                    if (properties)
+                                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                            if (properties[keys[i]] != null)
+                                                this[keys[i]] = properties[keys[i]];
+                                }
+    
+                                /**
+                                 * Creates a new Sum instance using the specified properties.
+                                 * @function create
+                                 * @memberof google.bigtable.admin.v2.Type.Aggregate.Sum
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.Aggregate.ISum=} [properties] Properties to set
+                                 * @returns {google.bigtable.admin.v2.Type.Aggregate.Sum} Sum instance
+                                 */
+                                Sum.create = function create(properties) {
+                                    return new Sum(properties);
+                                };
+    
+                                /**
+                                 * Encodes the specified Sum message. Does not implicitly {@link google.bigtable.admin.v2.Type.Aggregate.Sum.verify|verify} messages.
+                                 * @function encode
+                                 * @memberof google.bigtable.admin.v2.Type.Aggregate.Sum
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.Aggregate.ISum} message Sum message or plain object to encode
+                                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                                 * @returns {$protobuf.Writer} Writer
+                                 */
+                                Sum.encode = function encode(message, writer) {
+                                    if (!writer)
+                                        writer = $Writer.create();
+                                    return writer;
+                                };
+    
+                                /**
+                                 * Encodes the specified Sum message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Type.Aggregate.Sum.verify|verify} messages.
+                                 * @function encodeDelimited
+                                 * @memberof google.bigtable.admin.v2.Type.Aggregate.Sum
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.Aggregate.ISum} message Sum message or plain object to encode
+                                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                                 * @returns {$protobuf.Writer} Writer
+                                 */
+                                Sum.encodeDelimited = function encodeDelimited(message, writer) {
+                                    return this.encode(message, writer).ldelim();
+                                };
+    
+                                /**
+                                 * Decodes a Sum message from the specified reader or buffer.
+                                 * @function decode
+                                 * @memberof google.bigtable.admin.v2.Type.Aggregate.Sum
+                                 * @static
+                                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                 * @param {number} [length] Message length if known beforehand
+                                 * @returns {google.bigtable.admin.v2.Type.Aggregate.Sum} Sum
+                                 * @throws {Error} If the payload is not a reader or valid buffer
+                                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                 */
+                                Sum.decode = function decode(reader, length) {
+                                    if (!(reader instanceof $Reader))
+                                        reader = $Reader.create(reader);
+                                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Type.Aggregate.Sum();
+                                    while (reader.pos < end) {
+                                        var tag = reader.uint32();
+                                        switch (tag >>> 3) {
+                                        default:
+                                            reader.skipType(tag & 7);
+                                            break;
+                                        }
+                                    }
+                                    return message;
+                                };
+    
+                                /**
+                                 * Decodes a Sum message from the specified reader or buffer, length delimited.
+                                 * @function decodeDelimited
+                                 * @memberof google.bigtable.admin.v2.Type.Aggregate.Sum
+                                 * @static
+                                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                 * @returns {google.bigtable.admin.v2.Type.Aggregate.Sum} Sum
+                                 * @throws {Error} If the payload is not a reader or valid buffer
+                                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                 */
+                                Sum.decodeDelimited = function decodeDelimited(reader) {
+                                    if (!(reader instanceof $Reader))
+                                        reader = new $Reader(reader);
+                                    return this.decode(reader, reader.uint32());
+                                };
+    
+                                /**
+                                 * Verifies a Sum message.
+                                 * @function verify
+                                 * @memberof google.bigtable.admin.v2.Type.Aggregate.Sum
+                                 * @static
+                                 * @param {Object.<string,*>} message Plain object to verify
+                                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                                 */
+                                Sum.verify = function verify(message) {
+                                    if (typeof message !== "object" || message === null)
+                                        return "object expected";
+                                    return null;
+                                };
+    
+                                /**
+                                 * Creates a Sum message from a plain object. Also converts values to their respective internal types.
+                                 * @function fromObject
+                                 * @memberof google.bigtable.admin.v2.Type.Aggregate.Sum
+                                 * @static
+                                 * @param {Object.<string,*>} object Plain object
+                                 * @returns {google.bigtable.admin.v2.Type.Aggregate.Sum} Sum
+                                 */
+                                Sum.fromObject = function fromObject(object) {
+                                    if (object instanceof $root.google.bigtable.admin.v2.Type.Aggregate.Sum)
+                                        return object;
+                                    return new $root.google.bigtable.admin.v2.Type.Aggregate.Sum();
+                                };
+    
+                                /**
+                                 * Creates a plain object from a Sum message. Also converts values to other types if specified.
+                                 * @function toObject
+                                 * @memberof google.bigtable.admin.v2.Type.Aggregate.Sum
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.Aggregate.Sum} message Sum
+                                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                                 * @returns {Object.<string,*>} Plain object
+                                 */
+                                Sum.toObject = function toObject() {
+                                    return {};
+                                };
+    
+                                /**
+                                 * Converts this Sum to JSON.
+                                 * @function toJSON
+                                 * @memberof google.bigtable.admin.v2.Type.Aggregate.Sum
+                                 * @instance
+                                 * @returns {Object.<string,*>} JSON object
+                                 */
+                                Sum.prototype.toJSON = function toJSON() {
+                                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                                };
+    
+                                /**
+                                 * Gets the default type url for Sum
+                                 * @function getTypeUrl
+                                 * @memberof google.bigtable.admin.v2.Type.Aggregate.Sum
+                                 * @static
+                                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                                 * @returns {string} The default type url
+                                 */
+                                Sum.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                    if (typeUrlPrefix === undefined) {
+                                        typeUrlPrefix = "type.googleapis.com";
+                                    }
+                                    return typeUrlPrefix + "/google.bigtable.admin.v2.Type.Aggregate.Sum";
+                                };
+    
+                                return Sum;
+                            })();
+    
+                            return Aggregate;
+                        })();
+    
+                        return Type;
+                    })();
+    
                     return v2;
                 })();
     
@@ -25695,6 +31882,7 @@
                      * @memberof google.bigtable.v2
                      * @interface IReadRowsRequest
                      * @property {string|null} [tableName] ReadRowsRequest tableName
+                     * @property {string|null} [authorizedViewName] ReadRowsRequest authorizedViewName
                      * @property {string|null} [appProfileId] ReadRowsRequest appProfileId
                      * @property {google.bigtable.v2.IRowSet|null} [rows] ReadRowsRequest rows
                      * @property {google.bigtable.v2.IRowFilter|null} [filter] ReadRowsRequest filter
@@ -25725,6 +31913,14 @@
                      * @instance
                      */
                     ReadRowsRequest.prototype.tableName = "";
+    
+                    /**
+                     * ReadRowsRequest authorizedViewName.
+                     * @member {string} authorizedViewName
+                     * @memberof google.bigtable.v2.ReadRowsRequest
+                     * @instance
+                     */
+                    ReadRowsRequest.prototype.authorizedViewName = "";
     
                     /**
                      * ReadRowsRequest appProfileId.
@@ -25812,6 +32008,8 @@
                             writer.uint32(/* id 6, wireType 0 =*/48).int32(message.requestStatsView);
                         if (message.reversed != null && Object.hasOwnProperty.call(message, "reversed"))
                             writer.uint32(/* id 7, wireType 0 =*/56).bool(message.reversed);
+                        if (message.authorizedViewName != null && Object.hasOwnProperty.call(message, "authorizedViewName"))
+                            writer.uint32(/* id 9, wireType 2 =*/74).string(message.authorizedViewName);
                         return writer;
                     };
     
@@ -25848,6 +32046,10 @@
                             switch (tag >>> 3) {
                             case 1: {
                                     message.tableName = reader.string();
+                                    break;
+                                }
+                            case 9: {
+                                    message.authorizedViewName = reader.string();
                                     break;
                                 }
                             case 5: {
@@ -25912,6 +32114,9 @@
                         if (message.tableName != null && message.hasOwnProperty("tableName"))
                             if (!$util.isString(message.tableName))
                                 return "tableName: string expected";
+                        if (message.authorizedViewName != null && message.hasOwnProperty("authorizedViewName"))
+                            if (!$util.isString(message.authorizedViewName))
+                                return "authorizedViewName: string expected";
                         if (message.appProfileId != null && message.hasOwnProperty("appProfileId"))
                             if (!$util.isString(message.appProfileId))
                                 return "appProfileId: string expected";
@@ -25957,6 +32162,8 @@
                         var message = new $root.google.bigtable.v2.ReadRowsRequest();
                         if (object.tableName != null)
                             message.tableName = String(object.tableName);
+                        if (object.authorizedViewName != null)
+                            message.authorizedViewName = String(object.authorizedViewName);
                         if (object.appProfileId != null)
                             message.appProfileId = String(object.appProfileId);
                         if (object.rows != null) {
@@ -26028,6 +32235,7 @@
                             object.appProfileId = "";
                             object.requestStatsView = options.enums === String ? "REQUEST_STATS_VIEW_UNSPECIFIED" : 0;
                             object.reversed = false;
+                            object.authorizedViewName = "";
                         }
                         if (message.tableName != null && message.hasOwnProperty("tableName"))
                             object.tableName = message.tableName;
@@ -26046,6 +32254,8 @@
                             object.requestStatsView = options.enums === String ? $root.google.bigtable.v2.ReadRowsRequest.RequestStatsView[message.requestStatsView] === undefined ? message.requestStatsView : $root.google.bigtable.v2.ReadRowsRequest.RequestStatsView[message.requestStatsView] : message.requestStatsView;
                         if (message.reversed != null && message.hasOwnProperty("reversed"))
                             object.reversed = message.reversed;
+                        if (message.authorizedViewName != null && message.hasOwnProperty("authorizedViewName"))
+                            object.authorizedViewName = message.authorizedViewName;
                         return object;
                     };
     
@@ -26859,6 +33069,7 @@
                      * @memberof google.bigtable.v2
                      * @interface ISampleRowKeysRequest
                      * @property {string|null} [tableName] SampleRowKeysRequest tableName
+                     * @property {string|null} [authorizedViewName] SampleRowKeysRequest authorizedViewName
                      * @property {string|null} [appProfileId] SampleRowKeysRequest appProfileId
                      */
     
@@ -26884,6 +33095,14 @@
                      * @instance
                      */
                     SampleRowKeysRequest.prototype.tableName = "";
+    
+                    /**
+                     * SampleRowKeysRequest authorizedViewName.
+                     * @member {string} authorizedViewName
+                     * @memberof google.bigtable.v2.SampleRowKeysRequest
+                     * @instance
+                     */
+                    SampleRowKeysRequest.prototype.authorizedViewName = "";
     
                     /**
                      * SampleRowKeysRequest appProfileId.
@@ -26921,6 +33140,8 @@
                             writer.uint32(/* id 1, wireType 2 =*/10).string(message.tableName);
                         if (message.appProfileId != null && Object.hasOwnProperty.call(message, "appProfileId"))
                             writer.uint32(/* id 2, wireType 2 =*/18).string(message.appProfileId);
+                        if (message.authorizedViewName != null && Object.hasOwnProperty.call(message, "authorizedViewName"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.authorizedViewName);
                         return writer;
                     };
     
@@ -26957,6 +33178,10 @@
                             switch (tag >>> 3) {
                             case 1: {
                                     message.tableName = reader.string();
+                                    break;
+                                }
+                            case 4: {
+                                    message.authorizedViewName = reader.string();
                                     break;
                                 }
                             case 2: {
@@ -27001,6 +33226,9 @@
                         if (message.tableName != null && message.hasOwnProperty("tableName"))
                             if (!$util.isString(message.tableName))
                                 return "tableName: string expected";
+                        if (message.authorizedViewName != null && message.hasOwnProperty("authorizedViewName"))
+                            if (!$util.isString(message.authorizedViewName))
+                                return "authorizedViewName: string expected";
                         if (message.appProfileId != null && message.hasOwnProperty("appProfileId"))
                             if (!$util.isString(message.appProfileId))
                                 return "appProfileId: string expected";
@@ -27021,6 +33249,8 @@
                         var message = new $root.google.bigtable.v2.SampleRowKeysRequest();
                         if (object.tableName != null)
                             message.tableName = String(object.tableName);
+                        if (object.authorizedViewName != null)
+                            message.authorizedViewName = String(object.authorizedViewName);
                         if (object.appProfileId != null)
                             message.appProfileId = String(object.appProfileId);
                         return message;
@@ -27042,11 +33272,14 @@
                         if (options.defaults) {
                             object.tableName = "";
                             object.appProfileId = "";
+                            object.authorizedViewName = "";
                         }
                         if (message.tableName != null && message.hasOwnProperty("tableName"))
                             object.tableName = message.tableName;
                         if (message.appProfileId != null && message.hasOwnProperty("appProfileId"))
                             object.appProfileId = message.appProfileId;
+                        if (message.authorizedViewName != null && message.hasOwnProperty("authorizedViewName"))
+                            object.authorizedViewName = message.authorizedViewName;
                         return object;
                     };
     
@@ -27336,6 +33569,7 @@
                      * @memberof google.bigtable.v2
                      * @interface IMutateRowRequest
                      * @property {string|null} [tableName] MutateRowRequest tableName
+                     * @property {string|null} [authorizedViewName] MutateRowRequest authorizedViewName
                      * @property {string|null} [appProfileId] MutateRowRequest appProfileId
                      * @property {Uint8Array|null} [rowKey] MutateRowRequest rowKey
                      * @property {Array.<google.bigtable.v2.IMutation>|null} [mutations] MutateRowRequest mutations
@@ -27364,6 +33598,14 @@
                      * @instance
                      */
                     MutateRowRequest.prototype.tableName = "";
+    
+                    /**
+                     * MutateRowRequest authorizedViewName.
+                     * @member {string} authorizedViewName
+                     * @memberof google.bigtable.v2.MutateRowRequest
+                     * @instance
+                     */
+                    MutateRowRequest.prototype.authorizedViewName = "";
     
                     /**
                      * MutateRowRequest appProfileId.
@@ -27422,6 +33664,8 @@
                                 $root.google.bigtable.v2.Mutation.encode(message.mutations[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                         if (message.appProfileId != null && Object.hasOwnProperty.call(message, "appProfileId"))
                             writer.uint32(/* id 4, wireType 2 =*/34).string(message.appProfileId);
+                        if (message.authorizedViewName != null && Object.hasOwnProperty.call(message, "authorizedViewName"))
+                            writer.uint32(/* id 6, wireType 2 =*/50).string(message.authorizedViewName);
                         return writer;
                     };
     
@@ -27458,6 +33702,10 @@
                             switch (tag >>> 3) {
                             case 1: {
                                     message.tableName = reader.string();
+                                    break;
+                                }
+                            case 6: {
+                                    message.authorizedViewName = reader.string();
                                     break;
                                 }
                             case 4: {
@@ -27512,6 +33760,9 @@
                         if (message.tableName != null && message.hasOwnProperty("tableName"))
                             if (!$util.isString(message.tableName))
                                 return "tableName: string expected";
+                        if (message.authorizedViewName != null && message.hasOwnProperty("authorizedViewName"))
+                            if (!$util.isString(message.authorizedViewName))
+                                return "authorizedViewName: string expected";
                         if (message.appProfileId != null && message.hasOwnProperty("appProfileId"))
                             if (!$util.isString(message.appProfileId))
                                 return "appProfileId: string expected";
@@ -27544,6 +33795,8 @@
                         var message = new $root.google.bigtable.v2.MutateRowRequest();
                         if (object.tableName != null)
                             message.tableName = String(object.tableName);
+                        if (object.authorizedViewName != null)
+                            message.authorizedViewName = String(object.authorizedViewName);
                         if (object.appProfileId != null)
                             message.appProfileId = String(object.appProfileId);
                         if (object.rowKey != null)
@@ -27589,6 +33842,7 @@
                                     object.rowKey = $util.newBuffer(object.rowKey);
                             }
                             object.appProfileId = "";
+                            object.authorizedViewName = "";
                         }
                         if (message.tableName != null && message.hasOwnProperty("tableName"))
                             object.tableName = message.tableName;
@@ -27601,6 +33855,8 @@
                         }
                         if (message.appProfileId != null && message.hasOwnProperty("appProfileId"))
                             object.appProfileId = message.appProfileId;
+                        if (message.authorizedViewName != null && message.hasOwnProperty("authorizedViewName"))
+                            object.authorizedViewName = message.authorizedViewName;
                         return object;
                     };
     
@@ -27815,6 +34071,7 @@
                      * @memberof google.bigtable.v2
                      * @interface IMutateRowsRequest
                      * @property {string|null} [tableName] MutateRowsRequest tableName
+                     * @property {string|null} [authorizedViewName] MutateRowsRequest authorizedViewName
                      * @property {string|null} [appProfileId] MutateRowsRequest appProfileId
                      * @property {Array.<google.bigtable.v2.MutateRowsRequest.IEntry>|null} [entries] MutateRowsRequest entries
                      */
@@ -27842,6 +34099,14 @@
                      * @instance
                      */
                     MutateRowsRequest.prototype.tableName = "";
+    
+                    /**
+                     * MutateRowsRequest authorizedViewName.
+                     * @member {string} authorizedViewName
+                     * @memberof google.bigtable.v2.MutateRowsRequest
+                     * @instance
+                     */
+                    MutateRowsRequest.prototype.authorizedViewName = "";
     
                     /**
                      * MutateRowsRequest appProfileId.
@@ -27890,6 +34155,8 @@
                                 $root.google.bigtable.v2.MutateRowsRequest.Entry.encode(message.entries[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                         if (message.appProfileId != null && Object.hasOwnProperty.call(message, "appProfileId"))
                             writer.uint32(/* id 3, wireType 2 =*/26).string(message.appProfileId);
+                        if (message.authorizedViewName != null && Object.hasOwnProperty.call(message, "authorizedViewName"))
+                            writer.uint32(/* id 5, wireType 2 =*/42).string(message.authorizedViewName);
                         return writer;
                     };
     
@@ -27926,6 +34193,10 @@
                             switch (tag >>> 3) {
                             case 1: {
                                     message.tableName = reader.string();
+                                    break;
+                                }
+                            case 5: {
+                                    message.authorizedViewName = reader.string();
                                     break;
                                 }
                             case 3: {
@@ -27976,6 +34247,9 @@
                         if (message.tableName != null && message.hasOwnProperty("tableName"))
                             if (!$util.isString(message.tableName))
                                 return "tableName: string expected";
+                        if (message.authorizedViewName != null && message.hasOwnProperty("authorizedViewName"))
+                            if (!$util.isString(message.authorizedViewName))
+                                return "authorizedViewName: string expected";
                         if (message.appProfileId != null && message.hasOwnProperty("appProfileId"))
                             if (!$util.isString(message.appProfileId))
                                 return "appProfileId: string expected";
@@ -28005,6 +34279,8 @@
                         var message = new $root.google.bigtable.v2.MutateRowsRequest();
                         if (object.tableName != null)
                             message.tableName = String(object.tableName);
+                        if (object.authorizedViewName != null)
+                            message.authorizedViewName = String(object.authorizedViewName);
                         if (object.appProfileId != null)
                             message.appProfileId = String(object.appProfileId);
                         if (object.entries) {
@@ -28038,6 +34314,7 @@
                         if (options.defaults) {
                             object.tableName = "";
                             object.appProfileId = "";
+                            object.authorizedViewName = "";
                         }
                         if (message.tableName != null && message.hasOwnProperty("tableName"))
                             object.tableName = message.tableName;
@@ -28048,6 +34325,8 @@
                         }
                         if (message.appProfileId != null && message.hasOwnProperty("appProfileId"))
                             object.appProfileId = message.appProfileId;
+                        if (message.authorizedViewName != null && message.hasOwnProperty("authorizedViewName"))
+                            object.authorizedViewName = message.authorizedViewName;
                         return object;
                     };
     
@@ -29094,6 +35373,7 @@
                      * @memberof google.bigtable.v2
                      * @interface ICheckAndMutateRowRequest
                      * @property {string|null} [tableName] CheckAndMutateRowRequest tableName
+                     * @property {string|null} [authorizedViewName] CheckAndMutateRowRequest authorizedViewName
                      * @property {string|null} [appProfileId] CheckAndMutateRowRequest appProfileId
                      * @property {Uint8Array|null} [rowKey] CheckAndMutateRowRequest rowKey
                      * @property {google.bigtable.v2.IRowFilter|null} [predicateFilter] CheckAndMutateRowRequest predicateFilter
@@ -29125,6 +35405,14 @@
                      * @instance
                      */
                     CheckAndMutateRowRequest.prototype.tableName = "";
+    
+                    /**
+                     * CheckAndMutateRowRequest authorizedViewName.
+                     * @member {string} authorizedViewName
+                     * @memberof google.bigtable.v2.CheckAndMutateRowRequest
+                     * @instance
+                     */
+                    CheckAndMutateRowRequest.prototype.authorizedViewName = "";
     
                     /**
                      * CheckAndMutateRowRequest appProfileId.
@@ -29204,6 +35492,8 @@
                             $root.google.bigtable.v2.RowFilter.encode(message.predicateFilter, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                         if (message.appProfileId != null && Object.hasOwnProperty.call(message, "appProfileId"))
                             writer.uint32(/* id 7, wireType 2 =*/58).string(message.appProfileId);
+                        if (message.authorizedViewName != null && Object.hasOwnProperty.call(message, "authorizedViewName"))
+                            writer.uint32(/* id 9, wireType 2 =*/74).string(message.authorizedViewName);
                         return writer;
                     };
     
@@ -29240,6 +35530,10 @@
                             switch (tag >>> 3) {
                             case 1: {
                                     message.tableName = reader.string();
+                                    break;
+                                }
+                            case 9: {
+                                    message.authorizedViewName = reader.string();
                                     break;
                                 }
                             case 7: {
@@ -29304,6 +35598,9 @@
                         if (message.tableName != null && message.hasOwnProperty("tableName"))
                             if (!$util.isString(message.tableName))
                                 return "tableName: string expected";
+                        if (message.authorizedViewName != null && message.hasOwnProperty("authorizedViewName"))
+                            if (!$util.isString(message.authorizedViewName))
+                                return "authorizedViewName: string expected";
                         if (message.appProfileId != null && message.hasOwnProperty("appProfileId"))
                             if (!$util.isString(message.appProfileId))
                                 return "appProfileId: string expected";
@@ -29350,6 +35647,8 @@
                         var message = new $root.google.bigtable.v2.CheckAndMutateRowRequest();
                         if (object.tableName != null)
                             message.tableName = String(object.tableName);
+                        if (object.authorizedViewName != null)
+                            message.authorizedViewName = String(object.authorizedViewName);
                         if (object.appProfileId != null)
                             message.appProfileId = String(object.appProfileId);
                         if (object.rowKey != null)
@@ -29413,6 +35712,7 @@
                             }
                             object.predicateFilter = null;
                             object.appProfileId = "";
+                            object.authorizedViewName = "";
                         }
                         if (message.tableName != null && message.hasOwnProperty("tableName"))
                             object.tableName = message.tableName;
@@ -29432,6 +35732,8 @@
                             object.predicateFilter = $root.google.bigtable.v2.RowFilter.toObject(message.predicateFilter, options);
                         if (message.appProfileId != null && message.hasOwnProperty("appProfileId"))
                             object.appProfileId = message.appProfileId;
+                        if (message.authorizedViewName != null && message.hasOwnProperty("authorizedViewName"))
+                            object.authorizedViewName = message.authorizedViewName;
                         return object;
                     };
     
@@ -30076,6 +36378,7 @@
                      * @memberof google.bigtable.v2
                      * @interface IReadModifyWriteRowRequest
                      * @property {string|null} [tableName] ReadModifyWriteRowRequest tableName
+                     * @property {string|null} [authorizedViewName] ReadModifyWriteRowRequest authorizedViewName
                      * @property {string|null} [appProfileId] ReadModifyWriteRowRequest appProfileId
                      * @property {Uint8Array|null} [rowKey] ReadModifyWriteRowRequest rowKey
                      * @property {Array.<google.bigtable.v2.IReadModifyWriteRule>|null} [rules] ReadModifyWriteRowRequest rules
@@ -30104,6 +36407,14 @@
                      * @instance
                      */
                     ReadModifyWriteRowRequest.prototype.tableName = "";
+    
+                    /**
+                     * ReadModifyWriteRowRequest authorizedViewName.
+                     * @member {string} authorizedViewName
+                     * @memberof google.bigtable.v2.ReadModifyWriteRowRequest
+                     * @instance
+                     */
+                    ReadModifyWriteRowRequest.prototype.authorizedViewName = "";
     
                     /**
                      * ReadModifyWriteRowRequest appProfileId.
@@ -30162,6 +36473,8 @@
                                 $root.google.bigtable.v2.ReadModifyWriteRule.encode(message.rules[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                         if (message.appProfileId != null && Object.hasOwnProperty.call(message, "appProfileId"))
                             writer.uint32(/* id 4, wireType 2 =*/34).string(message.appProfileId);
+                        if (message.authorizedViewName != null && Object.hasOwnProperty.call(message, "authorizedViewName"))
+                            writer.uint32(/* id 6, wireType 2 =*/50).string(message.authorizedViewName);
                         return writer;
                     };
     
@@ -30198,6 +36511,10 @@
                             switch (tag >>> 3) {
                             case 1: {
                                     message.tableName = reader.string();
+                                    break;
+                                }
+                            case 6: {
+                                    message.authorizedViewName = reader.string();
                                     break;
                                 }
                             case 4: {
@@ -30252,6 +36569,9 @@
                         if (message.tableName != null && message.hasOwnProperty("tableName"))
                             if (!$util.isString(message.tableName))
                                 return "tableName: string expected";
+                        if (message.authorizedViewName != null && message.hasOwnProperty("authorizedViewName"))
+                            if (!$util.isString(message.authorizedViewName))
+                                return "authorizedViewName: string expected";
                         if (message.appProfileId != null && message.hasOwnProperty("appProfileId"))
                             if (!$util.isString(message.appProfileId))
                                 return "appProfileId: string expected";
@@ -30284,6 +36604,8 @@
                         var message = new $root.google.bigtable.v2.ReadModifyWriteRowRequest();
                         if (object.tableName != null)
                             message.tableName = String(object.tableName);
+                        if (object.authorizedViewName != null)
+                            message.authorizedViewName = String(object.authorizedViewName);
                         if (object.appProfileId != null)
                             message.appProfileId = String(object.appProfileId);
                         if (object.rowKey != null)
@@ -30329,6 +36651,7 @@
                                     object.rowKey = $util.newBuffer(object.rowKey);
                             }
                             object.appProfileId = "";
+                            object.authorizedViewName = "";
                         }
                         if (message.tableName != null && message.hasOwnProperty("tableName"))
                             object.tableName = message.tableName;
@@ -30341,6 +36664,8 @@
                         }
                         if (message.appProfileId != null && message.hasOwnProperty("appProfileId"))
                             object.appProfileId = message.appProfileId;
+                        if (message.authorizedViewName != null && message.hasOwnProperty("authorizedViewName"))
+                            object.authorizedViewName = message.authorizedViewName;
                         return object;
                     };
     
@@ -34257,6 +40582,308 @@
                     return Cell;
                 })();
     
+                v2.Value = (function() {
+    
+                    /**
+                     * Properties of a Value.
+                     * @memberof google.bigtable.v2
+                     * @interface IValue
+                     * @property {Uint8Array|null} [rawValue] Value rawValue
+                     * @property {number|Long|null} [rawTimestampMicros] Value rawTimestampMicros
+                     * @property {number|Long|null} [intValue] Value intValue
+                     */
+    
+                    /**
+                     * Constructs a new Value.
+                     * @memberof google.bigtable.v2
+                     * @classdesc Represents a Value.
+                     * @implements IValue
+                     * @constructor
+                     * @param {google.bigtable.v2.IValue=} [properties] Properties to set
+                     */
+                    function Value(properties) {
+                        if (properties)
+                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null)
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+    
+                    /**
+                     * Value rawValue.
+                     * @member {Uint8Array|null|undefined} rawValue
+                     * @memberof google.bigtable.v2.Value
+                     * @instance
+                     */
+                    Value.prototype.rawValue = null;
+    
+                    /**
+                     * Value rawTimestampMicros.
+                     * @member {number|Long|null|undefined} rawTimestampMicros
+                     * @memberof google.bigtable.v2.Value
+                     * @instance
+                     */
+                    Value.prototype.rawTimestampMicros = null;
+    
+                    /**
+                     * Value intValue.
+                     * @member {number|Long|null|undefined} intValue
+                     * @memberof google.bigtable.v2.Value
+                     * @instance
+                     */
+                    Value.prototype.intValue = null;
+    
+                    // OneOf field names bound to virtual getters and setters
+                    var $oneOfFields;
+    
+                    /**
+                     * Value kind.
+                     * @member {"rawValue"|"rawTimestampMicros"|"intValue"|undefined} kind
+                     * @memberof google.bigtable.v2.Value
+                     * @instance
+                     */
+                    Object.defineProperty(Value.prototype, "kind", {
+                        get: $util.oneOfGetter($oneOfFields = ["rawValue", "rawTimestampMicros", "intValue"]),
+                        set: $util.oneOfSetter($oneOfFields)
+                    });
+    
+                    /**
+                     * Creates a new Value instance using the specified properties.
+                     * @function create
+                     * @memberof google.bigtable.v2.Value
+                     * @static
+                     * @param {google.bigtable.v2.IValue=} [properties] Properties to set
+                     * @returns {google.bigtable.v2.Value} Value instance
+                     */
+                    Value.create = function create(properties) {
+                        return new Value(properties);
+                    };
+    
+                    /**
+                     * Encodes the specified Value message. Does not implicitly {@link google.bigtable.v2.Value.verify|verify} messages.
+                     * @function encode
+                     * @memberof google.bigtable.v2.Value
+                     * @static
+                     * @param {google.bigtable.v2.IValue} message Value message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Value.encode = function encode(message, writer) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (message.intValue != null && Object.hasOwnProperty.call(message, "intValue"))
+                            writer.uint32(/* id 6, wireType 0 =*/48).int64(message.intValue);
+                        if (message.rawValue != null && Object.hasOwnProperty.call(message, "rawValue"))
+                            writer.uint32(/* id 8, wireType 2 =*/66).bytes(message.rawValue);
+                        if (message.rawTimestampMicros != null && Object.hasOwnProperty.call(message, "rawTimestampMicros"))
+                            writer.uint32(/* id 9, wireType 0 =*/72).int64(message.rawTimestampMicros);
+                        return writer;
+                    };
+    
+                    /**
+                     * Encodes the specified Value message, length delimited. Does not implicitly {@link google.bigtable.v2.Value.verify|verify} messages.
+                     * @function encodeDelimited
+                     * @memberof google.bigtable.v2.Value
+                     * @static
+                     * @param {google.bigtable.v2.IValue} message Value message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Value.encodeDelimited = function encodeDelimited(message, writer) {
+                        return this.encode(message, writer).ldelim();
+                    };
+    
+                    /**
+                     * Decodes a Value message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof google.bigtable.v2.Value
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {google.bigtable.v2.Value} Value
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Value.decode = function decode(reader, length) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.v2.Value();
+                        while (reader.pos < end) {
+                            var tag = reader.uint32();
+                            switch (tag >>> 3) {
+                            case 8: {
+                                    message.rawValue = reader.bytes();
+                                    break;
+                                }
+                            case 9: {
+                                    message.rawTimestampMicros = reader.int64();
+                                    break;
+                                }
+                            case 6: {
+                                    message.intValue = reader.int64();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7);
+                                break;
+                            }
+                        }
+                        return message;
+                    };
+    
+                    /**
+                     * Decodes a Value message from the specified reader or buffer, length delimited.
+                     * @function decodeDelimited
+                     * @memberof google.bigtable.v2.Value
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @returns {google.bigtable.v2.Value} Value
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Value.decodeDelimited = function decodeDelimited(reader) {
+                        if (!(reader instanceof $Reader))
+                            reader = new $Reader(reader);
+                        return this.decode(reader, reader.uint32());
+                    };
+    
+                    /**
+                     * Verifies a Value message.
+                     * @function verify
+                     * @memberof google.bigtable.v2.Value
+                     * @static
+                     * @param {Object.<string,*>} message Plain object to verify
+                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                     */
+                    Value.verify = function verify(message) {
+                        if (typeof message !== "object" || message === null)
+                            return "object expected";
+                        var properties = {};
+                        if (message.rawValue != null && message.hasOwnProperty("rawValue")) {
+                            properties.kind = 1;
+                            if (!(message.rawValue && typeof message.rawValue.length === "number" || $util.isString(message.rawValue)))
+                                return "rawValue: buffer expected";
+                        }
+                        if (message.rawTimestampMicros != null && message.hasOwnProperty("rawTimestampMicros")) {
+                            if (properties.kind === 1)
+                                return "kind: multiple values";
+                            properties.kind = 1;
+                            if (!$util.isInteger(message.rawTimestampMicros) && !(message.rawTimestampMicros && $util.isInteger(message.rawTimestampMicros.low) && $util.isInteger(message.rawTimestampMicros.high)))
+                                return "rawTimestampMicros: integer|Long expected";
+                        }
+                        if (message.intValue != null && message.hasOwnProperty("intValue")) {
+                            if (properties.kind === 1)
+                                return "kind: multiple values";
+                            properties.kind = 1;
+                            if (!$util.isInteger(message.intValue) && !(message.intValue && $util.isInteger(message.intValue.low) && $util.isInteger(message.intValue.high)))
+                                return "intValue: integer|Long expected";
+                        }
+                        return null;
+                    };
+    
+                    /**
+                     * Creates a Value message from a plain object. Also converts values to their respective internal types.
+                     * @function fromObject
+                     * @memberof google.bigtable.v2.Value
+                     * @static
+                     * @param {Object.<string,*>} object Plain object
+                     * @returns {google.bigtable.v2.Value} Value
+                     */
+                    Value.fromObject = function fromObject(object) {
+                        if (object instanceof $root.google.bigtable.v2.Value)
+                            return object;
+                        var message = new $root.google.bigtable.v2.Value();
+                        if (object.rawValue != null)
+                            if (typeof object.rawValue === "string")
+                                $util.base64.decode(object.rawValue, message.rawValue = $util.newBuffer($util.base64.length(object.rawValue)), 0);
+                            else if (object.rawValue.length >= 0)
+                                message.rawValue = object.rawValue;
+                        if (object.rawTimestampMicros != null)
+                            if ($util.Long)
+                                (message.rawTimestampMicros = $util.Long.fromValue(object.rawTimestampMicros)).unsigned = false;
+                            else if (typeof object.rawTimestampMicros === "string")
+                                message.rawTimestampMicros = parseInt(object.rawTimestampMicros, 10);
+                            else if (typeof object.rawTimestampMicros === "number")
+                                message.rawTimestampMicros = object.rawTimestampMicros;
+                            else if (typeof object.rawTimestampMicros === "object")
+                                message.rawTimestampMicros = new $util.LongBits(object.rawTimestampMicros.low >>> 0, object.rawTimestampMicros.high >>> 0).toNumber();
+                        if (object.intValue != null)
+                            if ($util.Long)
+                                (message.intValue = $util.Long.fromValue(object.intValue)).unsigned = false;
+                            else if (typeof object.intValue === "string")
+                                message.intValue = parseInt(object.intValue, 10);
+                            else if (typeof object.intValue === "number")
+                                message.intValue = object.intValue;
+                            else if (typeof object.intValue === "object")
+                                message.intValue = new $util.LongBits(object.intValue.low >>> 0, object.intValue.high >>> 0).toNumber();
+                        return message;
+                    };
+    
+                    /**
+                     * Creates a plain object from a Value message. Also converts values to other types if specified.
+                     * @function toObject
+                     * @memberof google.bigtable.v2.Value
+                     * @static
+                     * @param {google.bigtable.v2.Value} message Value
+                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                     * @returns {Object.<string,*>} Plain object
+                     */
+                    Value.toObject = function toObject(message, options) {
+                        if (!options)
+                            options = {};
+                        var object = {};
+                        if (message.intValue != null && message.hasOwnProperty("intValue")) {
+                            if (typeof message.intValue === "number")
+                                object.intValue = options.longs === String ? String(message.intValue) : message.intValue;
+                            else
+                                object.intValue = options.longs === String ? $util.Long.prototype.toString.call(message.intValue) : options.longs === Number ? new $util.LongBits(message.intValue.low >>> 0, message.intValue.high >>> 0).toNumber() : message.intValue;
+                            if (options.oneofs)
+                                object.kind = "intValue";
+                        }
+                        if (message.rawValue != null && message.hasOwnProperty("rawValue")) {
+                            object.rawValue = options.bytes === String ? $util.base64.encode(message.rawValue, 0, message.rawValue.length) : options.bytes === Array ? Array.prototype.slice.call(message.rawValue) : message.rawValue;
+                            if (options.oneofs)
+                                object.kind = "rawValue";
+                        }
+                        if (message.rawTimestampMicros != null && message.hasOwnProperty("rawTimestampMicros")) {
+                            if (typeof message.rawTimestampMicros === "number")
+                                object.rawTimestampMicros = options.longs === String ? String(message.rawTimestampMicros) : message.rawTimestampMicros;
+                            else
+                                object.rawTimestampMicros = options.longs === String ? $util.Long.prototype.toString.call(message.rawTimestampMicros) : options.longs === Number ? new $util.LongBits(message.rawTimestampMicros.low >>> 0, message.rawTimestampMicros.high >>> 0).toNumber() : message.rawTimestampMicros;
+                            if (options.oneofs)
+                                object.kind = "rawTimestampMicros";
+                        }
+                        return object;
+                    };
+    
+                    /**
+                     * Converts this Value to JSON.
+                     * @function toJSON
+                     * @memberof google.bigtable.v2.Value
+                     * @instance
+                     * @returns {Object.<string,*>} JSON object
+                     */
+                    Value.prototype.toJSON = function toJSON() {
+                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                    };
+    
+                    /**
+                     * Gets the default type url for Value
+                     * @function getTypeUrl
+                     * @memberof google.bigtable.v2.Value
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    Value.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/google.bigtable.v2.Value";
+                    };
+    
+                    return Value;
+                })();
+    
                 v2.RowRange = (function() {
     
                     /**
@@ -37298,6 +43925,7 @@
                      * @memberof google.bigtable.v2
                      * @interface IMutation
                      * @property {google.bigtable.v2.Mutation.ISetCell|null} [setCell] Mutation setCell
+                     * @property {google.bigtable.v2.Mutation.IAddToCell|null} [addToCell] Mutation addToCell
                      * @property {google.bigtable.v2.Mutation.IDeleteFromColumn|null} [deleteFromColumn] Mutation deleteFromColumn
                      * @property {google.bigtable.v2.Mutation.IDeleteFromFamily|null} [deleteFromFamily] Mutation deleteFromFamily
                      * @property {google.bigtable.v2.Mutation.IDeleteFromRow|null} [deleteFromRow] Mutation deleteFromRow
@@ -37325,6 +43953,14 @@
                      * @instance
                      */
                     Mutation.prototype.setCell = null;
+    
+                    /**
+                     * Mutation addToCell.
+                     * @member {google.bigtable.v2.Mutation.IAddToCell|null|undefined} addToCell
+                     * @memberof google.bigtable.v2.Mutation
+                     * @instance
+                     */
+                    Mutation.prototype.addToCell = null;
     
                     /**
                      * Mutation deleteFromColumn.
@@ -37355,12 +43991,12 @@
     
                     /**
                      * Mutation mutation.
-                     * @member {"setCell"|"deleteFromColumn"|"deleteFromFamily"|"deleteFromRow"|undefined} mutation
+                     * @member {"setCell"|"addToCell"|"deleteFromColumn"|"deleteFromFamily"|"deleteFromRow"|undefined} mutation
                      * @memberof google.bigtable.v2.Mutation
                      * @instance
                      */
                     Object.defineProperty(Mutation.prototype, "mutation", {
-                        get: $util.oneOfGetter($oneOfFields = ["setCell", "deleteFromColumn", "deleteFromFamily", "deleteFromRow"]),
+                        get: $util.oneOfGetter($oneOfFields = ["setCell", "addToCell", "deleteFromColumn", "deleteFromFamily", "deleteFromRow"]),
                         set: $util.oneOfSetter($oneOfFields)
                     });
     
@@ -37396,6 +44032,8 @@
                             $root.google.bigtable.v2.Mutation.DeleteFromFamily.encode(message.deleteFromFamily, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                         if (message.deleteFromRow != null && Object.hasOwnProperty.call(message, "deleteFromRow"))
                             $root.google.bigtable.v2.Mutation.DeleteFromRow.encode(message.deleteFromRow, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                        if (message.addToCell != null && Object.hasOwnProperty.call(message, "addToCell"))
+                            $root.google.bigtable.v2.Mutation.AddToCell.encode(message.addToCell, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                         return writer;
                     };
     
@@ -37432,6 +44070,10 @@
                             switch (tag >>> 3) {
                             case 1: {
                                     message.setCell = $root.google.bigtable.v2.Mutation.SetCell.decode(reader, reader.uint32());
+                                    break;
+                                }
+                            case 5: {
+                                    message.addToCell = $root.google.bigtable.v2.Mutation.AddToCell.decode(reader, reader.uint32());
                                     break;
                                 }
                             case 2: {
@@ -37490,6 +44132,16 @@
                                     return "setCell." + error;
                             }
                         }
+                        if (message.addToCell != null && message.hasOwnProperty("addToCell")) {
+                            if (properties.mutation === 1)
+                                return "mutation: multiple values";
+                            properties.mutation = 1;
+                            {
+                                var error = $root.google.bigtable.v2.Mutation.AddToCell.verify(message.addToCell);
+                                if (error)
+                                    return "addToCell." + error;
+                            }
+                        }
                         if (message.deleteFromColumn != null && message.hasOwnProperty("deleteFromColumn")) {
                             if (properties.mutation === 1)
                                 return "mutation: multiple values";
@@ -37539,6 +44191,11 @@
                             if (typeof object.setCell !== "object")
                                 throw TypeError(".google.bigtable.v2.Mutation.setCell: object expected");
                             message.setCell = $root.google.bigtable.v2.Mutation.SetCell.fromObject(object.setCell);
+                        }
+                        if (object.addToCell != null) {
+                            if (typeof object.addToCell !== "object")
+                                throw TypeError(".google.bigtable.v2.Mutation.addToCell: object expected");
+                            message.addToCell = $root.google.bigtable.v2.Mutation.AddToCell.fromObject(object.addToCell);
                         }
                         if (object.deleteFromColumn != null) {
                             if (typeof object.deleteFromColumn !== "object")
@@ -37590,6 +44247,11 @@
                             object.deleteFromRow = $root.google.bigtable.v2.Mutation.DeleteFromRow.toObject(message.deleteFromRow, options);
                             if (options.oneofs)
                                 object.mutation = "deleteFromRow";
+                        }
+                        if (message.addToCell != null && message.hasOwnProperty("addToCell")) {
+                            object.addToCell = $root.google.bigtable.v2.Mutation.AddToCell.toObject(message.addToCell, options);
+                            if (options.oneofs)
+                                object.mutation = "addToCell";
                         }
                         return object;
                     };
@@ -37923,6 +44585,294 @@
                         };
     
                         return SetCell;
+                    })();
+    
+                    Mutation.AddToCell = (function() {
+    
+                        /**
+                         * Properties of an AddToCell.
+                         * @memberof google.bigtable.v2.Mutation
+                         * @interface IAddToCell
+                         * @property {string|null} [familyName] AddToCell familyName
+                         * @property {google.bigtable.v2.IValue|null} [columnQualifier] AddToCell columnQualifier
+                         * @property {google.bigtable.v2.IValue|null} [timestamp] AddToCell timestamp
+                         * @property {google.bigtable.v2.IValue|null} [input] AddToCell input
+                         */
+    
+                        /**
+                         * Constructs a new AddToCell.
+                         * @memberof google.bigtable.v2.Mutation
+                         * @classdesc Represents an AddToCell.
+                         * @implements IAddToCell
+                         * @constructor
+                         * @param {google.bigtable.v2.Mutation.IAddToCell=} [properties] Properties to set
+                         */
+                        function AddToCell(properties) {
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * AddToCell familyName.
+                         * @member {string} familyName
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @instance
+                         */
+                        AddToCell.prototype.familyName = "";
+    
+                        /**
+                         * AddToCell columnQualifier.
+                         * @member {google.bigtable.v2.IValue|null|undefined} columnQualifier
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @instance
+                         */
+                        AddToCell.prototype.columnQualifier = null;
+    
+                        /**
+                         * AddToCell timestamp.
+                         * @member {google.bigtable.v2.IValue|null|undefined} timestamp
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @instance
+                         */
+                        AddToCell.prototype.timestamp = null;
+    
+                        /**
+                         * AddToCell input.
+                         * @member {google.bigtable.v2.IValue|null|undefined} input
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @instance
+                         */
+                        AddToCell.prototype.input = null;
+    
+                        /**
+                         * Creates a new AddToCell instance using the specified properties.
+                         * @function create
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @static
+                         * @param {google.bigtable.v2.Mutation.IAddToCell=} [properties] Properties to set
+                         * @returns {google.bigtable.v2.Mutation.AddToCell} AddToCell instance
+                         */
+                        AddToCell.create = function create(properties) {
+                            return new AddToCell(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified AddToCell message. Does not implicitly {@link google.bigtable.v2.Mutation.AddToCell.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @static
+                         * @param {google.bigtable.v2.Mutation.IAddToCell} message AddToCell message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        AddToCell.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.familyName != null && Object.hasOwnProperty.call(message, "familyName"))
+                                writer.uint32(/* id 1, wireType 2 =*/10).string(message.familyName);
+                            if (message.columnQualifier != null && Object.hasOwnProperty.call(message, "columnQualifier"))
+                                $root.google.bigtable.v2.Value.encode(message.columnQualifier, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                            if (message.timestamp != null && Object.hasOwnProperty.call(message, "timestamp"))
+                                $root.google.bigtable.v2.Value.encode(message.timestamp, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                            if (message.input != null && Object.hasOwnProperty.call(message, "input"))
+                                $root.google.bigtable.v2.Value.encode(message.input, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified AddToCell message, length delimited. Does not implicitly {@link google.bigtable.v2.Mutation.AddToCell.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @static
+                         * @param {google.bigtable.v2.Mutation.IAddToCell} message AddToCell message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        AddToCell.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes an AddToCell message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.bigtable.v2.Mutation.AddToCell} AddToCell
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        AddToCell.decode = function decode(reader, length) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.v2.Mutation.AddToCell();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        message.familyName = reader.string();
+                                        break;
+                                    }
+                                case 2: {
+                                        message.columnQualifier = $root.google.bigtable.v2.Value.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 3: {
+                                        message.timestamp = $root.google.bigtable.v2.Value.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 4: {
+                                        message.input = $root.google.bigtable.v2.Value.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes an AddToCell message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.bigtable.v2.Mutation.AddToCell} AddToCell
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        AddToCell.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies an AddToCell message.
+                         * @function verify
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        AddToCell.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            if (message.familyName != null && message.hasOwnProperty("familyName"))
+                                if (!$util.isString(message.familyName))
+                                    return "familyName: string expected";
+                            if (message.columnQualifier != null && message.hasOwnProperty("columnQualifier")) {
+                                var error = $root.google.bigtable.v2.Value.verify(message.columnQualifier);
+                                if (error)
+                                    return "columnQualifier." + error;
+                            }
+                            if (message.timestamp != null && message.hasOwnProperty("timestamp")) {
+                                var error = $root.google.bigtable.v2.Value.verify(message.timestamp);
+                                if (error)
+                                    return "timestamp." + error;
+                            }
+                            if (message.input != null && message.hasOwnProperty("input")) {
+                                var error = $root.google.bigtable.v2.Value.verify(message.input);
+                                if (error)
+                                    return "input." + error;
+                            }
+                            return null;
+                        };
+    
+                        /**
+                         * Creates an AddToCell message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.bigtable.v2.Mutation.AddToCell} AddToCell
+                         */
+                        AddToCell.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.bigtable.v2.Mutation.AddToCell)
+                                return object;
+                            var message = new $root.google.bigtable.v2.Mutation.AddToCell();
+                            if (object.familyName != null)
+                                message.familyName = String(object.familyName);
+                            if (object.columnQualifier != null) {
+                                if (typeof object.columnQualifier !== "object")
+                                    throw TypeError(".google.bigtable.v2.Mutation.AddToCell.columnQualifier: object expected");
+                                message.columnQualifier = $root.google.bigtable.v2.Value.fromObject(object.columnQualifier);
+                            }
+                            if (object.timestamp != null) {
+                                if (typeof object.timestamp !== "object")
+                                    throw TypeError(".google.bigtable.v2.Mutation.AddToCell.timestamp: object expected");
+                                message.timestamp = $root.google.bigtable.v2.Value.fromObject(object.timestamp);
+                            }
+                            if (object.input != null) {
+                                if (typeof object.input !== "object")
+                                    throw TypeError(".google.bigtable.v2.Mutation.AddToCell.input: object expected");
+                                message.input = $root.google.bigtable.v2.Value.fromObject(object.input);
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from an AddToCell message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @static
+                         * @param {google.bigtable.v2.Mutation.AddToCell} message AddToCell
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        AddToCell.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.defaults) {
+                                object.familyName = "";
+                                object.columnQualifier = null;
+                                object.timestamp = null;
+                                object.input = null;
+                            }
+                            if (message.familyName != null && message.hasOwnProperty("familyName"))
+                                object.familyName = message.familyName;
+                            if (message.columnQualifier != null && message.hasOwnProperty("columnQualifier"))
+                                object.columnQualifier = $root.google.bigtable.v2.Value.toObject(message.columnQualifier, options);
+                            if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                                object.timestamp = $root.google.bigtable.v2.Value.toObject(message.timestamp, options);
+                            if (message.input != null && message.hasOwnProperty("input"))
+                                object.input = $root.google.bigtable.v2.Value.toObject(message.input, options);
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this AddToCell to JSON.
+                         * @function toJSON
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        AddToCell.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for AddToCell
+                         * @function getTypeUrl
+                         * @memberof google.bigtable.v2.Mutation.AddToCell
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        AddToCell.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.bigtable.v2.Mutation.AddToCell";
+                        };
+    
+                        return AddToCell;
                     })();
     
                     Mutation.DeleteFromColumn = (function() {
@@ -40567,6 +47517,7 @@
                      * @property {boolean|null} [lastScannedRowResponses] FeatureFlags lastScannedRowResponses
                      * @property {boolean|null} [routingCookie] FeatureFlags routingCookie
                      * @property {boolean|null} [retryInfo] FeatureFlags retryInfo
+                     * @property {boolean|null} [clientSideMetricsEnabled] FeatureFlags clientSideMetricsEnabled
                      */
     
                     /**
@@ -40633,6 +47584,14 @@
                     FeatureFlags.prototype.retryInfo = false;
     
                     /**
+                     * FeatureFlags clientSideMetricsEnabled.
+                     * @member {boolean} clientSideMetricsEnabled
+                     * @memberof google.bigtable.v2.FeatureFlags
+                     * @instance
+                     */
+                    FeatureFlags.prototype.clientSideMetricsEnabled = false;
+    
+                    /**
                      * Creates a new FeatureFlags instance using the specified properties.
                      * @function create
                      * @memberof google.bigtable.v2.FeatureFlags
@@ -40668,6 +47627,8 @@
                             writer.uint32(/* id 6, wireType 0 =*/48).bool(message.routingCookie);
                         if (message.retryInfo != null && Object.hasOwnProperty.call(message, "retryInfo"))
                             writer.uint32(/* id 7, wireType 0 =*/56).bool(message.retryInfo);
+                        if (message.clientSideMetricsEnabled != null && Object.hasOwnProperty.call(message, "clientSideMetricsEnabled"))
+                            writer.uint32(/* id 8, wireType 0 =*/64).bool(message.clientSideMetricsEnabled);
                         return writer;
                     };
     
@@ -40726,6 +47687,10 @@
                                     message.retryInfo = reader.bool();
                                     break;
                                 }
+                            case 8: {
+                                    message.clientSideMetricsEnabled = reader.bool();
+                                    break;
+                                }
                             default:
                                 reader.skipType(tag & 7);
                                 break;
@@ -40779,6 +47744,9 @@
                         if (message.retryInfo != null && message.hasOwnProperty("retryInfo"))
                             if (typeof message.retryInfo !== "boolean")
                                 return "retryInfo: boolean expected";
+                        if (message.clientSideMetricsEnabled != null && message.hasOwnProperty("clientSideMetricsEnabled"))
+                            if (typeof message.clientSideMetricsEnabled !== "boolean")
+                                return "clientSideMetricsEnabled: boolean expected";
                         return null;
                     };
     
@@ -40806,6 +47774,8 @@
                             message.routingCookie = Boolean(object.routingCookie);
                         if (object.retryInfo != null)
                             message.retryInfo = Boolean(object.retryInfo);
+                        if (object.clientSideMetricsEnabled != null)
+                            message.clientSideMetricsEnabled = Boolean(object.clientSideMetricsEnabled);
                         return message;
                     };
     
@@ -40829,6 +47799,7 @@
                             object.mutateRowsRateLimit2 = false;
                             object.routingCookie = false;
                             object.retryInfo = false;
+                            object.clientSideMetricsEnabled = false;
                         }
                         if (message.reverseScans != null && message.hasOwnProperty("reverseScans"))
                             object.reverseScans = message.reverseScans;
@@ -40842,6 +47813,8 @@
                             object.routingCookie = message.routingCookie;
                         if (message.retryInfo != null && message.hasOwnProperty("retryInfo"))
                             object.retryInfo = message.retryInfo;
+                        if (message.clientSideMetricsEnabled != null && message.hasOwnProperty("clientSideMetricsEnabled"))
+                            object.clientSideMetricsEnabled = message.clientSideMetricsEnabled;
                         return object;
                     };
     
