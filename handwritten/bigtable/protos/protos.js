@@ -29525,6 +29525,7 @@
                          * @memberof google.bigtable.admin.v2
                          * @interface IType
                          * @property {google.bigtable.admin.v2.Type.IBytes|null} [bytesType] Type bytesType
+                         * @property {google.bigtable.admin.v2.Type.IString|null} [stringType] Type stringType
                          * @property {google.bigtable.admin.v2.Type.IInt64|null} [int64Type] Type int64Type
                          * @property {google.bigtable.admin.v2.Type.IAggregate|null} [aggregateType] Type aggregateType
                          */
@@ -29553,6 +29554,14 @@
                         Type.prototype.bytesType = null;
     
                         /**
+                         * Type stringType.
+                         * @member {google.bigtable.admin.v2.Type.IString|null|undefined} stringType
+                         * @memberof google.bigtable.admin.v2.Type
+                         * @instance
+                         */
+                        Type.prototype.stringType = null;
+    
+                        /**
                          * Type int64Type.
                          * @member {google.bigtable.admin.v2.Type.IInt64|null|undefined} int64Type
                          * @memberof google.bigtable.admin.v2.Type
@@ -29573,12 +29582,12 @@
     
                         /**
                          * Type kind.
-                         * @member {"bytesType"|"int64Type"|"aggregateType"|undefined} kind
+                         * @member {"bytesType"|"stringType"|"int64Type"|"aggregateType"|undefined} kind
                          * @memberof google.bigtable.admin.v2.Type
                          * @instance
                          */
                         Object.defineProperty(Type.prototype, "kind", {
-                            get: $util.oneOfGetter($oneOfFields = ["bytesType", "int64Type", "aggregateType"]),
+                            get: $util.oneOfGetter($oneOfFields = ["bytesType", "stringType", "int64Type", "aggregateType"]),
                             set: $util.oneOfSetter($oneOfFields)
                         });
     
@@ -29608,6 +29617,8 @@
                                 writer = $Writer.create();
                             if (message.bytesType != null && Object.hasOwnProperty.call(message, "bytesType"))
                                 $root.google.bigtable.admin.v2.Type.Bytes.encode(message.bytesType, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                            if (message.stringType != null && Object.hasOwnProperty.call(message, "stringType"))
+                                $root.google.bigtable.admin.v2.Type.String.encode(message.stringType, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                             if (message.int64Type != null && Object.hasOwnProperty.call(message, "int64Type"))
                                 $root.google.bigtable.admin.v2.Type.Int64.encode(message.int64Type, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                             if (message.aggregateType != null && Object.hasOwnProperty.call(message, "aggregateType"))
@@ -29648,6 +29659,10 @@
                                 switch (tag >>> 3) {
                                 case 1: {
                                         message.bytesType = $root.google.bigtable.admin.v2.Type.Bytes.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 2: {
+                                        message.stringType = $root.google.bigtable.admin.v2.Type.String.decode(reader, reader.uint32());
                                         break;
                                     }
                                 case 5: {
@@ -29702,6 +29717,16 @@
                                         return "bytesType." + error;
                                 }
                             }
+                            if (message.stringType != null && message.hasOwnProperty("stringType")) {
+                                if (properties.kind === 1)
+                                    return "kind: multiple values";
+                                properties.kind = 1;
+                                {
+                                    var error = $root.google.bigtable.admin.v2.Type.String.verify(message.stringType);
+                                    if (error)
+                                        return "stringType." + error;
+                                }
+                            }
                             if (message.int64Type != null && message.hasOwnProperty("int64Type")) {
                                 if (properties.kind === 1)
                                     return "kind: multiple values";
@@ -29742,6 +29767,11 @@
                                     throw TypeError(".google.bigtable.admin.v2.Type.bytesType: object expected");
                                 message.bytesType = $root.google.bigtable.admin.v2.Type.Bytes.fromObject(object.bytesType);
                             }
+                            if (object.stringType != null) {
+                                if (typeof object.stringType !== "object")
+                                    throw TypeError(".google.bigtable.admin.v2.Type.stringType: object expected");
+                                message.stringType = $root.google.bigtable.admin.v2.Type.String.fromObject(object.stringType);
+                            }
                             if (object.int64Type != null) {
                                 if (typeof object.int64Type !== "object")
                                     throw TypeError(".google.bigtable.admin.v2.Type.int64Type: object expected");
@@ -29772,6 +29802,11 @@
                                 object.bytesType = $root.google.bigtable.admin.v2.Type.Bytes.toObject(message.bytesType, options);
                                 if (options.oneofs)
                                     object.kind = "bytesType";
+                            }
+                            if (message.stringType != null && message.hasOwnProperty("stringType")) {
+                                object.stringType = $root.google.bigtable.admin.v2.Type.String.toObject(message.stringType, options);
+                                if (options.oneofs)
+                                    object.kind = "stringType";
                             }
                             if (message.int64Type != null && message.hasOwnProperty("int64Type")) {
                                 object.int64Type = $root.google.bigtable.admin.v2.Type.Int64.toObject(message.int64Type, options);
@@ -30420,6 +30455,616 @@
                             })();
     
                             return Bytes;
+                        })();
+    
+                        Type.String = (function() {
+    
+                            /**
+                             * Properties of a String.
+                             * @memberof google.bigtable.admin.v2.Type
+                             * @interface IString
+                             * @property {google.bigtable.admin.v2.Type.String.IEncoding|null} [encoding] String encoding
+                             */
+    
+                            /**
+                             * Constructs a new String.
+                             * @memberof google.bigtable.admin.v2.Type
+                             * @classdesc Represents a String.
+                             * @implements IString
+                             * @constructor
+                             * @param {google.bigtable.admin.v2.Type.IString=} [properties] Properties to set
+                             */
+                            function String(properties) {
+                                if (properties)
+                                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                        if (properties[keys[i]] != null)
+                                            this[keys[i]] = properties[keys[i]];
+                            }
+    
+                            /**
+                             * String encoding.
+                             * @member {google.bigtable.admin.v2.Type.String.IEncoding|null|undefined} encoding
+                             * @memberof google.bigtable.admin.v2.Type.String
+                             * @instance
+                             */
+                            String.prototype.encoding = null;
+    
+                            /**
+                             * Creates a new String instance using the specified properties.
+                             * @function create
+                             * @memberof google.bigtable.admin.v2.Type.String
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.IString=} [properties] Properties to set
+                             * @returns {google.bigtable.admin.v2.Type.String} String instance
+                             */
+                            String.create = function create(properties) {
+                                return new String(properties);
+                            };
+    
+                            /**
+                             * Encodes the specified String message. Does not implicitly {@link google.bigtable.admin.v2.Type.String.verify|verify} messages.
+                             * @function encode
+                             * @memberof google.bigtable.admin.v2.Type.String
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.IString} message String message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            String.encode = function encode(message, writer) {
+                                if (!writer)
+                                    writer = $Writer.create();
+                                if (message.encoding != null && Object.hasOwnProperty.call(message, "encoding"))
+                                    $root.google.bigtable.admin.v2.Type.String.Encoding.encode(message.encoding, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                                return writer;
+                            };
+    
+                            /**
+                             * Encodes the specified String message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Type.String.verify|verify} messages.
+                             * @function encodeDelimited
+                             * @memberof google.bigtable.admin.v2.Type.String
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.IString} message String message or plain object to encode
+                             * @param {$protobuf.Writer} [writer] Writer to encode to
+                             * @returns {$protobuf.Writer} Writer
+                             */
+                            String.encodeDelimited = function encodeDelimited(message, writer) {
+                                return this.encode(message, writer).ldelim();
+                            };
+    
+                            /**
+                             * Decodes a String message from the specified reader or buffer.
+                             * @function decode
+                             * @memberof google.bigtable.admin.v2.Type.String
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @param {number} [length] Message length if known beforehand
+                             * @returns {google.bigtable.admin.v2.Type.String} String
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            String.decode = function decode(reader, length) {
+                                if (!(reader instanceof $Reader))
+                                    reader = $Reader.create(reader);
+                                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Type.String();
+                                while (reader.pos < end) {
+                                    var tag = reader.uint32();
+                                    switch (tag >>> 3) {
+                                    case 1: {
+                                            message.encoding = $root.google.bigtable.admin.v2.Type.String.Encoding.decode(reader, reader.uint32());
+                                            break;
+                                        }
+                                    default:
+                                        reader.skipType(tag & 7);
+                                        break;
+                                    }
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Decodes a String message from the specified reader or buffer, length delimited.
+                             * @function decodeDelimited
+                             * @memberof google.bigtable.admin.v2.Type.String
+                             * @static
+                             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                             * @returns {google.bigtable.admin.v2.Type.String} String
+                             * @throws {Error} If the payload is not a reader or valid buffer
+                             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                             */
+                            String.decodeDelimited = function decodeDelimited(reader) {
+                                if (!(reader instanceof $Reader))
+                                    reader = new $Reader(reader);
+                                return this.decode(reader, reader.uint32());
+                            };
+    
+                            /**
+                             * Verifies a String message.
+                             * @function verify
+                             * @memberof google.bigtable.admin.v2.Type.String
+                             * @static
+                             * @param {Object.<string,*>} message Plain object to verify
+                             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                             */
+                            String.verify = function verify(message) {
+                                if (typeof message !== "object" || message === null)
+                                    return "object expected";
+                                if (message.encoding != null && message.hasOwnProperty("encoding")) {
+                                    var error = $root.google.bigtable.admin.v2.Type.String.Encoding.verify(message.encoding);
+                                    if (error)
+                                        return "encoding." + error;
+                                }
+                                return null;
+                            };
+    
+                            /**
+                             * Creates a String message from a plain object. Also converts values to their respective internal types.
+                             * @function fromObject
+                             * @memberof google.bigtable.admin.v2.Type.String
+                             * @static
+                             * @param {Object.<string,*>} object Plain object
+                             * @returns {google.bigtable.admin.v2.Type.String} String
+                             */
+                            String.fromObject = function fromObject(object) {
+                                if (object instanceof $root.google.bigtable.admin.v2.Type.String)
+                                    return object;
+                                var message = new $root.google.bigtable.admin.v2.Type.String();
+                                if (object.encoding != null) {
+                                    if (typeof object.encoding !== "object")
+                                        throw TypeError(".google.bigtable.admin.v2.Type.String.encoding: object expected");
+                                    message.encoding = $root.google.bigtable.admin.v2.Type.String.Encoding.fromObject(object.encoding);
+                                }
+                                return message;
+                            };
+    
+                            /**
+                             * Creates a plain object from a String message. Also converts values to other types if specified.
+                             * @function toObject
+                             * @memberof google.bigtable.admin.v2.Type.String
+                             * @static
+                             * @param {google.bigtable.admin.v2.Type.String} message String
+                             * @param {$protobuf.IConversionOptions} [options] Conversion options
+                             * @returns {Object.<string,*>} Plain object
+                             */
+                            String.toObject = function toObject(message, options) {
+                                if (!options)
+                                    options = {};
+                                var object = {};
+                                if (options.defaults)
+                                    object.encoding = null;
+                                if (message.encoding != null && message.hasOwnProperty("encoding"))
+                                    object.encoding = $root.google.bigtable.admin.v2.Type.String.Encoding.toObject(message.encoding, options);
+                                return object;
+                            };
+    
+                            /**
+                             * Converts this String to JSON.
+                             * @function toJSON
+                             * @memberof google.bigtable.admin.v2.Type.String
+                             * @instance
+                             * @returns {Object.<string,*>} JSON object
+                             */
+                            String.prototype.toJSON = function toJSON() {
+                                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                            };
+    
+                            /**
+                             * Gets the default type url for String
+                             * @function getTypeUrl
+                             * @memberof google.bigtable.admin.v2.Type.String
+                             * @static
+                             * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                             * @returns {string} The default type url
+                             */
+                            String.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                if (typeUrlPrefix === undefined) {
+                                    typeUrlPrefix = "type.googleapis.com";
+                                }
+                                return typeUrlPrefix + "/google.bigtable.admin.v2.Type.String";
+                            };
+    
+                            String.Encoding = (function() {
+    
+                                /**
+                                 * Properties of an Encoding.
+                                 * @memberof google.bigtable.admin.v2.Type.String
+                                 * @interface IEncoding
+                                 * @property {google.bigtable.admin.v2.Type.String.Encoding.IUtf8Raw|null} [utf8Raw] Encoding utf8Raw
+                                 */
+    
+                                /**
+                                 * Constructs a new Encoding.
+                                 * @memberof google.bigtable.admin.v2.Type.String
+                                 * @classdesc Represents an Encoding.
+                                 * @implements IEncoding
+                                 * @constructor
+                                 * @param {google.bigtable.admin.v2.Type.String.IEncoding=} [properties] Properties to set
+                                 */
+                                function Encoding(properties) {
+                                    if (properties)
+                                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                            if (properties[keys[i]] != null)
+                                                this[keys[i]] = properties[keys[i]];
+                                }
+    
+                                /**
+                                 * Encoding utf8Raw.
+                                 * @member {google.bigtable.admin.v2.Type.String.Encoding.IUtf8Raw|null|undefined} utf8Raw
+                                 * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                 * @instance
+                                 */
+                                Encoding.prototype.utf8Raw = null;
+    
+                                // OneOf field names bound to virtual getters and setters
+                                var $oneOfFields;
+    
+                                /**
+                                 * Encoding encoding.
+                                 * @member {"utf8Raw"|undefined} encoding
+                                 * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                 * @instance
+                                 */
+                                Object.defineProperty(Encoding.prototype, "encoding", {
+                                    get: $util.oneOfGetter($oneOfFields = ["utf8Raw"]),
+                                    set: $util.oneOfSetter($oneOfFields)
+                                });
+    
+                                /**
+                                 * Creates a new Encoding instance using the specified properties.
+                                 * @function create
+                                 * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.String.IEncoding=} [properties] Properties to set
+                                 * @returns {google.bigtable.admin.v2.Type.String.Encoding} Encoding instance
+                                 */
+                                Encoding.create = function create(properties) {
+                                    return new Encoding(properties);
+                                };
+    
+                                /**
+                                 * Encodes the specified Encoding message. Does not implicitly {@link google.bigtable.admin.v2.Type.String.Encoding.verify|verify} messages.
+                                 * @function encode
+                                 * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.String.IEncoding} message Encoding message or plain object to encode
+                                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                                 * @returns {$protobuf.Writer} Writer
+                                 */
+                                Encoding.encode = function encode(message, writer) {
+                                    if (!writer)
+                                        writer = $Writer.create();
+                                    if (message.utf8Raw != null && Object.hasOwnProperty.call(message, "utf8Raw"))
+                                        $root.google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw.encode(message.utf8Raw, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                                    return writer;
+                                };
+    
+                                /**
+                                 * Encodes the specified Encoding message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Type.String.Encoding.verify|verify} messages.
+                                 * @function encodeDelimited
+                                 * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.String.IEncoding} message Encoding message or plain object to encode
+                                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                                 * @returns {$protobuf.Writer} Writer
+                                 */
+                                Encoding.encodeDelimited = function encodeDelimited(message, writer) {
+                                    return this.encode(message, writer).ldelim();
+                                };
+    
+                                /**
+                                 * Decodes an Encoding message from the specified reader or buffer.
+                                 * @function decode
+                                 * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                 * @static
+                                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                 * @param {number} [length] Message length if known beforehand
+                                 * @returns {google.bigtable.admin.v2.Type.String.Encoding} Encoding
+                                 * @throws {Error} If the payload is not a reader or valid buffer
+                                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                 */
+                                Encoding.decode = function decode(reader, length) {
+                                    if (!(reader instanceof $Reader))
+                                        reader = $Reader.create(reader);
+                                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Type.String.Encoding();
+                                    while (reader.pos < end) {
+                                        var tag = reader.uint32();
+                                        switch (tag >>> 3) {
+                                        case 1: {
+                                                message.utf8Raw = $root.google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw.decode(reader, reader.uint32());
+                                                break;
+                                            }
+                                        default:
+                                            reader.skipType(tag & 7);
+                                            break;
+                                        }
+                                    }
+                                    return message;
+                                };
+    
+                                /**
+                                 * Decodes an Encoding message from the specified reader or buffer, length delimited.
+                                 * @function decodeDelimited
+                                 * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                 * @static
+                                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                 * @returns {google.bigtable.admin.v2.Type.String.Encoding} Encoding
+                                 * @throws {Error} If the payload is not a reader or valid buffer
+                                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                 */
+                                Encoding.decodeDelimited = function decodeDelimited(reader) {
+                                    if (!(reader instanceof $Reader))
+                                        reader = new $Reader(reader);
+                                    return this.decode(reader, reader.uint32());
+                                };
+    
+                                /**
+                                 * Verifies an Encoding message.
+                                 * @function verify
+                                 * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                 * @static
+                                 * @param {Object.<string,*>} message Plain object to verify
+                                 * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                                 */
+                                Encoding.verify = function verify(message) {
+                                    if (typeof message !== "object" || message === null)
+                                        return "object expected";
+                                    var properties = {};
+                                    if (message.utf8Raw != null && message.hasOwnProperty("utf8Raw")) {
+                                        properties.encoding = 1;
+                                        {
+                                            var error = $root.google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw.verify(message.utf8Raw);
+                                            if (error)
+                                                return "utf8Raw." + error;
+                                        }
+                                    }
+                                    return null;
+                                };
+    
+                                /**
+                                 * Creates an Encoding message from a plain object. Also converts values to their respective internal types.
+                                 * @function fromObject
+                                 * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                 * @static
+                                 * @param {Object.<string,*>} object Plain object
+                                 * @returns {google.bigtable.admin.v2.Type.String.Encoding} Encoding
+                                 */
+                                Encoding.fromObject = function fromObject(object) {
+                                    if (object instanceof $root.google.bigtable.admin.v2.Type.String.Encoding)
+                                        return object;
+                                    var message = new $root.google.bigtable.admin.v2.Type.String.Encoding();
+                                    if (object.utf8Raw != null) {
+                                        if (typeof object.utf8Raw !== "object")
+                                            throw TypeError(".google.bigtable.admin.v2.Type.String.Encoding.utf8Raw: object expected");
+                                        message.utf8Raw = $root.google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw.fromObject(object.utf8Raw);
+                                    }
+                                    return message;
+                                };
+    
+                                /**
+                                 * Creates a plain object from an Encoding message. Also converts values to other types if specified.
+                                 * @function toObject
+                                 * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                 * @static
+                                 * @param {google.bigtable.admin.v2.Type.String.Encoding} message Encoding
+                                 * @param {$protobuf.IConversionOptions} [options] Conversion options
+                                 * @returns {Object.<string,*>} Plain object
+                                 */
+                                Encoding.toObject = function toObject(message, options) {
+                                    if (!options)
+                                        options = {};
+                                    var object = {};
+                                    if (message.utf8Raw != null && message.hasOwnProperty("utf8Raw")) {
+                                        object.utf8Raw = $root.google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw.toObject(message.utf8Raw, options);
+                                        if (options.oneofs)
+                                            object.encoding = "utf8Raw";
+                                    }
+                                    return object;
+                                };
+    
+                                /**
+                                 * Converts this Encoding to JSON.
+                                 * @function toJSON
+                                 * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                 * @instance
+                                 * @returns {Object.<string,*>} JSON object
+                                 */
+                                Encoding.prototype.toJSON = function toJSON() {
+                                    return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                                };
+    
+                                /**
+                                 * Gets the default type url for Encoding
+                                 * @function getTypeUrl
+                                 * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                 * @static
+                                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                                 * @returns {string} The default type url
+                                 */
+                                Encoding.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                    if (typeUrlPrefix === undefined) {
+                                        typeUrlPrefix = "type.googleapis.com";
+                                    }
+                                    return typeUrlPrefix + "/google.bigtable.admin.v2.Type.String.Encoding";
+                                };
+    
+                                Encoding.Utf8Raw = (function() {
+    
+                                    /**
+                                     * Properties of an Utf8Raw.
+                                     * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                     * @interface IUtf8Raw
+                                     */
+    
+                                    /**
+                                     * Constructs a new Utf8Raw.
+                                     * @memberof google.bigtable.admin.v2.Type.String.Encoding
+                                     * @classdesc Represents an Utf8Raw.
+                                     * @implements IUtf8Raw
+                                     * @constructor
+                                     * @param {google.bigtable.admin.v2.Type.String.Encoding.IUtf8Raw=} [properties] Properties to set
+                                     */
+                                    function Utf8Raw(properties) {
+                                        if (properties)
+                                            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                                if (properties[keys[i]] != null)
+                                                    this[keys[i]] = properties[keys[i]];
+                                    }
+    
+                                    /**
+                                     * Creates a new Utf8Raw instance using the specified properties.
+                                     * @function create
+                                     * @memberof google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw
+                                     * @static
+                                     * @param {google.bigtable.admin.v2.Type.String.Encoding.IUtf8Raw=} [properties] Properties to set
+                                     * @returns {google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw} Utf8Raw instance
+                                     */
+                                    Utf8Raw.create = function create(properties) {
+                                        return new Utf8Raw(properties);
+                                    };
+    
+                                    /**
+                                     * Encodes the specified Utf8Raw message. Does not implicitly {@link google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw.verify|verify} messages.
+                                     * @function encode
+                                     * @memberof google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw
+                                     * @static
+                                     * @param {google.bigtable.admin.v2.Type.String.Encoding.IUtf8Raw} message Utf8Raw message or plain object to encode
+                                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                                     * @returns {$protobuf.Writer} Writer
+                                     */
+                                    Utf8Raw.encode = function encode(message, writer) {
+                                        if (!writer)
+                                            writer = $Writer.create();
+                                        return writer;
+                                    };
+    
+                                    /**
+                                     * Encodes the specified Utf8Raw message, length delimited. Does not implicitly {@link google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw.verify|verify} messages.
+                                     * @function encodeDelimited
+                                     * @memberof google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw
+                                     * @static
+                                     * @param {google.bigtable.admin.v2.Type.String.Encoding.IUtf8Raw} message Utf8Raw message or plain object to encode
+                                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                                     * @returns {$protobuf.Writer} Writer
+                                     */
+                                    Utf8Raw.encodeDelimited = function encodeDelimited(message, writer) {
+                                        return this.encode(message, writer).ldelim();
+                                    };
+    
+                                    /**
+                                     * Decodes an Utf8Raw message from the specified reader or buffer.
+                                     * @function decode
+                                     * @memberof google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw
+                                     * @static
+                                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                     * @param {number} [length] Message length if known beforehand
+                                     * @returns {google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw} Utf8Raw
+                                     * @throws {Error} If the payload is not a reader or valid buffer
+                                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                     */
+                                    Utf8Raw.decode = function decode(reader, length) {
+                                        if (!(reader instanceof $Reader))
+                                            reader = $Reader.create(reader);
+                                        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw();
+                                        while (reader.pos < end) {
+                                            var tag = reader.uint32();
+                                            switch (tag >>> 3) {
+                                            default:
+                                                reader.skipType(tag & 7);
+                                                break;
+                                            }
+                                        }
+                                        return message;
+                                    };
+    
+                                    /**
+                                     * Decodes an Utf8Raw message from the specified reader or buffer, length delimited.
+                                     * @function decodeDelimited
+                                     * @memberof google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw
+                                     * @static
+                                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                                     * @returns {google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw} Utf8Raw
+                                     * @throws {Error} If the payload is not a reader or valid buffer
+                                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                                     */
+                                    Utf8Raw.decodeDelimited = function decodeDelimited(reader) {
+                                        if (!(reader instanceof $Reader))
+                                            reader = new $Reader(reader);
+                                        return this.decode(reader, reader.uint32());
+                                    };
+    
+                                    /**
+                                     * Verifies an Utf8Raw message.
+                                     * @function verify
+                                     * @memberof google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw
+                                     * @static
+                                     * @param {Object.<string,*>} message Plain object to verify
+                                     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                                     */
+                                    Utf8Raw.verify = function verify(message) {
+                                        if (typeof message !== "object" || message === null)
+                                            return "object expected";
+                                        return null;
+                                    };
+    
+                                    /**
+                                     * Creates an Utf8Raw message from a plain object. Also converts values to their respective internal types.
+                                     * @function fromObject
+                                     * @memberof google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw
+                                     * @static
+                                     * @param {Object.<string,*>} object Plain object
+                                     * @returns {google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw} Utf8Raw
+                                     */
+                                    Utf8Raw.fromObject = function fromObject(object) {
+                                        if (object instanceof $root.google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw)
+                                            return object;
+                                        return new $root.google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw();
+                                    };
+    
+                                    /**
+                                     * Creates a plain object from an Utf8Raw message. Also converts values to other types if specified.
+                                     * @function toObject
+                                     * @memberof google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw
+                                     * @static
+                                     * @param {google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw} message Utf8Raw
+                                     * @param {$protobuf.IConversionOptions} [options] Conversion options
+                                     * @returns {Object.<string,*>} Plain object
+                                     */
+                                    Utf8Raw.toObject = function toObject() {
+                                        return {};
+                                    };
+    
+                                    /**
+                                     * Converts this Utf8Raw to JSON.
+                                     * @function toJSON
+                                     * @memberof google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw
+                                     * @instance
+                                     * @returns {Object.<string,*>} JSON object
+                                     */
+                                    Utf8Raw.prototype.toJSON = function toJSON() {
+                                        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                                    };
+    
+                                    /**
+                                     * Gets the default type url for Utf8Raw
+                                     * @function getTypeUrl
+                                     * @memberof google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw
+                                     * @static
+                                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                                     * @returns {string} The default type url
+                                     */
+                                    Utf8Raw.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                                        if (typeUrlPrefix === undefined) {
+                                            typeUrlPrefix = "type.googleapis.com";
+                                        }
+                                        return typeUrlPrefix + "/google.bigtable.admin.v2.Type.String.Encoding.Utf8Raw";
+                                    };
+    
+                                    return Utf8Raw;
+                                })();
+    
+                                return Encoding;
+                            })();
+    
+                            return String;
                         })();
     
                         Type.Int64 = (function() {
