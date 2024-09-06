@@ -14,17 +14,17 @@
 
 syntax = "proto3";
 
-package google.bigtable.admin.v2;
+package google.bigtable.v2;
 
 import "google/api/field_behavior.proto";
 
-option csharp_namespace = "Google.Cloud.Bigtable.Admin.V2";
-option go_package = "cloud.google.com/go/bigtable/admin/apiv2/adminpb;adminpb";
+option csharp_namespace = "Google.Cloud.Bigtable.V2";
+option go_package = "cloud.google.com/go/bigtable/apiv2/bigtablepb;bigtablepb";
 option java_multiple_files = true;
 option java_outer_classname = "TypesProto";
-option java_package = "com.google.bigtable.admin.v2";
-option php_namespace = "Google\\Cloud\\Bigtable\\Admin\\V2";
-option ruby_package = "Google::Cloud::Bigtable::Admin::V2";
+option java_package = "com.google.bigtable.v2";
+option php_namespace = "Google\\Cloud\\Bigtable\\V2";
+option ruby_package = "Google::Cloud::Bigtable::V2";
 
 // `Type` represents the type of data that is written to, read from, or stored
 // in Bigtable. It is heavily based on the GoogleSQL standard to help maintain
