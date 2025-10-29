@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(authorizedView) {
-  // [START bigtableadmin_v2_generated_BigtableTableAdmin_UpdateAuthorizedView_async]
+function main(parent) {
+  // [START bigtableadmin_v2_generated_BigtableTableAdmin_ListAuthorizedViews_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,27 +29,30 @@ function main(authorizedView) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The AuthorizedView to update. The `name` in `authorized_view` is
-   *  used to identify the AuthorizedView. AuthorizedView name must in this
-   *  format
-   *  projects/<project>/instances/<instance>/tables/<table>/authorizedViews/<authorized_view>
+   *  Required. The unique name of the table for which AuthorizedViews should be
+   *  listed. Values are of the form
+   *  `projects/{project}/instances/{instance}/tables/{table}`.
    */
-  // const authorizedView = {}
+  // const parent = 'abc123'
   /**
-   *  Optional. The list of fields to update.
-   *  A mask specifying which fields in the AuthorizedView resource should be
-   *  updated. This mask is relative to the AuthorizedView resource, not to the
-   *  request message. A field will be overwritten if it is in the mask. If
-   *  empty, all fields set in the request will be overwritten. A special value
-   *  `*` means to overwrite all fields (including fields not set in the
-   *  request).
+   *  Optional. Maximum number of results per page.
+   *  A page_size of zero lets the server choose the number of items to return.
+   *  A page_size which is strictly positive will return at most that many items.
+   *  A negative page_size will cause an error.
+   *  Following the first request, subsequent paginated calls are not required
+   *  to pass a page_size. If a page_size is set in subsequent calls, it must
+   *  match the page_size given in the first request.
    */
-  // const updateMask = {}
+  // const pageSize = 1234
   /**
-   *  Optional. If true, ignore the safety checks when updating the
-   *  AuthorizedView.
+   *  Optional. The value of `next_page_token` returned by a previous call.
    */
-  // const ignoreWarnings = true
+  // const pageToken = 'abc123'
+  /**
+   *  Optional. The resource_view to be applied to the returned AuthorizedViews'
+   *  fields. Default to NAME_ONLY.
+   */
+  // const view = {}
 
   // Imports the Admin library
   const {BigtableTableAdminClient} = require('@google-cloud/bigtable').v2;
@@ -57,20 +60,21 @@ function main(authorizedView) {
   // Instantiates a client
   const adminClient = new BigtableTableAdminClient();
 
-  async function callUpdateAuthorizedView() {
+  async function callListAuthorizedViews() {
     // Construct request
     const request = {
-      authorizedView,
+      parent,
     };
 
     // Run request
-    const [operation] = await adminClient.updateAuthorizedView(request);
-    const [response] = await operation.promise();
-    console.log(response);
+    const iterable = adminClient.listAuthorizedViewsAsync(request);
+    for await (const response of iterable) {
+        console.log(response);
+    }
   }
 
-  callUpdateAuthorizedView();
-  // [END bigtableadmin_v2_generated_BigtableTableAdmin_UpdateAuthorizedView_async]
+  callListAuthorizedViews();
+  // [END bigtableadmin_v2_generated_BigtableTableAdmin_ListAuthorizedViews_async]
 }
 
 process.on('unhandledRejection', err => {

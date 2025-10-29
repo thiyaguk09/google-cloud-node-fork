@@ -29,9 +29,9 @@ import type {
   GaxCall,
 } from 'google-gax';
 import {Transform} from 'stream';
-import * as protos from '../../protos/protos';
-import jsonProtos = require('../../protos/protos.json');
-import {loggingUtils as logging} from 'google-gax';
+import * as protos from '../../../protos/protos';
+import jsonProtos = require('../../../protos/protos.json');
+import {loggingUtils as logging, decodeAnyProtosInArray} from 'google-gax';
 
 /**
  * Client JSON configuration object, loaded from
@@ -39,7 +39,7 @@ import {loggingUtils as logging} from 'google-gax';
  * This file defines retry strategy and timeouts for all API methods in this library.
  */
 import * as gapicConfig from './bigtable_table_admin_client_config.json';
-const version = require('../../../package.json').version;
+const version = require('../../../../package.json').version;
 
 /**
  *  Service for creating, configuring, and deleting Cloud Bigtable tables.
@@ -236,6 +236,9 @@ export class BigtableTableAdminClient {
       projectPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}',
       ),
+      schemaBundlePathTemplate: new this._gaxModule.PathTemplate(
+        'projects/{project}/instances/{instance}/tables/{table}/schemaBundles/{schema_bundle}',
+      ),
       snapshotPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/instances/{instance}/clusters/{cluster}/snapshots/{snapshot}',
       ),
@@ -268,9 +271,14 @@ export class BigtableTableAdminClient {
         'nextPageToken',
         'backups',
       ),
+      listSchemaBundles: new this._gaxModule.PageDescriptor(
+        'pageToken',
+        'nextPageToken',
+        'schemaBundles',
+      ),
     };
 
-    const protoFilesRoot = this._gaxModule.protobuf.Root.fromJSON(jsonProtos);
+    const protoFilesRoot = this._gaxModule.protobufFromJSON(jsonProtos);
     // This API contains "long-running operations", which return a
     // an Operation object that allows for tracking of the operation,
     // rather than holding a request open.
@@ -356,6 +364,18 @@ export class BigtableTableAdminClient {
     const copyBackupMetadata = protoFilesRoot.lookup(
       '.google.bigtable.admin.v2.CopyBackupMetadata',
     ) as gax.protobuf.Type;
+    const createSchemaBundleResponse = protoFilesRoot.lookup(
+      '.google.bigtable.admin.v2.SchemaBundle',
+    ) as gax.protobuf.Type;
+    const createSchemaBundleMetadata = protoFilesRoot.lookup(
+      '.google.bigtable.admin.v2.CreateSchemaBundleMetadata',
+    ) as gax.protobuf.Type;
+    const updateSchemaBundleResponse = protoFilesRoot.lookup(
+      '.google.bigtable.admin.v2.SchemaBundle',
+    ) as gax.protobuf.Type;
+    const updateSchemaBundleMetadata = protoFilesRoot.lookup(
+      '.google.bigtable.admin.v2.UpdateSchemaBundleMetadata',
+    ) as gax.protobuf.Type;
 
     this.descriptors.longrunning = {
       createTableFromSnapshot: new this._gaxModule.LongrunningDescriptor(
@@ -406,6 +426,16 @@ export class BigtableTableAdminClient {
         this.operationsClient,
         copyBackupResponse.decode.bind(copyBackupResponse),
         copyBackupMetadata.decode.bind(copyBackupMetadata),
+      ),
+      createSchemaBundle: new this._gaxModule.LongrunningDescriptor(
+        this.operationsClient,
+        createSchemaBundleResponse.decode.bind(createSchemaBundleResponse),
+        createSchemaBundleMetadata.decode.bind(createSchemaBundleMetadata),
+      ),
+      updateSchemaBundle: new this._gaxModule.LongrunningDescriptor(
+        this.operationsClient,
+        updateSchemaBundleResponse.decode.bind(updateSchemaBundleResponse),
+        updateSchemaBundleMetadata.decode.bind(updateSchemaBundleMetadata),
       ),
     };
 
@@ -489,6 +519,11 @@ export class BigtableTableAdminClient {
       'getIamPolicy',
       'setIamPolicy',
       'testIamPermissions',
+      'createSchemaBundle',
+      'updateSchemaBundle',
+      'getSchemaBundle',
+      'listSchemaBundles',
+      'deleteSchemaBundle',
     ];
     for (const methodName of bigtableTableAdminStubMethods) {
       const callPromise = this.bigtableTableAdminStub.then(
@@ -749,7 +784,23 @@ export class BigtableTableAdminClient {
           this._log.info('createTable response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets metadata information about the specified table.
@@ -862,7 +913,23 @@ export class BigtableTableAdminClient {
           this._log.info('getTable response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Permanently deletes a specified table and all of its data.
@@ -976,7 +1043,23 @@ export class BigtableTableAdminClient {
           this._log.info('deleteTable response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets information from a specified AuthorizedView.
@@ -1099,7 +1182,23 @@ export class BigtableTableAdminClient {
           this._log.info('getAuthorizedView response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Permanently deletes a specified AuthorizedView.
@@ -1227,7 +1326,23 @@ export class BigtableTableAdminClient {
           this._log.info('deleteAuthorizedView response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Performs a series of column family modifications on the specified table.
@@ -1360,7 +1475,23 @@ export class BigtableTableAdminClient {
           this._log.info('modifyColumnFamilies response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Permanently drop/delete a row range from a specified table. The request can
@@ -1481,7 +1612,23 @@ export class BigtableTableAdminClient {
           this._log.info('dropRowRange response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Generates a consistency token for a Table, which can be used in
@@ -1613,7 +1760,23 @@ export class BigtableTableAdminClient {
           this._log.info('generateConsistencyToken response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Checks replication consistency based on a consistency token, that is, if
@@ -1745,7 +1908,23 @@ export class BigtableTableAdminClient {
           this._log.info('checkConsistency response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets metadata information about the specified snapshot.
@@ -1865,7 +2044,23 @@ export class BigtableTableAdminClient {
           this._log.info('getSnapshot response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Permanently deletes the specified snapshot.
@@ -1985,7 +2180,23 @@ export class BigtableTableAdminClient {
           this._log.info('deleteSnapshot response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets metadata on a pending or completed Cloud Bigtable Backup.
@@ -2095,7 +2306,23 @@ export class BigtableTableAdminClient {
           this._log.info('getBackup response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Updates a pending or completed Cloud Bigtable Backup.
@@ -2217,7 +2444,23 @@ export class BigtableTableAdminClient {
           this._log.info('updateBackup response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Deletes a pending or completed Cloud Bigtable backup.
@@ -2331,10 +2574,26 @@ export class BigtableTableAdminClient {
           this._log.info('deleteBackup response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
-   * Gets the access control policy for a Table or Backup resource.
+   * Gets the access control policy for a Bigtable resource.
    * Returns an empty policy if the resource exists but does not have a policy
    * set.
    *
@@ -2445,10 +2704,26 @@ export class BigtableTableAdminClient {
           this._log.info('getIamPolicy response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
-   * Sets the access control policy on a Table or Backup resource.
+   * Sets the access control policy on a Bigtable resource.
    * Replaces any existing policy.
    *
    * @param {Object} request
@@ -2566,10 +2841,26 @@ export class BigtableTableAdminClient {
           this._log.info('setIamPolicy response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
-   * Returns permissions that the caller has on the specified Table or Backup
+   * Returns permissions that the caller has on the specified Bigtable
    * resource.
    *
    * @param {Object} request
@@ -2681,7 +2972,302 @@ export class BigtableTableAdminClient {
           this._log.info('testIamPermissions response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
+  }
+  /**
+   * Gets metadata information about the specified schema bundle.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The unique name of the schema bundle to retrieve.
+   *   Values are of the form
+   *   `projects/{project}/instances/{instance}/tables/{table}/schemaBundles/{schema_bundle}`
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing {@link protos.google.bigtable.admin.v2.SchemaBundle|SchemaBundle}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/bigtable_table_admin.get_schema_bundle.js</caption>
+   * region_tag:bigtableadmin_v2_generated_BigtableTableAdmin_GetSchemaBundle_async
+   */
+  getSchemaBundle(
+    request?: protos.google.bigtable.admin.v2.IGetSchemaBundleRequest,
+    options?: CallOptions,
+  ): Promise<
+    [
+      protos.google.bigtable.admin.v2.ISchemaBundle,
+      protos.google.bigtable.admin.v2.IGetSchemaBundleRequest | undefined,
+      {} | undefined,
+    ]
+  >;
+  getSchemaBundle(
+    request: protos.google.bigtable.admin.v2.IGetSchemaBundleRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.bigtable.admin.v2.ISchemaBundle,
+      | protos.google.bigtable.admin.v2.IGetSchemaBundleRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  getSchemaBundle(
+    request: protos.google.bigtable.admin.v2.IGetSchemaBundleRequest,
+    callback: Callback<
+      protos.google.bigtable.admin.v2.ISchemaBundle,
+      | protos.google.bigtable.admin.v2.IGetSchemaBundleRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  getSchemaBundle(
+    request?: protos.google.bigtable.admin.v2.IGetSchemaBundleRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.bigtable.admin.v2.ISchemaBundle,
+          | protos.google.bigtable.admin.v2.IGetSchemaBundleRequest
+          | null
+          | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.bigtable.admin.v2.ISchemaBundle,
+      | protos.google.bigtable.admin.v2.IGetSchemaBundleRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): Promise<
+    [
+      protos.google.bigtable.admin.v2.ISchemaBundle,
+      protos.google.bigtable.admin.v2.IGetSchemaBundleRequest | undefined,
+      {} | undefined,
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        name: request.name ?? '',
+      });
+    this.initialize().catch(err => {
+      throw err;
+    });
+    this._log.info('getSchemaBundle request %j', request);
+    const wrappedCallback:
+      | Callback<
+          protos.google.bigtable.admin.v2.ISchemaBundle,
+          | protos.google.bigtable.admin.v2.IGetSchemaBundleRequest
+          | null
+          | undefined,
+          {} | null | undefined
+        >
+      | undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info('getSchemaBundle response %j', response);
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls
+      .getSchemaBundle(request, options, wrappedCallback)
+      ?.then(
+        ([response, options, rawResponse]: [
+          protos.google.bigtable.admin.v2.ISchemaBundle,
+          protos.google.bigtable.admin.v2.IGetSchemaBundleRequest | undefined,
+          {} | undefined,
+        ]) => {
+          this._log.info('getSchemaBundle response %j', response);
+          return [response, options, rawResponse];
+        },
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
+  }
+  /**
+   * Deletes a schema bundle in the specified table.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.name
+   *   Required. The unique name of the schema bundle to delete.
+   *   Values are of the form
+   *   `projects/{project}/instances/{instance}/tables/{table}/schemaBundles/{schema_bundle}`
+   * @param {string} [request.etag]
+   *   Optional. The etag of the schema bundle.
+   *   If this is provided, it must match the server's etag. The server
+   *   returns an ABORTED error on a mismatched etag.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing {@link protos.google.protobuf.Empty|Empty}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/bigtable_table_admin.delete_schema_bundle.js</caption>
+   * region_tag:bigtableadmin_v2_generated_BigtableTableAdmin_DeleteSchemaBundle_async
+   */
+  deleteSchemaBundle(
+    request?: protos.google.bigtable.admin.v2.IDeleteSchemaBundleRequest,
+    options?: CallOptions,
+  ): Promise<
+    [
+      protos.google.protobuf.IEmpty,
+      protos.google.bigtable.admin.v2.IDeleteSchemaBundleRequest | undefined,
+      {} | undefined,
+    ]
+  >;
+  deleteSchemaBundle(
+    request: protos.google.bigtable.admin.v2.IDeleteSchemaBundleRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.protobuf.IEmpty,
+      | protos.google.bigtable.admin.v2.IDeleteSchemaBundleRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  deleteSchemaBundle(
+    request: protos.google.bigtable.admin.v2.IDeleteSchemaBundleRequest,
+    callback: Callback<
+      protos.google.protobuf.IEmpty,
+      | protos.google.bigtable.admin.v2.IDeleteSchemaBundleRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  deleteSchemaBundle(
+    request?: protos.google.bigtable.admin.v2.IDeleteSchemaBundleRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.protobuf.IEmpty,
+          | protos.google.bigtable.admin.v2.IDeleteSchemaBundleRequest
+          | null
+          | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.protobuf.IEmpty,
+      | protos.google.bigtable.admin.v2.IDeleteSchemaBundleRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): Promise<
+    [
+      protos.google.protobuf.IEmpty,
+      protos.google.bigtable.admin.v2.IDeleteSchemaBundleRequest | undefined,
+      {} | undefined,
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        name: request.name ?? '',
+      });
+    this.initialize().catch(err => {
+      throw err;
+    });
+    this._log.info('deleteSchemaBundle request %j', request);
+    const wrappedCallback:
+      | Callback<
+          protos.google.protobuf.IEmpty,
+          | protos.google.bigtable.admin.v2.IDeleteSchemaBundleRequest
+          | null
+          | undefined,
+          {} | null | undefined
+        >
+      | undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info('deleteSchemaBundle response %j', response);
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls
+      .deleteSchemaBundle(request, options, wrappedCallback)
+      ?.then(
+        ([response, options, rawResponse]: [
+          protos.google.protobuf.IEmpty,
+          (
+            | protos.google.bigtable.admin.v2.IDeleteSchemaBundleRequest
+            | undefined
+          ),
+          {} | undefined,
+        ]) => {
+          this._log.info('deleteSchemaBundle response %j', response);
+          return [response, options, rawResponse];
+        },
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
 
   /**
@@ -3412,8 +3998,8 @@ export class BigtableTableAdminClient {
    * @param {google.bigtable.admin.v2.AuthorizedView} request.authorizedView
    *   Required. The AuthorizedView to update. The `name` in `authorized_view` is
    *   used to identify the AuthorizedView. AuthorizedView name must in this
-   *   format
-   *   projects/<project>/instances/<instance>/tables/<table>/authorizedViews/<authorized_view>
+   *   format:
+   *   `projects/{project}/instances/{instance}/tables/{table}/authorizedViews/{authorized_view}`.
    * @param {google.protobuf.FieldMask} [request.updateMask]
    *   Optional. The list of fields to update.
    *   A mask specifying which fields in the AuthorizedView resource should be
@@ -4346,6 +4932,362 @@ export class BigtableTableAdminClient {
     >;
   }
   /**
+   * Creates a new schema bundle in the specified table.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The parent resource where this schema bundle will be created.
+   *   Values are of the form
+   *   `projects/{project}/instances/{instance}/tables/{table}`.
+   * @param {string} request.schemaBundleId
+   *   Required. The unique ID to use for the schema bundle, which will become the
+   *   final component of the schema bundle's resource name.
+   * @param {google.bigtable.admin.v2.SchemaBundle} request.schemaBundle
+   *   Required. The schema bundle to create.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing
+   *   a long running operation. Its `promise()` method returns a promise
+   *   you can `await` for.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/bigtable_table_admin.create_schema_bundle.js</caption>
+   * region_tag:bigtableadmin_v2_generated_BigtableTableAdmin_CreateSchemaBundle_async
+   */
+  createSchemaBundle(
+    request?: protos.google.bigtable.admin.v2.ICreateSchemaBundleRequest,
+    options?: CallOptions,
+  ): Promise<
+    [
+      LROperation<
+        protos.google.bigtable.admin.v2.ISchemaBundle,
+        protos.google.bigtable.admin.v2.ICreateSchemaBundleMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined,
+    ]
+  >;
+  createSchemaBundle(
+    request: protos.google.bigtable.admin.v2.ICreateSchemaBundleRequest,
+    options: CallOptions,
+    callback: Callback<
+      LROperation<
+        protos.google.bigtable.admin.v2.ISchemaBundle,
+        protos.google.bigtable.admin.v2.ICreateSchemaBundleMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  createSchemaBundle(
+    request: protos.google.bigtable.admin.v2.ICreateSchemaBundleRequest,
+    callback: Callback<
+      LROperation<
+        protos.google.bigtable.admin.v2.ISchemaBundle,
+        protos.google.bigtable.admin.v2.ICreateSchemaBundleMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  createSchemaBundle(
+    request?: protos.google.bigtable.admin.v2.ICreateSchemaBundleRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          LROperation<
+            protos.google.bigtable.admin.v2.ISchemaBundle,
+            protos.google.bigtable.admin.v2.ICreateSchemaBundleMetadata
+          >,
+          protos.google.longrunning.IOperation | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      LROperation<
+        protos.google.bigtable.admin.v2.ISchemaBundle,
+        protos.google.bigtable.admin.v2.ICreateSchemaBundleMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >,
+  ): Promise<
+    [
+      LROperation<
+        protos.google.bigtable.admin.v2.ISchemaBundle,
+        protos.google.bigtable.admin.v2.ICreateSchemaBundleMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined,
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    this.initialize().catch(err => {
+      throw err;
+    });
+    const wrappedCallback:
+      | Callback<
+          LROperation<
+            protos.google.bigtable.admin.v2.ISchemaBundle,
+            protos.google.bigtable.admin.v2.ICreateSchemaBundleMetadata
+          >,
+          protos.google.longrunning.IOperation | null | undefined,
+          {} | null | undefined
+        >
+      | undefined = callback
+      ? (error, response, rawResponse, _) => {
+          this._log.info('createSchemaBundle response %j', rawResponse);
+          callback!(error, response, rawResponse, _); // We verified callback above.
+        }
+      : undefined;
+    this._log.info('createSchemaBundle request %j', request);
+    return this.innerApiCalls
+      .createSchemaBundle(request, options, wrappedCallback)
+      ?.then(
+        ([response, rawResponse, _]: [
+          LROperation<
+            protos.google.bigtable.admin.v2.ISchemaBundle,
+            protos.google.bigtable.admin.v2.ICreateSchemaBundleMetadata
+          >,
+          protos.google.longrunning.IOperation | undefined,
+          {} | undefined,
+        ]) => {
+          this._log.info('createSchemaBundle response %j', rawResponse);
+          return [response, rawResponse, _];
+        },
+      );
+  }
+  /**
+   * Check the status of the long running operation returned by `createSchemaBundle()`.
+   * @param {String} name
+   *   The operation name that will be passed.
+   * @returns {Promise} - The promise which resolves to an object.
+   *   The decoded operation object has result and metadata field to get information from.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/bigtable_table_admin.create_schema_bundle.js</caption>
+   * region_tag:bigtableadmin_v2_generated_BigtableTableAdmin_CreateSchemaBundle_async
+   */
+  async checkCreateSchemaBundleProgress(
+    name: string,
+  ): Promise<
+    LROperation<
+      protos.google.bigtable.admin.v2.SchemaBundle,
+      protos.google.bigtable.admin.v2.CreateSchemaBundleMetadata
+    >
+  > {
+    this._log.info('createSchemaBundle long-running');
+    const request =
+      new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest(
+        {name},
+      );
+    const [operation] = await this.operationsClient.getOperation(request);
+    const decodeOperation = new this._gaxModule.Operation(
+      operation,
+      this.descriptors.longrunning.createSchemaBundle,
+      this._gaxModule.createDefaultBackoffSettings(),
+    );
+    return decodeOperation as LROperation<
+      protos.google.bigtable.admin.v2.SchemaBundle,
+      protos.google.bigtable.admin.v2.CreateSchemaBundleMetadata
+    >;
+  }
+  /**
+   * Updates a schema bundle in the specified table.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {google.bigtable.admin.v2.SchemaBundle} request.schemaBundle
+   *   Required. The schema bundle to update.
+   *
+   *   The schema bundle's `name` field is used to identify the schema bundle to
+   *   update. Values are of the form
+   *   `projects/{project}/instances/{instance}/tables/{table}/schemaBundles/{schema_bundle}`
+   * @param {google.protobuf.FieldMask} [request.updateMask]
+   *   Optional. The list of fields to update.
+   * @param {boolean} [request.ignoreWarnings]
+   *   Optional. If set, ignore the safety checks when updating the Schema Bundle.
+   *   The safety checks are:
+   *   - The new Schema Bundle is backwards compatible with the existing Schema
+   *   Bundle.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing
+   *   a long running operation. Its `promise()` method returns a promise
+   *   you can `await` for.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/bigtable_table_admin.update_schema_bundle.js</caption>
+   * region_tag:bigtableadmin_v2_generated_BigtableTableAdmin_UpdateSchemaBundle_async
+   */
+  updateSchemaBundle(
+    request?: protos.google.bigtable.admin.v2.IUpdateSchemaBundleRequest,
+    options?: CallOptions,
+  ): Promise<
+    [
+      LROperation<
+        protos.google.bigtable.admin.v2.ISchemaBundle,
+        protos.google.bigtable.admin.v2.IUpdateSchemaBundleMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined,
+    ]
+  >;
+  updateSchemaBundle(
+    request: protos.google.bigtable.admin.v2.IUpdateSchemaBundleRequest,
+    options: CallOptions,
+    callback: Callback<
+      LROperation<
+        protos.google.bigtable.admin.v2.ISchemaBundle,
+        protos.google.bigtable.admin.v2.IUpdateSchemaBundleMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  updateSchemaBundle(
+    request: protos.google.bigtable.admin.v2.IUpdateSchemaBundleRequest,
+    callback: Callback<
+      LROperation<
+        protos.google.bigtable.admin.v2.ISchemaBundle,
+        protos.google.bigtable.admin.v2.IUpdateSchemaBundleMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  updateSchemaBundle(
+    request?: protos.google.bigtable.admin.v2.IUpdateSchemaBundleRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          LROperation<
+            protos.google.bigtable.admin.v2.ISchemaBundle,
+            protos.google.bigtable.admin.v2.IUpdateSchemaBundleMetadata
+          >,
+          protos.google.longrunning.IOperation | null | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      LROperation<
+        protos.google.bigtable.admin.v2.ISchemaBundle,
+        protos.google.bigtable.admin.v2.IUpdateSchemaBundleMetadata
+      >,
+      protos.google.longrunning.IOperation | null | undefined,
+      {} | null | undefined
+    >,
+  ): Promise<
+    [
+      LROperation<
+        protos.google.bigtable.admin.v2.ISchemaBundle,
+        protos.google.bigtable.admin.v2.IUpdateSchemaBundleMetadata
+      >,
+      protos.google.longrunning.IOperation | undefined,
+      {} | undefined,
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        'schema_bundle.name': request.schemaBundle!.name ?? '',
+      });
+    this.initialize().catch(err => {
+      throw err;
+    });
+    const wrappedCallback:
+      | Callback<
+          LROperation<
+            protos.google.bigtable.admin.v2.ISchemaBundle,
+            protos.google.bigtable.admin.v2.IUpdateSchemaBundleMetadata
+          >,
+          protos.google.longrunning.IOperation | null | undefined,
+          {} | null | undefined
+        >
+      | undefined = callback
+      ? (error, response, rawResponse, _) => {
+          this._log.info('updateSchemaBundle response %j', rawResponse);
+          callback!(error, response, rawResponse, _); // We verified callback above.
+        }
+      : undefined;
+    this._log.info('updateSchemaBundle request %j', request);
+    return this.innerApiCalls
+      .updateSchemaBundle(request, options, wrappedCallback)
+      ?.then(
+        ([response, rawResponse, _]: [
+          LROperation<
+            protos.google.bigtable.admin.v2.ISchemaBundle,
+            protos.google.bigtable.admin.v2.IUpdateSchemaBundleMetadata
+          >,
+          protos.google.longrunning.IOperation | undefined,
+          {} | undefined,
+        ]) => {
+          this._log.info('updateSchemaBundle response %j', rawResponse);
+          return [response, rawResponse, _];
+        },
+      );
+  }
+  /**
+   * Check the status of the long running operation returned by `updateSchemaBundle()`.
+   * @param {String} name
+   *   The operation name that will be passed.
+   * @returns {Promise} - The promise which resolves to an object.
+   *   The decoded operation object has result and metadata field to get information from.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/bigtable_table_admin.update_schema_bundle.js</caption>
+   * region_tag:bigtableadmin_v2_generated_BigtableTableAdmin_UpdateSchemaBundle_async
+   */
+  async checkUpdateSchemaBundleProgress(
+    name: string,
+  ): Promise<
+    LROperation<
+      protos.google.bigtable.admin.v2.SchemaBundle,
+      protos.google.bigtable.admin.v2.UpdateSchemaBundleMetadata
+    >
+  > {
+    this._log.info('updateSchemaBundle long-running');
+    const request =
+      new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest(
+        {name},
+      );
+    const [operation] = await this.operationsClient.getOperation(request);
+    const decodeOperation = new this._gaxModule.Operation(
+      operation,
+      this.descriptors.longrunning.updateSchemaBundle,
+      this._gaxModule.createDefaultBackoffSettings(),
+    );
+    return decodeOperation as LROperation<
+      protos.google.bigtable.admin.v2.SchemaBundle,
+      protos.google.bigtable.admin.v2.UpdateSchemaBundleMetadata
+    >;
+  }
+  /**
    * Lists all tables served from a specified instance.
    *
    * @param {Object} request
@@ -4617,8 +5559,8 @@ export class BigtableTableAdminClient {
    * @param {string} [request.pageToken]
    *   Optional. The value of `next_page_token` returned by a previous call.
    * @param {google.bigtable.admin.v2.AuthorizedView.ResponseView} [request.view]
-   *   Optional. The resource_view to be applied to the returned views' fields.
-   *   Default to NAME_ONLY.
+   *   Optional. The resource_view to be applied to the returned AuthorizedViews'
+   *   fields. Default to NAME_ONLY.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -4755,8 +5697,8 @@ export class BigtableTableAdminClient {
    * @param {string} [request.pageToken]
    *   Optional. The value of `next_page_token` returned by a previous call.
    * @param {google.bigtable.admin.v2.AuthorizedView.ResponseView} [request.view]
-   *   Optional. The resource_view to be applied to the returned views' fields.
-   *   Default to NAME_ONLY.
+   *   Optional. The resource_view to be applied to the returned AuthorizedViews'
+   *   fields. Default to NAME_ONLY.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Stream}
@@ -4816,8 +5758,8 @@ export class BigtableTableAdminClient {
    * @param {string} [request.pageToken]
    *   Optional. The value of `next_page_token` returned by a previous call.
    * @param {google.bigtable.admin.v2.AuthorizedView.ResponseView} [request.view]
-   *   Optional. The resource_view to be applied to the returned views' fields.
-   *   Default to NAME_ONLY.
+   *   Optional. The resource_view to be applied to the returned AuthorizedViews'
+   *   fields. Default to NAME_ONLY.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Object}
@@ -5499,6 +6441,250 @@ export class BigtableTableAdminClient {
       callSettings,
     ) as AsyncIterable<protos.google.bigtable.admin.v2.IBackup>;
   }
+  /**
+   * Lists all schema bundles associated with the specified table.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The parent, which owns this collection of schema bundles.
+   *   Values are of the form
+   *   `projects/{project}/instances/{instance}/tables/{table}`.
+   * @param {number} request.pageSize
+   *   The maximum number of schema bundles to return. If the value is positive,
+   *   the server may return at most this value. If unspecified, the server will
+   *   return the maximum allowed page size.
+   * @param {string} request.pageToken
+   *   A page token, received from a previous `ListSchemaBundles` call.
+   *   Provide this to retrieve the subsequent page.
+   *
+   *   When paginating, all other parameters provided to `ListSchemaBundles` must
+   *   match the call that provided the page token.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is Array of {@link protos.google.bigtable.admin.v2.SchemaBundle|SchemaBundle}.
+   *   The client library will perform auto-pagination by default: it will call the API as many
+   *   times as needed and will merge results from all the pages into this array.
+   *   Note that it can affect your quota.
+   *   We recommend using `listSchemaBundlesAsync()`
+   *   method described below for async iteration which you can stop as needed.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
+   *   for more details and examples.
+   */
+  listSchemaBundles(
+    request?: protos.google.bigtable.admin.v2.IListSchemaBundlesRequest,
+    options?: CallOptions,
+  ): Promise<
+    [
+      protos.google.bigtable.admin.v2.ISchemaBundle[],
+      protos.google.bigtable.admin.v2.IListSchemaBundlesRequest | null,
+      protos.google.bigtable.admin.v2.IListSchemaBundlesResponse,
+    ]
+  >;
+  listSchemaBundles(
+    request: protos.google.bigtable.admin.v2.IListSchemaBundlesRequest,
+    options: CallOptions,
+    callback: PaginationCallback<
+      protos.google.bigtable.admin.v2.IListSchemaBundlesRequest,
+      | protos.google.bigtable.admin.v2.IListSchemaBundlesResponse
+      | null
+      | undefined,
+      protos.google.bigtable.admin.v2.ISchemaBundle
+    >,
+  ): void;
+  listSchemaBundles(
+    request: protos.google.bigtable.admin.v2.IListSchemaBundlesRequest,
+    callback: PaginationCallback<
+      protos.google.bigtable.admin.v2.IListSchemaBundlesRequest,
+      | protos.google.bigtable.admin.v2.IListSchemaBundlesResponse
+      | null
+      | undefined,
+      protos.google.bigtable.admin.v2.ISchemaBundle
+    >,
+  ): void;
+  listSchemaBundles(
+    request?: protos.google.bigtable.admin.v2.IListSchemaBundlesRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | PaginationCallback<
+          protos.google.bigtable.admin.v2.IListSchemaBundlesRequest,
+          | protos.google.bigtable.admin.v2.IListSchemaBundlesResponse
+          | null
+          | undefined,
+          protos.google.bigtable.admin.v2.ISchemaBundle
+        >,
+    callback?: PaginationCallback<
+      protos.google.bigtable.admin.v2.IListSchemaBundlesRequest,
+      | protos.google.bigtable.admin.v2.IListSchemaBundlesResponse
+      | null
+      | undefined,
+      protos.google.bigtable.admin.v2.ISchemaBundle
+    >,
+  ): Promise<
+    [
+      protos.google.bigtable.admin.v2.ISchemaBundle[],
+      protos.google.bigtable.admin.v2.IListSchemaBundlesRequest | null,
+      protos.google.bigtable.admin.v2.IListSchemaBundlesResponse,
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    this.initialize().catch(err => {
+      throw err;
+    });
+    const wrappedCallback:
+      | PaginationCallback<
+          protos.google.bigtable.admin.v2.IListSchemaBundlesRequest,
+          | protos.google.bigtable.admin.v2.IListSchemaBundlesResponse
+          | null
+          | undefined,
+          protos.google.bigtable.admin.v2.ISchemaBundle
+        >
+      | undefined = callback
+      ? (error, values, nextPageRequest, rawResponse) => {
+          this._log.info('listSchemaBundles values %j', values);
+          callback!(error, values, nextPageRequest, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    this._log.info('listSchemaBundles request %j', request);
+    return this.innerApiCalls
+      .listSchemaBundles(request, options, wrappedCallback)
+      ?.then(
+        ([response, input, output]: [
+          protos.google.bigtable.admin.v2.ISchemaBundle[],
+          protos.google.bigtable.admin.v2.IListSchemaBundlesRequest | null,
+          protos.google.bigtable.admin.v2.IListSchemaBundlesResponse,
+        ]) => {
+          this._log.info('listSchemaBundles values %j', response);
+          return [response, input, output];
+        },
+      );
+  }
+
+  /**
+   * Equivalent to `listSchemaBundles`, but returns a NodeJS Stream object.
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The parent, which owns this collection of schema bundles.
+   *   Values are of the form
+   *   `projects/{project}/instances/{instance}/tables/{table}`.
+   * @param {number} request.pageSize
+   *   The maximum number of schema bundles to return. If the value is positive,
+   *   the server may return at most this value. If unspecified, the server will
+   *   return the maximum allowed page size.
+   * @param {string} request.pageToken
+   *   A page token, received from a previous `ListSchemaBundles` call.
+   *   Provide this to retrieve the subsequent page.
+   *
+   *   When paginating, all other parameters provided to `ListSchemaBundles` must
+   *   match the call that provided the page token.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Stream}
+   *   An object stream which emits an object representing {@link protos.google.bigtable.admin.v2.SchemaBundle|SchemaBundle} on 'data' event.
+   *   The client library will perform auto-pagination by default: it will call the API as many
+   *   times as needed. Note that it can affect your quota.
+   *   We recommend using `listSchemaBundlesAsync()`
+   *   method described below for async iteration which you can stop as needed.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
+   *   for more details and examples.
+   */
+  listSchemaBundlesStream(
+    request?: protos.google.bigtable.admin.v2.IListSchemaBundlesRequest,
+    options?: CallOptions,
+  ): Transform {
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    const defaultCallSettings = this._defaults['listSchemaBundles'];
+    const callSettings = defaultCallSettings.merge(options);
+    this.initialize().catch(err => {
+      throw err;
+    });
+    this._log.info('listSchemaBundles stream %j', request);
+    return this.descriptors.page.listSchemaBundles.createStream(
+      this.innerApiCalls.listSchemaBundles as GaxCall,
+      request,
+      callSettings,
+    );
+  }
+
+  /**
+   * Equivalent to `listSchemaBundles`, but returns an iterable object.
+   *
+   * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. The parent, which owns this collection of schema bundles.
+   *   Values are of the form
+   *   `projects/{project}/instances/{instance}/tables/{table}`.
+   * @param {number} request.pageSize
+   *   The maximum number of schema bundles to return. If the value is positive,
+   *   the server may return at most this value. If unspecified, the server will
+   *   return the maximum allowed page size.
+   * @param {string} request.pageToken
+   *   A page token, received from a previous `ListSchemaBundles` call.
+   *   Provide this to retrieve the subsequent page.
+   *
+   *   When paginating, all other parameters provided to `ListSchemaBundles` must
+   *   match the call that provided the page token.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Object}
+   *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
+   *   When you iterate the returned iterable, each element will be an object representing
+   *   {@link protos.google.bigtable.admin.v2.SchemaBundle|SchemaBundle}. The API will be called under the hood as needed, once per the page,
+   *   so you can stop the iteration when you don't need more results.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v2/bigtable_table_admin.list_schema_bundles.js</caption>
+   * region_tag:bigtableadmin_v2_generated_BigtableTableAdmin_ListSchemaBundles_async
+   */
+  listSchemaBundlesAsync(
+    request?: protos.google.bigtable.admin.v2.IListSchemaBundlesRequest,
+    options?: CallOptions,
+  ): AsyncIterable<protos.google.bigtable.admin.v2.ISchemaBundle> {
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    const defaultCallSettings = this._defaults['listSchemaBundles'];
+    const callSettings = defaultCallSettings.merge(options);
+    this.initialize().catch(err => {
+      throw err;
+    });
+    this._log.info('listSchemaBundles iterate %j', request);
+    return this.descriptors.page.listSchemaBundles.asyncIterate(
+      this.innerApiCalls['listSchemaBundles'] as GaxCall,
+      request as {},
+      callSettings,
+    ) as AsyncIterable<protos.google.bigtable.admin.v2.ISchemaBundle>;
+  }
   // --------------------
   // -- Path templates --
   // --------------------
@@ -5988,6 +7174,77 @@ export class BigtableTableAdminClient {
   }
 
   /**
+   * Return a fully-qualified schemaBundle resource name string.
+   *
+   * @param {string} project
+   * @param {string} instance
+   * @param {string} table
+   * @param {string} schema_bundle
+   * @returns {string} Resource name string.
+   */
+  schemaBundlePath(
+    project: string,
+    instance: string,
+    table: string,
+    schemaBundle: string,
+  ) {
+    return this.pathTemplates.schemaBundlePathTemplate.render({
+      project: project,
+      instance: instance,
+      table: table,
+      schema_bundle: schemaBundle,
+    });
+  }
+
+  /**
+   * Parse the project from SchemaBundle resource.
+   *
+   * @param {string} schemaBundleName
+   *   A fully-qualified path representing SchemaBundle resource.
+   * @returns {string} A string representing the project.
+   */
+  matchProjectFromSchemaBundleName(schemaBundleName: string) {
+    return this.pathTemplates.schemaBundlePathTemplate.match(schemaBundleName)
+      .project;
+  }
+
+  /**
+   * Parse the instance from SchemaBundle resource.
+   *
+   * @param {string} schemaBundleName
+   *   A fully-qualified path representing SchemaBundle resource.
+   * @returns {string} A string representing the instance.
+   */
+  matchInstanceFromSchemaBundleName(schemaBundleName: string) {
+    return this.pathTemplates.schemaBundlePathTemplate.match(schemaBundleName)
+      .instance;
+  }
+
+  /**
+   * Parse the table from SchemaBundle resource.
+   *
+   * @param {string} schemaBundleName
+   *   A fully-qualified path representing SchemaBundle resource.
+   * @returns {string} A string representing the table.
+   */
+  matchTableFromSchemaBundleName(schemaBundleName: string) {
+    return this.pathTemplates.schemaBundlePathTemplate.match(schemaBundleName)
+      .table;
+  }
+
+  /**
+   * Parse the schema_bundle from SchemaBundle resource.
+   *
+   * @param {string} schemaBundleName
+   *   A fully-qualified path representing SchemaBundle resource.
+   * @returns {string} A string representing the schema_bundle.
+   */
+  matchSchemaBundleFromSchemaBundleName(schemaBundleName: string) {
+    return this.pathTemplates.schemaBundlePathTemplate.match(schemaBundleName)
+      .schema_bundle;
+  }
+
+  /**
    * Return a fully-qualified snapshot resource name string.
    *
    * @param {string} project
@@ -6115,7 +7372,7 @@ export class BigtableTableAdminClient {
         this._log.info('ending gRPC channel');
         this._terminated = true;
         stub.close();
-        this.operationsClient.close();
+        void this.operationsClient.close();
       });
     }
     return Promise.resolve();

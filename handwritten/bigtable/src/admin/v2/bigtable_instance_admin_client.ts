@@ -29,9 +29,9 @@ import type {
   GaxCall,
 } from 'google-gax';
 import {Transform} from 'stream';
-import * as protos from '../../protos/protos';
-import jsonProtos = require('../../protos/protos.json');
-import {loggingUtils as logging} from 'google-gax';
+import * as protos from '../../../protos/protos';
+import jsonProtos = require('../../../protos/protos.json');
+import {loggingUtils as logging, decodeAnyProtosInArray} from 'google-gax';
 
 /**
  * Client JSON configuration object, loaded from
@@ -39,7 +39,7 @@ import {loggingUtils as logging} from 'google-gax';
  * This file defines retry strategy and timeouts for all API methods in this library.
  */
 import * as gapicConfig from './bigtable_instance_admin_client_config.json';
-const version = require('../../../package.json').version;
+const version = require('../../../../package.json').version;
 
 /**
  *  Service for creating, configuring, and deleting Cloud Bigtable Instances and
@@ -235,6 +235,9 @@ export class BigtableInstanceAdminClient {
       projectPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}',
       ),
+      schemaBundlePathTemplate: new this._gaxModule.PathTemplate(
+        'projects/{project}/instances/{instance}/tables/{table}/schemaBundles/{schema_bundle}',
+      ),
       snapshotPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/instances/{instance}/clusters/{cluster}/snapshots/{snapshot}',
       ),
@@ -269,7 +272,7 @@ export class BigtableInstanceAdminClient {
       ),
     };
 
-    const protoFilesRoot = this._gaxModule.protobuf.Root.fromJSON(jsonProtos);
+    const protoFilesRoot = this._gaxModule.protobufFromJSON(jsonProtos);
     // This API contains "long-running operations", which return a
     // an Operation object that allows for tracking of the operation,
     // rather than holding a request open.
@@ -744,7 +747,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('getInstance response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Lists information about instances in a project.
@@ -859,7 +878,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('listInstances response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Updates an instance within a project. This method updates only the display
@@ -899,6 +934,16 @@ export class BigtableInstanceAdminClient {
    *   Output only. Reserved for future use.
    * @param {boolean} request.satisfiesPzi
    *   Output only. Reserved for future use.
+   * @param {number[]} request.tags
+   *   Optional. Input only. Immutable. Tag keys/values directly bound to this
+   *   resource. For example:
+   *   - "123/environment": "production",
+   *   - "123/costCenter": "marketing"
+   *
+   *   Tags and Labels (above) are both used to bind metadata to resources, with
+   *   different use-cases. See
+   *   https://cloud.google.com/resource-manager/docs/tags/tags-overview for an
+   *   in-depth overview on the difference between tags and labels.
    * @param {object} [options]
    *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
    * @returns {Promise} - The promise which resolves to an array.
@@ -998,7 +1043,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('updateInstance response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Delete an instance from a project.
@@ -1111,7 +1172,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('deleteInstance response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets information about a cluster.
@@ -1220,7 +1297,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('getCluster response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Lists information about clusters in an instance.
@@ -1338,7 +1431,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('listClusters response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Deletes a cluster from an instance.
@@ -1451,7 +1560,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('deleteCluster response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Creates an app profile within an instance.
@@ -1579,7 +1704,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('createAppProfile response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets information about an app profile.
@@ -1692,7 +1833,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('getAppProfile response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Deletes an app profile from an instance.
@@ -1814,7 +1971,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('deleteAppProfile response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets the access control policy for an instance resource. Returns an empty
@@ -1927,7 +2100,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('getIamPolicy response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Sets the access control policy on an instance resource. Replaces any
@@ -2048,7 +2237,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('setIamPolicy response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Returns permissions that the caller has on the specified instance resource.
@@ -2162,7 +2367,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('testIamPermissions response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets information about a logical view.
@@ -2275,7 +2496,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('getLogicalView response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Deletes a logical view from an instance.
@@ -2400,7 +2637,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('deleteLogicalView response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Gets information about a materialized view.
@@ -2523,7 +2776,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('getMaterializedView response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
   /**
    * Deletes a materialized view from an instance.
@@ -2657,7 +2926,23 @@ export class BigtableInstanceAdminClient {
           this._log.info('deleteMaterializedView response %j', response);
           return [response, options, rawResponse];
         },
-      );
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
   }
 
   /**
@@ -5960,6 +6245,77 @@ export class BigtableInstanceAdminClient {
   }
 
   /**
+   * Return a fully-qualified schemaBundle resource name string.
+   *
+   * @param {string} project
+   * @param {string} instance
+   * @param {string} table
+   * @param {string} schema_bundle
+   * @returns {string} Resource name string.
+   */
+  schemaBundlePath(
+    project: string,
+    instance: string,
+    table: string,
+    schemaBundle: string,
+  ) {
+    return this.pathTemplates.schemaBundlePathTemplate.render({
+      project: project,
+      instance: instance,
+      table: table,
+      schema_bundle: schemaBundle,
+    });
+  }
+
+  /**
+   * Parse the project from SchemaBundle resource.
+   *
+   * @param {string} schemaBundleName
+   *   A fully-qualified path representing SchemaBundle resource.
+   * @returns {string} A string representing the project.
+   */
+  matchProjectFromSchemaBundleName(schemaBundleName: string) {
+    return this.pathTemplates.schemaBundlePathTemplate.match(schemaBundleName)
+      .project;
+  }
+
+  /**
+   * Parse the instance from SchemaBundle resource.
+   *
+   * @param {string} schemaBundleName
+   *   A fully-qualified path representing SchemaBundle resource.
+   * @returns {string} A string representing the instance.
+   */
+  matchInstanceFromSchemaBundleName(schemaBundleName: string) {
+    return this.pathTemplates.schemaBundlePathTemplate.match(schemaBundleName)
+      .instance;
+  }
+
+  /**
+   * Parse the table from SchemaBundle resource.
+   *
+   * @param {string} schemaBundleName
+   *   A fully-qualified path representing SchemaBundle resource.
+   * @returns {string} A string representing the table.
+   */
+  matchTableFromSchemaBundleName(schemaBundleName: string) {
+    return this.pathTemplates.schemaBundlePathTemplate.match(schemaBundleName)
+      .table;
+  }
+
+  /**
+   * Parse the schema_bundle from SchemaBundle resource.
+   *
+   * @param {string} schemaBundleName
+   *   A fully-qualified path representing SchemaBundle resource.
+   * @returns {string} A string representing the schema_bundle.
+   */
+  matchSchemaBundleFromSchemaBundleName(schemaBundleName: string) {
+    return this.pathTemplates.schemaBundlePathTemplate.match(schemaBundleName)
+      .schema_bundle;
+  }
+
+  /**
    * Return a fully-qualified snapshot resource name string.
    *
    * @param {string} project
@@ -6087,7 +6443,7 @@ export class BigtableInstanceAdminClient {
         this._log.info('ending gRPC channel');
         this._terminated = true;
         stub.close();
-        this.operationsClient.close();
+        void this.operationsClient.close();
       });
     }
     return Promise.resolve();
