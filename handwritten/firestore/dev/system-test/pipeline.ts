@@ -346,6 +346,94 @@ describe.skipClassic('Pipeline class', () => {
   afterEach(() => verifyInstance(firestore as unknown as InternalFirestore));
 
   describe('pipeline results', () => {
+    describe('DML stages', () => {
+      it('can execute delete stage', async () => {
+        const docRef = randomCol.doc('testDelete');
+        await docRef.set({foo: 'bar'});
+
+        const deletePpl = firestore
+          .pipeline()
+          .collection(randomCol.path)
+          .where(equal(field('__name__').documentId(), docRef.id))
+          .delete();
+
+        const deleteRes = await deletePpl.execute();
+        expectResults(deleteRes, {documents_modified: 1});
+
+        // Verify 'testDelete' document was deleted
+        const docSnap = await docRef.get();
+        expect(docSnap.exists).to.be.false;
+      });
+
+      it('can execute delete stage within a transaction', async () => {
+        const docRef = randomCol.doc('testDelete');
+        await docRef.set({foo: 'bar'});
+        await firestore.runTransaction(async transaction => {
+          const deletePpl = firestore
+            .pipeline()
+            .collection(randomCol.path)
+            .where(equal(field('__name__').documentId(), docRef.id))
+            .delete();
+
+          const deleteRes = await transaction.execute(deletePpl);
+          expectResults(deleteRes, {documents_modified: 1});
+        });
+
+        // Verify 'testDelete' document was deleted
+        const docSnap = await docRef.get();
+        expect(docSnap.exists).to.be.false;
+      });
+
+      it('can execute update stage', async () => {
+        randomCol.doc('testUpdate');
+
+        const ppl = firestore
+          .pipeline()
+          .collection(randomCol.path)
+          .where(equal(field('__name__'), 'testDelete'))
+          .addFields(
+            field('__name__').as('id'),
+            'upserted_value' as unknown as Pipelines.Selectable, // Hardcoded values inside addFields need specific treatment or aren't supported
+          )
+          .update(randomCol.path);
+
+        await ppl.execute();
+      });
+
+      it('can execute upsert stage', async () => {
+        randomCol.doc('testUpsert');
+
+        const ppl = firestore
+          .pipeline()
+          .collection(randomCol.path)
+          .where(equal(field('__name__'), 'testDelete'))
+          .addFields(
+            // Use selectables for addFields
+            field('__name__').as('id'),
+            'upserted_value' as unknown as Pipelines.Selectable, // Hardcoded values inside addFields need specific treatment or aren't supported
+          )
+          .upsert(randomCol.path);
+
+        await ppl.execute();
+      });
+
+      it('can execute insert stage', async () => {
+        randomCol.doc('testInsert');
+
+        const ppl = firestore
+          .pipeline()
+          .collection(randomCol.path)
+          .where(equal(field('__name__'), 'testDelete')) // arbitrary matching
+          .addFields(
+            field('__name__').as('id'),
+            'inserted_value' as unknown as Pipelines.Selectable,
+          )
+          .insert(randomCol.path);
+
+        await ppl.execute();
+      });
+    });
+
     it('empty snapshot as expected', async () => {
       const snapshot = await firestore
         .pipeline()

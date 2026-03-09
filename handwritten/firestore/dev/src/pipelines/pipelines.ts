@@ -81,6 +81,9 @@ import {
   Sample,
   Union,
   Unnest,
+  DeleteStage,
+  UpsertStage,
+  InsertStage,
   InternalWhereStageOptions,
   InternalOffsetStageOptions,
   InternalLimitStageOptions,
@@ -95,6 +98,7 @@ import {
   InternalDocumentsStageOptions,
   InternalCollectionGroupStageOptions,
   InternalCollectionStageOptions,
+  UpdateStage,
 } from './stage';
 import {StructuredPipeline} from './structured-pipeline';
 import Selectable = FirebaseFirestore.Pipelines.Selectable;
@@ -1484,6 +1488,200 @@ export class Pipeline implements firestore.Pipelines.Pipeline {
     };
 
     return this._addStage(new Sort(internalOptions));
+  }
+
+  /**
+   * @beta
+   * Performs a delete operation on documents from previous stages.
+   *
+   * @example
+   * ```typescript
+   * // Deletes all documents in the "books" collection.
+   * firestore.pipeline().collection("books")
+   *    .delete();
+   * ```
+   *
+   * @return A new {@code Pipeline} object with this stage appended to the stage list.
+   */
+  delete(): Pipeline;
+  /**
+   * @beta
+   * Performs a delete operation on documents from previous stages.
+   *
+   * TODO(dlarocque): Verify we want this function.
+   *
+   * @param collectionNameOrRef - The collection to delete from.
+   * @return A new {@code Pipeline} object with this stage appended to the stage list.
+   */
+  delete(collectionNameOrRef: string | firestore.CollectionReference): Pipeline;
+  /**
+   * @beta
+   * Performs a delete operation on documents from previous stages.
+   *
+   * @example
+   * ```typescript
+   * // Deletes all documents in the books collection and returns their IDs.
+   * firestore.pipeline().collection("books")
+   *    .delete({
+   *        returns: "DOCUMENT_ID",
+   *    });
+   * ```
+   *
+   * @param options - The {@code DeleteStageOptions} to apply to the stage.
+   * @return A new {@code Pipeline} object with this stage appended to the stage list.
+   */
+  delete(options: firestore.Pipelines.DeleteStageOptions): Pipeline;
+  delete(
+    optionsOrCollection?:
+      | string
+      | firestore.CollectionReference
+      | firestore.Pipelines.DeleteStageOptions,
+  ): Pipeline {
+    let target = undefined;
+    if (typeof optionsOrCollection === 'string') {
+      target = this.db.collection(optionsOrCollection);
+    } else if (isCollectionReference(optionsOrCollection)) {
+      target = optionsOrCollection;
+    }
+    const options = (
+      !isCollectionReference(optionsOrCollection) &&
+      typeof optionsOrCollection !== 'string'
+        ? optionsOrCollection
+        : undefined
+    ) as firestore.Pipelines.DeleteStageOptions | undefined;
+    return this._addStage(new DeleteStage(target, options));
+  }
+
+  /**
+   * @beta
+   * Performs an update operation using documents from previous stages.
+   *
+   * @return A new {@code Pipeline} object with this stage appended to the stage list.
+   */
+  update(): Pipeline;
+  /**
+   * @beta
+   * Performs an update operation using documents from previous stages.
+   *
+   * @param collectionNameOrRef - The collection to update.
+   * @return A new {@code Pipeline} object with this stage appended to the stage list.
+   */
+  update(collectionNameOrRef: string | firestore.CollectionReference): Pipeline;
+  /**
+   * @beta
+   * Performs an update operation using documents from previous stages.
+   *
+   * @param options - The {@code UpdateStageOptions} to apply to the stage.
+   * @return A new {@code Pipeline} object with this stage appended to the stage list.
+   */
+  update(options: firestore.Pipelines.UpdateStageOptions): Pipeline;
+  update(
+    optionsOrCollection?:
+      | string
+      | firestore.CollectionReference
+      | firestore.Pipelines.UpdateStageOptions,
+  ): Pipeline {
+    let target = undefined;
+    if (typeof optionsOrCollection === 'string') {
+      target = this.db.collection(optionsOrCollection);
+    } else if (isCollectionReference(optionsOrCollection)) {
+      target = optionsOrCollection;
+    }
+    const options = (
+      !isCollectionReference(optionsOrCollection) &&
+      typeof optionsOrCollection !== 'string'
+        ? optionsOrCollection
+        : undefined
+    ) as firestore.Pipelines.UpdateStageOptions | undefined;
+    return this._addStage(new UpdateStage(target, options));
+  }
+
+  /**
+   * @beta
+   * Performs an upsert operation using documents from previous stages.
+   *
+   * @return A new {@code Pipeline} object with this stage appended to the stage list.
+   */
+  upsert(): Pipeline;
+  /**
+   * @beta
+   * Performs an upsert operation using documents from previous stages.
+   *
+   * @param collectionNameOrRef - The collection to upsert to.
+   * @return A new {@code Pipeline} object with this stage appended to the stage list.
+   */
+  upsert(collectionNameOrRef: string | firestore.CollectionReference): Pipeline;
+  /**
+   * @beta
+   * Performs an upsert operation using documents from previous stages.
+   *
+   * @param options - The {@code UpsertStageOptions} to apply to the stage.
+   * @return A new {@code Pipeline} object with this stage appended to the stage list.
+   */
+  upsert(options: firestore.Pipelines.UpsertStageOptions): Pipeline;
+  upsert(
+    optionsOrCollection?:
+      | string
+      | firestore.CollectionReference
+      | firestore.Pipelines.UpsertStageOptions,
+  ): Pipeline {
+    let target = undefined;
+    if (typeof optionsOrCollection === 'string') {
+      target = this.db.collection(optionsOrCollection);
+    } else if (isCollectionReference(optionsOrCollection)) {
+      target = optionsOrCollection;
+    }
+    const options = (
+      !isCollectionReference(optionsOrCollection) &&
+      typeof optionsOrCollection !== 'string'
+        ? optionsOrCollection
+        : undefined
+    ) as firestore.Pipelines.UpsertStageOptions | undefined;
+    return this._addStage(new UpsertStage(target, options));
+  }
+
+  /**
+   * @beta
+   * Performs an insert operation using documents from previous stages.
+   *
+   * @return A new {@code Pipeline} object with this stage appended to the stage list.
+   */
+  insert(): Pipeline;
+  /**
+   * @beta
+   * Performs an insert operation using documents from previous stages.
+   *
+   * @param collectionNameOrRef - The collection to insert to.
+   * @return A new {@code Pipeline} object with this stage appended to the stage list.
+   */
+  insert(collectionNameOrRef: string | firestore.CollectionReference): Pipeline;
+  /**
+   * @beta
+   * Performs an insert operation using documents from previous stages.
+   *
+   * @param options - The {@code InsertStageOptions} to apply to the stage.
+   * @return A new {@code Pipeline} object with this stage appended to the stage list.
+   */
+  insert(options: firestore.Pipelines.InsertStageOptions): Pipeline;
+  insert(
+    optionsOrCollection?:
+      | string
+      | firestore.CollectionReference
+      | firestore.Pipelines.InsertStageOptions,
+  ): Pipeline {
+    let target = undefined;
+    if (typeof optionsOrCollection === 'string') {
+      target = this.db.collection(optionsOrCollection);
+    } else if (isCollectionReference(optionsOrCollection)) {
+      target = optionsOrCollection;
+    }
+    const options = (
+      !isCollectionReference(optionsOrCollection) &&
+      typeof optionsOrCollection !== 'string'
+        ? optionsOrCollection
+        : undefined
+    ) as firestore.Pipelines.InsertStageOptions | undefined;
+    return this._addStage(new InsertStage(target, options));
   }
 
   /**
