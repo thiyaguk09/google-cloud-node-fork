@@ -11,20 +11,23 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-'use strict';
 
-const normalizeCallback = require('./utils/normalize-callback.js');
+import {google} from '../protos/protos';
+import {ClientImplMaker, normalizeCallback} from './utils';
+type ICloseClientRequest = google.bigtable.testproxy.ICloseClientRequest;
+type ICloseClientResponse = google.bigtable.testproxy.ICloseClientResponse;
 
-const closeClient = ({clientMap}) =>
+export const closeClient: ClientImplMaker<
+  ICloseClientRequest,
+  ICloseClientResponse
+> = ({clientMap}) =>
   normalizeCallback(async rawRequest => {
     const request = rawRequest.request;
     const {clientId} = request;
-    const bigtable = clientMap.get(clientId);
+    const bigtable = clientMap.get(clientId!);
 
     if (bigtable) {
       await bigtable.close();
-      return {};
     }
+    return {};
   });
-
-module.exports = closeClient;

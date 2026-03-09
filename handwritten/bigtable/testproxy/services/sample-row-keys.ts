@@ -11,22 +11,27 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-'use strict';
 
-const grpc = require('@grpc/grpc-js');
-const {
-  getSRKRequest,
-} = require('../../build/testproxy/services/utils/request/sampleRowKeys.js');
-const normalizeCallback = require('./utils/normalize-callback.js');
+import * as grpc from '@grpc/grpc-js';
+import {GoogleError} from 'google-gax';
+import {getSRKRequest} from './utils/request/sampleRowKeys';
+import {ClientImplMaker, normalizeCallback} from './utils';
 
-const sampleRowKeys = ({clientMap}) =>
+import {google} from '../protos/protos';
+type ISampleRowKeysRequest = google.bigtable.testproxy.ISampleRowKeysRequest;
+type ISampleRowKeysResult = google.bigtable.testproxy.ISampleRowKeysResult;
+
+export const sampleRowKeys: ClientImplMaker<
+  ISampleRowKeysRequest,
+  ISampleRowKeysResult
+> = ({clientMap}) =>
   normalizeCallback(async rawRequest => {
     const {request} = rawRequest;
     const {clientId, request: sampleRowKeysRequest} = request;
-    const {appProfileId, tableName} = sampleRowKeysRequest;
+    const {appProfileId, tableName} = sampleRowKeysRequest!;
 
-    const bigtable = clientMap.get(clientId);
-    bigtable.appProfileId = appProfileId;
+    const bigtable = clientMap.get(clientId!);
+    bigtable.appProfileId = appProfileId!;
 
     try {
       const response = await getSRKRequest(bigtable, {appProfileId, tableName});
@@ -35,13 +40,15 @@ const sampleRowKeys = ({clientMap}) =>
         status: {code: grpc.status.OK, details: []},
         response,
       };
-    } catch (error) {
+    } catch (e) {
+      const error = e as GoogleError;
       console.error('Error:', error.code);
 
       return {
-        status: {code: error.code, details: []},
+        status: {
+          code: error.code,
+          details: [],
+        },
       };
     }
   });
-
-module.exports = sampleRowKeys;

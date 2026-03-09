@@ -1,4 +1,4 @@
-// Copyright 2022 Google LLC
+// Copyright 2022-2026 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,22 +11,28 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-'use strict';
 
-const grpc = require('@grpc/grpc-js');
+import * as grpc from '@grpc/grpc-js';
+import {GoogleError} from 'google-gax';
+import {google} from '../protos/protos';
+type IMutateRowRequest = google.bigtable.testproxy.IMutateRowRequest;
+type IMutateRowResult = google.bigtable.testproxy.IMutateRowResult;
 
-const normalizeCallback = require('./utils/normalize-callback.js');
+import {ClientImplMaker, normalizeCallback} from './utils';
+import {getBigtableClient} from './utils/bigtable-client';
 
-const v2 = Symbol.for('v2');
-
-const mutateRow = ({clientMap}) =>
+export const mutateRow: ClientImplMaker<
+  IMutateRowRequest,
+  IMutateRowResult
+> = ({clientMap}) =>
   normalizeCallback(async rawRequest => {
     const {request} = rawRequest;
     const {request: mutateRequest} = request;
-    const {mutations, tableName, rowKey} = mutateRequest;
+    const {mutations, tableName, rowKey} = mutateRequest!;
     const {clientId} = request;
-    const appProfileId = clientMap.get(clientId).appProfileId;
-    const client = clientMap.get(clientId)[v2];
+    const bigtable = clientMap.get(clientId!);
+    const appProfileId = bigtable.appProfileId;
+    const client = getBigtableClient(bigtable);
 
     await client.mutateRow({
       appProfileId,
@@ -39,5 +45,3 @@ const mutateRow = ({clientMap}) =>
       status: {code: grpc.status.OK, details: []},
     };
   });
-
-module.exports = mutateRow;

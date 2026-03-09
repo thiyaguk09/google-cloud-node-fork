@@ -11,18 +11,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-'use strict';
 
-const grpc = require('@grpc/grpc-js');
+import * as grpc from '@grpc/grpc-js';
 
-const {callbackify} = require('node:util');
+import {callbackify} from 'node:util';
+import {ClientImpl, ClientImplCallback, WrappedRequest} from './client-map';
 
-const normalizeCallback = fn =>
-  callbackify(async (...args) => {
-    let res;
+export const normalizeCallback = <RequestType, ResponseType>(
+  fn: ClientImpl<RequestType, ResponseType>,
+): ClientImplCallback<RequestType, ResponseType> =>
+  callbackify(async (rawRequest: WrappedRequest<RequestType>) => {
+    let res: ResponseType;
     try {
-      res = await fn(...args);
-    } catch (e) {
+      res = await fn(rawRequest);
+    } catch (err) {
+      const e = err as Error;
+
       // sends original errors directly to standard error since
       // callbackify is going to swallow them later
       console.error(e);
@@ -38,5 +42,3 @@ const normalizeCallback = fn =>
     }
     return res;
   });
-
-module.exports = normalizeCallback;

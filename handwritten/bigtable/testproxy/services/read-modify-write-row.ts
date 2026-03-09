@@ -11,43 +11,47 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-'use strict';
 
-const grpc = require('@grpc/grpc-js');
+import * as grpc from '@grpc/grpc-js';
+import {GoogleError} from 'google-gax';
 
-const normalizeCallback = require('./utils/normalize-callback.js');
-const {
-  getRMWRRequestInverse,
-} = require('../../build/testproxy/services/utils/request/readModifyWriteRow.js');
-const getTableInfo = require('./utils/get-table-info');
+import {google} from '../protos/protos';
+type IReadModifyWriteRowRequest =
+  google.bigtable.testproxy.IReadModifyWriteRowRequest;
+type IRowResult = google.bigtable.testproxy.IRowResult;
 
-const readModifyWriteRow = ({clientMap}) =>
+import {ClientImplMaker, getTableInfo, normalizeCallback} from './utils';
+import {getRMWRRequestInverse} from './utils/request/readModifyWriteRow';
+
+export const readModifyWriteRow: ClientImplMaker<
+  IReadModifyWriteRowRequest,
+  IRowResult
+> = ({clientMap}) =>
   normalizeCallback(async rawRequest => {
     const {request} = rawRequest;
     const {clientId, request: readModifyWriteRow} = request;
-    const {appProfileId, tableName} = readModifyWriteRow;
-    const handWrittenRequest = getRMWRRequestInverse(readModifyWriteRow);
-    const bigtable = clientMap.get(clientId);
+    const {appProfileId, tableName} = readModifyWriteRow!;
+    const handWrittenRequest = getRMWRRequestInverse(readModifyWriteRow!);
+    const bigtable = clientMap.get(clientId!);
     if (appProfileId && appProfileId !== '') {
       bigtable.appProfileId = appProfileId;
     }
-    const table = getTableInfo(bigtable, tableName);
+    const table = getTableInfo(bigtable, tableName!);
     const row = table.row(handWrittenRequest.id);
     try {
-      const [result] = await row.createRules(handWrittenRequest.rules);
+      const [result] = await row.createRules(handWrittenRequest.rules!);
       return {
         status: {code: grpc.status.OK, details: []},
         row: result.row,
       };
     } catch (e) {
+      const error = e as GoogleError;
       return {
         status: {
-          code: e.code ? e.code : grpc.status.UNKNOWN,
+          code: error.code ? error.code : grpc.status.UNKNOWN,
           details: [],
-          message: e.message,
+          message: error.message,
         },
       };
     }
   });
-
-module.exports = readModifyWriteRow;

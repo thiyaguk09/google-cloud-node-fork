@@ -11,21 +11,31 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-'use strict';
 
-const grpc = require('@grpc/grpc-js');
+import * as grpc from '@grpc/grpc-js';
 
-const normalizeCallback = require('./utils/normalize-callback.js');
-const getRowResponse = require('./utils/get-row-response.js');
-const getTableInfo = require('./utils/get-table-info.js');
+import {google} from '../protos/protos';
+type IReadRowRequest = google.bigtable.testproxy.IReadRowRequest;
+type IRowResult = google.bigtable.testproxy.IRowResult;
 
-const readRow = ({clientMap}) =>
+import {
+  ClientImplMaker,
+  normalizeCallback,
+  getRowResponse,
+  getTableInfo,
+} from './utils';
+
+export const readRow: ClientImplMaker<IReadRowRequest, IRowResult> = ({
+  clientMap,
+}) =>
   normalizeCallback(async rawRequest => {
-    const {clientId, columns = {}, rowKey, tableName} = rawRequest.request;
+    const {clientId, rowKey, tableName} = rawRequest.request;
+    const columns = {};
 
-    const bigtable = clientMap.get(clientId);
-    const table = getTableInfo(bigtable, tableName);
-    const row = table.row(rowKey);
+    const bigtable = clientMap.get(clientId!);
+    const table = getTableInfo(bigtable, tableName!);
+    const row = table.row(rowKey!);
+
     const res = await row.get(columns);
     const firstRow = getRowResponse(res[0]);
 
@@ -34,5 +44,3 @@ const readRow = ({clientMap}) =>
       row: firstRow,
     };
   });
-
-module.exports = readRow;

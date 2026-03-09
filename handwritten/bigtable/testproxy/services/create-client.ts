@@ -11,26 +11,39 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-'use strict';
 
-const normalizeCallback = require('./utils/normalize-callback.js');
+import {ClientImplMaker, normalizeCallback} from './utils';
+import {google} from '../protos/protos';
 
-const grpc = require('@grpc/grpc-js');
-const {Bigtable} = require('../../build/src/index.js');
-const {
-  ClientSideMetricsConfigManager,
-} = require('../../build/src/client-side-metrics/metrics-config-manager');
-const {BigtableClient} = require('../../build/src/index.js').v2;
+import * as grpc from '@grpc/grpc-js';
+import {Bigtable} from '../../src';
+import {createBigtableClient} from './utils/bigtable-client';
 
-const v2 = Symbol.for('v2');
-
-function durationToMilliseconds(duration) {
-  const secondsInMs = parseInt(duration.seconds, 10) * 1000;
-  const nanosInMs = duration.nanos / 1000000;
+function durationToMilliseconds(
+  duration: google.protobuf.Duration | google.protobuf.IDuration,
+) {
+  const secondsInMs = parseInt(duration.seconds as string, 10) * 1000;
+  const nanosInMs = duration.nanos! / 1000000;
   return secondsInMs + nanosInMs;
 }
 
-const createClient = ({clientMap}) =>
+type ICreateClientRequest = google.bigtable.testproxy.ICreateClientRequest;
+type ICreateClientResponse = google.bigtable.testproxy.ICreateClientResponse;
+
+interface HasCredential {
+  callCredential?: {jsonServiceAccount: string};
+}
+
+interface MethodConfig {
+  timeout_millis: number;
+  retry_codes_name: string;
+  retry_params_name: string;
+}
+
+export const createClient: ClientImplMaker<
+  ICreateClientRequest,
+  ICreateClientResponse
+> = ({clientMap}) =>
   normalizeCallback(async rawRequest => {
     // TODO: Handle refresh periods
     const {request} = rawRequest;
@@ -44,7 +57,7 @@ const createClient = ({clientMap}) =>
       instanceId,
       dataTarget: apiEndpoint,
       appProfileId,
-    } = request;
+    } = request as ICreateClientRequest & HasCredential;
 
     if (!(clientId && projectId && instanceId && apiEndpoint)) {
       throw Object.assign(
@@ -64,7 +77,7 @@ const createClient = ({clientMap}) =>
     // TODO: Implement support to SSL connection
     let authClient;
     if (callCredential && callCredential.jsonServiceAccount) {
-      authClient = JSON.parse(request.callCredential.jsonServiceAccount);
+      authClient = JSON.parse(callCredential.jsonServiceAccount);
     }
     if (request.perOperationTimeout) {
       /**
@@ -74,22 +87,21 @@ const createClient = ({clientMap}) =>
       Object.entries(
         clientConfig.interfaces['google.bigtable.v2.Bigtable'].methods,
       ).forEach(([, v]) => {
-        v.timeout_millis = durationToMilliseconds(request.perOperationTimeout);
+        (v as MethodConfig).timeout_millis = durationToMilliseconds(
+          request.perOperationTimeout!,
+        );
       });
     }
-    const bigtable = new Bigtable({
+
+    const options = {
       projectId,
       apiEndpoint,
       authClient,
-      appProfileId,
+      appProfileId: appProfileId!,
       clientConfig,
-    });
-    const handlers = [];
-    bigtable._metricsConfigManager = new ClientSideMetricsConfigManager(
-      handlers,
-    );
-    bigtable[v2] = new BigtableClient(bigtable.options.BigtableClient);
-    clientMap.set(clientId, bigtable);
+    };
+    const bigtable = new Bigtable(options);
+    createBigtableClient(bigtable);
+    clientMap.set(clientId!, bigtable);
+    return {};
   });
-
-module.exports = createClient;

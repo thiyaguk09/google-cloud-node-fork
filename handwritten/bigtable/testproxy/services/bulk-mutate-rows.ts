@@ -11,22 +11,31 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-'use strict';
 
-const grpc = require('@grpc/grpc-js');
+import * as grpc from '@grpc/grpc-js';
 
-const normalizeCallback = require('./utils/normalize-callback.js');
-const getTableInfo = require('./utils/get-table-info');
+import {normalizeCallback, ClientImplMaker, getTableInfo} from './utils';
+import {google} from '../protos/protos';
+import {PartialFailureError} from '../../src';
+type IMutateRowsRequest = google.bigtable.testproxy.IMutateRowsRequest;
+type IMutateRowsResult = google.bigtable.testproxy.IMutateRowsResult;
 
-const bulkMutateRows = ({clientMap}) =>
+interface ErrorCode {
+  code?: number;
+}
+
+export const bulkMutateRows: ClientImplMaker<
+  IMutateRowsRequest,
+  IMutateRowsResult
+> = ({clientMap}) =>
   normalizeCallback(async rawRequest => {
     const {request} = rawRequest;
-    const {request: mutateRequest} = request;
-    const {entries, tableName} = mutateRequest;
+    const {entries, tableName} = request.request!;
 
     const {clientId} = request;
-    const bigtable = clientMap.get(clientId);
-    const table = getTableInfo(bigtable, tableName);
+    const bigtable = clientMap.get(clientId!);
+    const table = getTableInfo(bigtable, tableName!);
+
     try {
       const mutateOptions = {
         rawMutation: true,
@@ -36,13 +45,14 @@ const bulkMutateRows = ({clientMap}) =>
         status: {code: grpc.status.OK, details: []},
         entries: [],
       };
-    } catch (error) {
+    } catch (e) {
+      const error = e as PartialFailureError & ErrorCode;
       const entries = error.errors
-        ? Array.from(error.errors.entries()).map(([index, entry]) => ({
+        ? Array.from(error.errors.entries()).map(([index, err]) => ({
             index: index + 1,
             status: {
-              code: entry.code,
-              message: entry.message,
+              code: (err as ErrorCode).code,
+              message: err.message,
             },
           }))
         : [];
@@ -56,5 +66,3 @@ const bulkMutateRows = ({clientMap}) =>
       };
     }
   });
-
-module.exports = bulkMutateRows;
