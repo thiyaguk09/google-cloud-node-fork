@@ -1832,6 +1832,9 @@ function multiply(first: Expression, second: Expression | unknown): FunctionExpr
 function multiply(fieldName: string, second: Expression | unknown): FunctionExpression;
 
 // @beta
+function nor(first: BooleanExpression, second: BooleanExpression, ...more: BooleanExpression[]): BooleanExpression;
+
+// @beta
 function not(booleanExpr: BooleanExpression): BooleanExpression;
 
 // @beta
@@ -2125,7 +2128,9 @@ declare namespace Pipelines {
         stringIndexOf,
         stringRepeat,
         stringReplaceAll,
-        stringReplaceOne
+        stringReplaceOne,
+        nor,
+        switchOn
     }
 }
 export { Pipelines }
@@ -2647,6 +2652,9 @@ function sum(expression: Expression): AggregateFunction;
 
 // @beta
 function sum(fieldName: string): AggregateFunction;
+
+// @beta
+function switchOn(condition: BooleanExpression, result: Expression, ...others: Array<BooleanExpression | Expression>): FunctionExpression;
 
 // @public
 export class Timestamp implements firestore.Timestamp {
