@@ -3,7 +3,7 @@
   "name_pretty": "Google Cloud Precise Date",
   "release_level": "stable",
   "language": "nodejs",
-  "repo": "googleapis/nodejs-precise-date",
+  "repo": "googleapis/google-cloud-node",
   "distribution_name": "@google-cloud/precise-date",
   "client_documentation": "https://cloud.google.com/nodejs/docs/reference/precise-date/latest",
   "library_type": "OTHER",

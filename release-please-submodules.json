@@ -8,6 +8,7 @@
     "core/paginator": {
       "component": "paginator"
     },
+    "core/precise-date": {},
     "core/projectify": {
       "component": "projectify"
     },

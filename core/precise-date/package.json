@@ -4,7 +4,11 @@
   "description": "A simple utility for precise-dateing functions and classes.",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
-  "repository": "googleapis/nodejs-precise-date",
+  "repository": {
+    "type": "git",
+    "directory": "core/precise-date",
+    "url": "https://github.com/googleapis/google-cloud-node.git"
+  },
   "scripts": {
     "test": "c8 mocha build/test",
     "lint": "gts check",
@@ -47,5 +51,6 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "homepage": "https://github.com/googleapis/google-cloud-node/tree/main/core/precise-date"
 }

@@ -1,6 +1,7 @@
 {
   "core/common": "6.0.0",
   "core/paginator": "6.0.0",
+  "core/precise-date": "5.0.0",
   "core/projectify": "5.0.0",
   "core/promisify": "5.0.0",
   "handwritten/bigquery": "8.2.0",

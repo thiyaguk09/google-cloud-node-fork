@@ -13,5 +13,4 @@
 /handwritten/firestore @googleapis/firestore-team
 /handwritten/spanner @googleapis/spanner-team
 /handwritten/bigquery-storage @googleapis/bigquery-team
-/handwritten/pubsub @googleapis/pubsub-team
-/core/common @googleapis/jsteam-handwritten-libraries
+/core/precise-date jsteam-handwritten-libraries
