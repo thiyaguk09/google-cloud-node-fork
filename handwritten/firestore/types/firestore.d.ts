@@ -5597,7 +5597,66 @@ declare namespace FirebaseFirestore {
        * @param type The type to check for.
        * @returns A new `BooleanExpression` that evaluates to true if the expression's result is of the given type, false otherwise.
        */
-      isType(type: string): BooleanExpression;
+      isType(type: Type): BooleanExpression;
+
+      /**
+       * Evaluates if the result of this `expression` is between
+       * the `lowerBound` (inclusive) and `upperBound` (inclusive).
+       *
+       * @example
+       * ```
+       * // Evaluate if the 'tireWidth' is between 2.2 and 2.4
+       * field('tireWidth').between(constant(2.2), constant(2.4))
+       *
+       * // This is functionally equivalent to
+       * and(field('tireWidth').greaterThanOrEqual(contant(2.2)), field('tireWidth').lessThanOrEqual(constant(2.4)))
+       * ```
+       *
+       * @param lowerBound - Lower bound (inclusive) of the range.
+       * @param upperBound - Upper bound (inclusive) of the range.
+       */
+      between(
+        lowerBound: Expression,
+        upperBound: Expression,
+      ): BooleanExpression;
+
+      /**
+       * Evaluates if the result of this `expression` is between
+       * the `lowerBound` (inclusive) and `upperBound` (inclusive).
+       *
+       * @example
+       * ```
+       * // Evaluate if the 'tireWidth' is between 2.2 and 2.4
+       * field('tireWidth').between(2.2, 2.4)
+       *
+       * // This is functionally equivalent to
+       * and(field('tireWidth').greaterThanOrEqual(2.2), field('tireWidth').lessThanOrEqual(2.4))
+       * ```
+       *
+       * @param lowerBound - Lower bound (inclusive) of the range.
+       * @param upperBound - Upper bound (inclusive) of the range.
+       */
+      between(lowerBound: unknown, upperBound: unknown): BooleanExpression;
+
+      /**
+       * Evaluates to an HTML-formatted text snippet that renders terms matching
+       * the search query in `<b>bold</b>`.
+       *
+       * @remarks This Expression can only be used within a `Search` stage.
+       *
+       * @param rquery Define the search query using the search DTS (TODO(search) link).
+       */
+      snippet(rquery: string): Expression;
+
+      /**
+       * Evaluates to an HTML-formatted text snippet that renders terms matching
+       * the search query in `<b>bold</b>`.
+       *
+       * @remarks This Expression can only be used within a `Search` stage.
+       *
+       * @param options Define how snippeting behaves.
+       */
+      snippet(options: SnippetOptions): Expression;
 
       // TODO(new-expression): Add new expression method declarations above this line
       /**
@@ -5815,7 +5874,28 @@ declare namespace FirebaseFirestore {
        * @returns The name of the field.
        */
       get fieldName(): string;
+
       /**
+       * Perform a full-text search on this field.
+       *
+       * @remarks This Expression can only be used within a `Search` stage.
+       *
+       * @param rquery Define the search query using the rquery DTS.
+       */
+      matches(rquery: string | Expression): BooleanExpression;
+
+      /**
+       * Evaluates to the distance in meters between the location specified
+       * by this field and the query location.
+       *
+       * @remarks This Expression can only be used within a `Search` stage.
+       *
+       * @param location - Compute distance to this GeoPoint.
+       */
+      geoDistance(location: GeoPoint | Expression): Expression;
+
+      /**
+       * @beta
        * @internal
        * Returns the alias of the field, which is the field-name itself.
        *
@@ -11513,7 +11593,175 @@ declare namespace FirebaseFirestore {
      */
     export function isType(
       expression: Expression,
-      type: string,
+      type: Type,
+    ): BooleanExpression;
+    /**
+     * Perform a full-text search on the specified field.
+     *
+     * @remarks This Expression can only be used within a `Search` stage.
+     *
+     * @param searchField Search the specified field.
+     * @param rquery Define the search query using the search DTS.
+     */
+    export function matches(
+      searchField: string | Field,
+      rquery: string | Expression,
+    ): BooleanExpression;
+
+    /**
+     * Perform a full-text search on the document.
+     *
+     * @remarks This Expression can only be used within a `Search` stage.
+     *
+     * @param rquery Define the search query using the rquery DTS.
+     */
+    export function documentMatches(
+      rquery: string | Expression,
+    ): BooleanExpression;
+
+    /**
+     * Evaluates to the search score that reflects the topicality of the document
+     * to all of the text predicates (`queryMatch`)
+     * in the search query. If `SearchOptions.query` is not set or does not contain
+     * any text predicates, then this topicality score will always be `0`.
+     *
+     * @remarks This Expression can only be used within a `Search` stage.
+     */
+    export function score(): Expression;
+
+    /**
+     * Evaluates to an HTML-formatted text snippet that highlights terms matching
+     * the search query in `<b>bold</b>`.
+     *
+     * @remarks This Expression can only be used within a `Search` stage.
+     *
+     * @param searchField Search the specified field for matching terms.
+     * @param rquery Define the search query using the search DTS (TODO(search) link).
+     */
+    export function snippet(
+      searchField: string | Field,
+      rquery: string,
+    ): Expression;
+
+    /**
+     * Evaluates to an HTML-formatted text snippet that highlights terms matching
+     * the search query in `<b>bold</b>`.
+     *
+     * @remarks This Expression can only be used within a `Search` stage.
+     *
+     * @param searchField Search the specified field for matching terms.
+     * @param options Define the search query using the search DTS (TODO(search) link).
+     */
+    export function snippet(
+      searchField: string | Field,
+      options: SnippetOptions,
+    ): Expression;
+
+    /**
+     * Evaluates to the distance in meters between the location in the specified
+     * field and the query location.
+     *
+     * @remarks This Expression can only be used within a `Search` stage.
+     *
+     * @param fieldName - Specifies the field in the document which contains
+     * the first GeoPoint for distance computation.
+     * @param location - Compute distance to this GeoPoint.
+     */
+    export function geoDistance(
+      fieldName: string | Field,
+      location: GeoPoint | Expression,
+    ): Expression;
+
+    /**
+     * Evaluates if the value in the field specified by `fieldName` is between
+     * the evaluated values for `lowerBound` (inclusive) and `upperBound` (inclusive).
+     *
+     * @example
+     * ```
+     * // Evaluate if the 'tireWidth' is between 2.2 and 2.4
+     * between('tireWidth', constant(2.2), constant(2.4))
+     *
+     * // This is functionally equivalent to
+     * and(greaterThanOrEqual('tireWidth', constant(2.2)), lessThanOrEqual('tireWidth', constant(2.4)))
+     * ```
+     *
+     * @param fieldName - Evaluate if the value stored in this field is between the lower and upper bounds.
+     * @param lowerBound - Lower bound (inclusive) of the range.
+     * @param upperBound - Upper bound (inclusive) of the range.
+     */
+    export function between(
+      fieldName: string,
+      lowerBound: Expression,
+      upperBound: Expression,
+    ): BooleanExpression;
+
+    /**
+     * Evaluates if the value in the field specified by `fieldName` is between
+     * the values for `lowerBound` (inclusive) and `upperBound` (inclusive).
+     *
+     * @example
+     * ```
+     * // Evaluate if the 'tireWidth' is between 2.2 and 2.4
+     * between('tireWidth', 2.2, 2.4)
+     *
+     * // This is functionally equivalent to
+     * and(greaterThanOrEqual('tireWidth', 2.2), lessThanOrEqual('tireWidth', 2.4))
+     * ```
+     *
+     * @param fieldName - Evaluate if the value stored in this field is between the lower and upper bounds.
+     * @param lowerBound - Lower bound (inclusive) of the range.
+     * @param upperBound - Upper bound (inclusive) of the range.
+     */
+    export function between(
+      fieldName: string,
+      lowerBound: unknown,
+      upperBound: unknown,
+    ): BooleanExpression;
+
+    /**
+     * Evaluates if the result of the specified `expression` is between
+     * the results of `lowerBound` (inclusive) and `upperBound` (inclusive).
+     *
+     * @example
+     * ```
+     * // Evaluate if the 'tireWidth' is between 2.2 and 2.4
+     * between(field('tireWidth'), constant(2.2), constant(2.4))
+     *
+     * // This is functionally equivalent to
+     * and(greaterThanOrEqual(field('tireWidth'), constant(2.2)), lessThanOrEqual(field('tireWidth'), constant(2.4)))
+     * ```
+     *
+     * @param expression - Evaluate if the result of this expression is between the lower and upper bounds.
+     * @param lowerBound - Lower bound (inclusive) of the range.
+     * @param upperBound - Upper bound (inclusive) of the range.
+     */
+    export function between(
+      expression: Expression,
+      lowerBound: Expression,
+      upperBound: Expression,
+    ): BooleanExpression;
+
+    /**
+     * Evaluates if the result of the specified `expression` is between
+     * the `lowerBound` (inclusive) and `upperBound` (inclusive).
+     *
+     * @example
+     * ```
+     * // Evaluate if the 'tireWidth' is between 2.2 and 2.4
+     * between(field('tireWidth'), 2.2, 2.4)
+     *
+     * // This is functionally equivalent to
+     * and(greaterThanOrEqual(field('tireWidth'), 2.2), lessThanOrEqual(field('tireWidth'), 2.4))
+     * ```
+     *
+     * @param expression - Evaluate if the result of this expression is between the lower and upper bounds.
+     * @param lowerBound - Lower bound (inclusive) of the range.
+     * @param upperBound - Upper bound (inclusive) of the range.
+     */
+    export function between(
+      expression: Expression,
+      lowerBound: unknown,
+      upperBound: unknown,
     ): BooleanExpression;
 
     // TODO(new-expression): Add new top-level expression function declarations above this line
@@ -13140,6 +13388,113 @@ declare namespace FirebaseFirestore {
     };
 
     /**
+     * Specifies if the `matches` and `snippet` expressions will enhance the user
+     * provided query to perform matching of synonyms, misspellings, lemmatization,
+     * stemming.
+     *
+     * required - search will fail if the query enhancement times out or if the query
+     *                    enhancement is not supported by the project's DRZ compliance
+     *                    requirements.
+     * preferred - search will fall back to the un-enhanced, user provided query, if
+     *                    the query enhancement fails.
+     */
+    export type QueryEnhancement = 'disabled' | 'required' | 'preferred';
+
+    /**
+     * Options defining how a SearchStage is evaluated. See {@link @firebase/firestore/pipelines#Pipeline.(search)}.
+     */
+    export type SearchStageOptions = StageOptions & {
+      /**
+       * Specifies the search query that will be used to query and score documents
+       * by the search stage.
+       *
+       * The query can be expressed as an `Expression`, which will be used to score
+       * and filter the results. Not all expressions supported by Pipelines
+       * are supported in the Search query.
+       *
+       * @example
+       * ```
+       * db.pipeline().collection('restaurants').search({
+       *   query: or(
+       *     documentContainsText("breakfast"),
+       *     field('menu').containsText('waffle AND coffee')
+       *   )
+       * })
+       * ```
+       *
+       * The query can also be expressed as a string in the Search DSL:
+       *
+       * @example
+       * ```
+       * db.pipeline().collection('restaurants').search({
+       *   query: 'menu:(waffle and coffee) OR breakfast'
+       * })
+       * ```
+       */
+      query: BooleanExpression | string;
+      /**
+       * The maximum number of documents to return from the Search stage.
+       */
+      limit?: number;
+      /**
+       * The maximum number of documents for the search stage to score. Documents
+       * will be processed in the pre-sort order specified by the search index.
+       */
+      retrievalDepth?: number;
+      /**
+       * Orderings specify how the input documents are sorted.
+       * One or more ordering are required.
+       */
+      sort?: Ordering | Ordering[];
+      /**
+       * The fields to add to each document, specified as a {@link @firebase/firestore/pipelines#Selectable}.
+       */
+      addFields?: Selectable[];
+      /**
+       * The fields to keep or add to each document,
+       * specified as an array of {@link @firebase/firestore/pipelines#Selectable}.
+       */
+      select?: Array<Selectable | string>;
+      /**
+       * The number of documents to skip.
+       */
+      offset?: number;
+      /**
+       * Define the query expansion behavior used by full-text search expressions
+       * in this search stage.
+       */
+      queryEnhancement?: QueryEnhancement;
+    };
+
+    /**
+     * Options defining how a snippet expression is evaluated.
+     */
+    export type SnippetOptions = {
+      /**
+       * Define the search query using the search DTS.
+       */
+      rquery: string;
+
+      /**
+       * The maximum width of the string estimated for a variable width font. The
+       * unit is tenths of ems. The default is `160`.
+       */
+      maxSnippetWidth?: number;
+
+      /**
+       * The maximum number of non-contiguous pieces of text in the returned snippet.
+       * The default is `1`.
+       */
+      maxSnippets?: number;
+
+      /**
+       * The string to join the pieces. The default value is '\n'
+       */
+      separator?: string;
+    };
+
+    /**
+     * @beta
      * Represents a field value within the explain statistics, which can be a primitive type (null, string, number, boolean)
      * or a recursively defined object where keys are strings and values are also `ExplainStatsFieldValue`.
      */
