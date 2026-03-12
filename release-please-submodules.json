@@ -2,6 +2,7 @@
   "commit-batch-size": 1,
   "include-component-in-tag": true,
   "packages": {
+    "core/common": {},
     "core/paginator": {
       "component": "paginator"
     },

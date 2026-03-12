@@ -3,7 +3,7 @@
   "name_pretty": "Google Cloud Common",
   "release_level": "stable",
   "language": "nodejs",
-  "repo": "googleapis/nodejs-common",
+  "repo": "googleapis/google-cloud-node",
   "distribution_name": "@google-cloud/common",
   "client_documentation": "https://googleapis.dev/nodejs/common/latest",
   "api_shortname": "common",
