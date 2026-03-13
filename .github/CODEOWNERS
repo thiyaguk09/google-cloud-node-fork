@@ -13,4 +13,3 @@
 /handwritten/firestore @googleapis/firestore-team
 /handwritten/spanner @googleapis/spanner-team
 /handwritten/bigquery-storage @googleapis/bigquery-team
-/core/precise-date jsteam-handwritten-libraries

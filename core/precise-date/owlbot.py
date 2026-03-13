@@ -21,6 +21,6 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 common_templates = gcp.CommonTemplates()
-templates = common_templates.node_library()
-s.copy(templates, excludes=["README.md"])
+templates = common_templates.node_mono_repo_library(relative_dir="core/precise-date")
+s.copy(templates, destination="core/precise-date", excludes=["README.md"])
 node.fix()
