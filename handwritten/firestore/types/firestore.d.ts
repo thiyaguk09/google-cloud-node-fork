@@ -505,6 +505,11 @@ declare namespace FirebaseFirestore {
      * @beta
      */
     openTelemetry?: FirestoreOpenTelemetryOptions;
+    /**
+     * Whether to always use implicit order by clauses.
+     * @internal
+     */
+    alwaysUseImplicitOrderBy?: boolean;
     [key: string]: any; // Accept other properties, such as GRPC settings.
   }
   /**
@@ -570,6 +575,11 @@ declare namespace FirebaseFirestore {
      * Returns the Database ID for this Firestore instance.
      */
     get databaseId(): string;
+    /**
+     * Whether to always use implicit order by clauses.
+     * @internal
+     */
+    get alwaysUseImplicitOrderBy(): boolean;
     /**
      * Gets a `CollectionReference` instance that refers to the collection at
      * the specified path.

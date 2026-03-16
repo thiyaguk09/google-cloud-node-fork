@@ -933,9 +933,6 @@ export class Query<
 
   private createImplicitOrderBy(ignoreInequalityFields = false): FieldOrder[] {
     const fieldOrders = this._queryOptions.fieldOrders.slice();
-    const fieldsNormalized = new Set([
-      ...fieldOrders.map(item => item.field.toString()),
-    ]);
 
     /** The order of the implicit ordering always matches the last explicit order by. */
     const lastDirection =
@@ -954,17 +951,16 @@ export class Query<
       const inequalityFields = this.getInequalityFilterFields();
       for (const field of inequalityFields) {
         if (
-          !fieldsNormalized.has(field.toString()) &&
+          !fieldOrders.some(item => item.field.isEqual(field)) &&
           !field.isEqual(FieldPath.documentId())
         ) {
           fieldOrders.push(new FieldOrder(field, lastDirection));
-          fieldsNormalized.add(field.toString());
         }
       }
     }
 
     // Add the document key field to the last if it is not explicitly ordered.
-    if (!fieldsNormalized.has(FieldPath.documentId().toString())) {
+    if (!fieldOrders.some(item => item.field.isEqual(FieldPath.documentId()))) {
       fieldOrders.push(new FieldOrder(FieldPath.documentId(), lastDirection));
     }
 
@@ -1475,6 +1471,7 @@ export class Query<
   toProto(
     transactionOrReadTime?: Uint8Array | Timestamp | api.ITransactionOptions,
     explainOptions?: firestore.ExplainOptions,
+    forceImplicitOrderBy?: boolean,
   ): api.IRunQueryRequest {
     const projectId = this.firestore.projectId;
     const databaseId = this.firestore.databaseId;
@@ -1483,18 +1480,18 @@ export class Query<
       databaseId,
     );
 
-    const structuredQuery = this.toStructuredQuery();
+    const structuredQuery = this.toStructuredQuery(forceImplicitOrderBy);
 
     // For limitToLast queries, the structured query has to be translated to a version with
     // reversed ordered, and flipped startAt/endAt to work properly.
     if (this._queryOptions.limitType === LimitType.Last) {
-      if (!this._queryOptions.hasFieldOrders()) {
-        throw new Error(
-          'limitToLast() queries require specifying at least one orderBy() clause.',
-        );
-      }
+      const forceImplicit =
+        forceImplicitOrderBy || this._firestore.alwaysUseImplicitOrderBy;
+      const fieldOrders = forceImplicit
+        ? this.createImplicitOrderBy()
+        : this._queryOptions.fieldOrders;
 
-      structuredQuery.orderBy = this._queryOptions.fieldOrders!.map(order => {
+      structuredQuery.orderBy = fieldOrders.map(order => {
         // Flip the orderBy directions since we want the last results
         const dir =
           order.direction === 'DESCENDING' ? 'ASCENDING' : 'DESCENDING';
@@ -1564,7 +1561,9 @@ export class Query<
     return bundledQuery;
   }
 
-  private toStructuredQuery(): api.IStructuredQuery {
+  private toStructuredQuery(
+    forceImplicitOrderBy?: boolean,
+  ): api.IStructuredQuery {
     const structuredQuery: api.IStructuredQuery = {
       from: [{}],
     };
@@ -1586,9 +1585,19 @@ export class Query<
       ).toProto();
     }
 
-    if (this._queryOptions.hasFieldOrders()) {
-      structuredQuery.orderBy = this._queryOptions.fieldOrders.map(o =>
-        o.toProto(),
+    // orders
+    const forceImplicit =
+      forceImplicitOrderBy || this._firestore.alwaysUseImplicitOrderBy;
+    let fieldOrders = this._queryOptions.fieldOrders;
+    if (forceImplicit) {
+      fieldOrders = this.createImplicitOrderBy();
+    }
+
+    if (fieldOrders.length > 0) {
+      structuredQuery.orderBy = fieldOrders.map(o => o.toProto());
+    } else if (this._queryOptions.limitType === LimitType.Last) {
+      throw new Error(
+        'limitToLast() queries require specifying at least one orderBy() clause.',
       );
     }
 
