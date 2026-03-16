@@ -3831,16 +3831,14 @@ export class SnippetExpression extends FunctionExpression {
   }
 
   _toProto(serializer: Serializer): api.IValue {
-    return {
-      functionValue: {
-        ...super._toProto(serializer),
-        options: this._optionsUtil.getOptionsProto(
-          serializer,
-          this._options ?? {},
-          {},
-        ),
-      },
-    };
+    const proto = super._toProto(serializer);
+    proto.functionValue!.options = this._optionsUtil.getOptionsProto(
+      serializer,
+      this._options ?? {},
+      {},
+    );
+
+    return proto;
   }
 }
 
@@ -10391,7 +10389,7 @@ export function documentMatches(
  * @remarks This Expression can only be used within a `Search` stage.
  */
 export function score(): Expression {
-  return new FunctionExpression('search_score', []).asBoolean();
+  return new FunctionExpression('score', []).asBoolean();
 }
 
 /**
