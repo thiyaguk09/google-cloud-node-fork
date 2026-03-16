@@ -40,6 +40,7 @@ import {
   selectablesToMap,
   toField,
   vectorToExpr,
+  selectablesToObject,
 } from './pipeline-util';
 import {DocumentReference} from '../reference/document-reference';
 import {PipelineResponse} from '../reference/types';
@@ -1599,6 +1600,43 @@ export class Pipeline implements firestore.Pipelines.Pipeline {
   }
 
   /**
+   * Add a search stage to the Pipeline.
+   *
+   * @remarks This must be the first stage of the pipeline.
+   * @remarks A limited set of expressions are supported in the search stage.
+   *
+   * @param options - An object that specifies required and optional parameters
+   *                  for the stage.
+   * @return A new `Pipeline` object with this stage appended to the stage list.
+   */
+  search(options: firestore.Pipelines.SearchStageOptions): Pipeline {
+    // Convert user land convenience types to internal types
+    const normalizedQuery: firestore.Pipelines.BooleanExpression = isExpr(
+      options.query,
+    )
+      ? options.query
+      : documentMatches(options.query);
+    const normalizedSelect: Record<string, Expression> | undefined =
+      options.select ? selectablesToObject(options.select) : undefined;
+    const normalizedAddFields: Record<string, Expression> | undefined =
+      options.addFields ? selectablesToObject(options.addFields) : undefined;
+    const normalizedSort: firestore.Pipelines.Ordering[] | undefined =
+      isOrdering(options.sort) ? [options.sort] : options.sort;
+
+    const internalOptions: InternalSearchStageOptions = {
+      ...options,
+      query: normalizedQuery,
+      select: normalizedSelect,
+      addFields: normalizedAddFields,
+      sort: normalizedSort,
+    };
+
+    // Add stage to the pipeline
+    return this._addStage(new Search(internalOptions));
+  }
+
+  /**
+   * @beta
    * Sorts the documents from previous stages based on one or more `Ordering` criteria.
    *
    * <p>This stage allows you to order the results of your pipeline. You can specify multiple

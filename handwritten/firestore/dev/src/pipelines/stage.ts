@@ -792,9 +792,12 @@ export class SubcollectionSource implements Stage {
 
 export type InternalSearchStageOptions = Omit<
   firestore.Pipelines.SearchStageOptions,
-  'query'
+  'query' | 'sort' | 'select' | 'addFields'
 > & {
-  query?: BooleanExpression;
+  query: firestore.Pipelines.BooleanExpression;
+  sort?: Array<firestore.Pipelines.Ordering>;
+  select?: Record<string, firestore.Pipelines.Expression>;
+  addFields?: Record<string, firestore.Pipelines.Expression>;
 };
 
 /**
@@ -827,8 +830,11 @@ export class Search implements Stage {
     offset: {
       serverName: 'offset',
     },
-    queryExpansion: {
-      serverName: 'query_expansion',
+    queryEnhancement: {
+      serverName: 'query_enhancement',
+    },
+    languageCode: {
+      serverName: 'language_code',
     },
   });
 
