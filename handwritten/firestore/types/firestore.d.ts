@@ -507,7 +507,6 @@ declare namespace FirebaseFirestore {
     openTelemetry?: FirestoreOpenTelemetryOptions;
     /**
      * Whether to always use implicit order by clauses.
-     * @internal
      */
     alwaysUseImplicitOrderBy?: boolean;
     [key: string]: any; // Accept other properties, such as GRPC settings.
@@ -577,7 +576,6 @@ declare namespace FirebaseFirestore {
     get databaseId(): string;
     /**
      * Whether to always use implicit order by clauses.
-     * @internal
      */
     get alwaysUseImplicitOrderBy(): boolean;
     /**

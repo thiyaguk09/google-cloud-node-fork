@@ -941,12 +941,7 @@ export class QueryWatch<
   }
 
   getTarget(resumeToken?: Uint8Array): google.firestore.v1.ITarget {
-    const forceImplicitOrderBy = !this.firestore.alwaysUseImplicitOrderBy;
-    const query = this.query.toProto(
-      undefined,
-      undefined,
-      forceImplicitOrderBy,
-    );
+    const query = this.query.toProto(undefined, undefined, true);
     return {query, targetId: WATCH_TARGET_ID, resumeToken};
   }
 }

@@ -660,8 +660,10 @@ describe('Query watch', () => {
             from: [{collectionId: 'col'}],
             orderBy: [
               {
-                direction: 'ASCENDING' as api.StructuredQuery.Direction,
-                field: {fieldPath: '__name__'},
+                direction: 'ASCENDING',
+                field: {
+                  fieldPath: '__name__',
+                },
               },
             ],
           },

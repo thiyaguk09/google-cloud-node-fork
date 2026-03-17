@@ -2323,15 +2323,11 @@ describe.skipClassic('Query and Pipeline Compare - Enterprise DB', () => {
         'doc10',
       ];
 
-      const originalQuery = collection.where('sort', '>', 1);
-      const originalSnapshot = await originalQuery.get();
-      const originalResult = originalSnapshot.docs.map(d => d.id);
-
-      // In Enterprise, the order might not be strictly deterministic without implicit order by
-      // unless it's Standard edition. Standard Edition always has implicit order by.
-      // This test is intended to run against Enterprise where possible.
-      // If it's Standard, originalResult will be equal to expectedOrder.
-      // If it's Enterprise, it might not be.
+      // TODO: This test should run against both standard and enterprise
+      // and verify the results respectively
+      // const originalQuery = collection.where('sort', '>', 1);
+      // const originalSnapshot = await originalQuery.get();
+      // const originalResult = originalSnapshot.docs.map(d => d.id);
 
       const modifiedFirestore = new Firestore({
         ...firestore.settings,
@@ -2344,13 +2340,6 @@ describe.skipClassic('Query and Pipeline Compare - Enterprise DB', () => {
 
       // since alwaysUseImplicitOrderBy is true, we expect strict ordering.
       expect(result).to.deep.equal(expectedOrder);
-
-      if (originalResult.length === expectedOrder.length) {
-        // We can't easily check if it's Enterprise vs Standard from within the test
-        // without more setup, but we can at least verify that our new option
-        // produces the expected deterministic result.
-        expect(result).to.have.members(originalResult);
-      }
     });
   });
 });

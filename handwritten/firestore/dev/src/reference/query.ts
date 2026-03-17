@@ -933,6 +933,9 @@ export class Query<
 
   private createImplicitOrderBy(ignoreInequalityFields = false): FieldOrder[] {
     const fieldOrders = this._queryOptions.fieldOrders.slice();
+    const fieldsNormalized = new Set([
+      ...fieldOrders.map(item => item.field.toString()),
+    ]);
 
     /** The order of the implicit ordering always matches the last explicit order by. */
     const lastDirection =
@@ -951,16 +954,17 @@ export class Query<
       const inequalityFields = this.getInequalityFilterFields();
       for (const field of inequalityFields) {
         if (
-          !fieldOrders.some(item => item.field.isEqual(field)) &&
+          !fieldsNormalized.has(field.toString()) &&
           !field.isEqual(FieldPath.documentId())
         ) {
           fieldOrders.push(new FieldOrder(field, lastDirection));
+          fieldsNormalized.add(field.toString());
         }
       }
     }
 
     // Add the document key field to the last if it is not explicitly ordered.
-    if (!fieldOrders.some(item => item.field.isEqual(FieldPath.documentId()))) {
+    if (!fieldsNormalized.has(FieldPath.documentId().toString())) {
       fieldOrders.push(new FieldOrder(FieldPath.documentId(), lastDirection));
     }
 
