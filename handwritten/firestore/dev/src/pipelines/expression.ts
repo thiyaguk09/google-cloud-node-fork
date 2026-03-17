@@ -647,6 +647,56 @@ export abstract class Expression
 
   /**
    * @beta
+   * Creates an expression that filters an array using a provided alias and predicate expression.
+   *
+   * @example
+   * ```typescript
+   * // Filter "scores" to include only values greater than 50
+   * field("scores").arrayFilter("score", variable("score").greaterThan(50));
+   * ```
+   *
+   * @param alias The variable name to use for each element.
+   * @param filter The predicate expression to evaluate for each element.
+   * @returns A new `Expression` representing the filtered array.
+   */
+  arrayFilter(alias: string, filter: Expression): FunctionExpression {
+    return new FunctionExpression('array_filter', [
+      this,
+      valueToDefaultExpr(alias),
+      valueToDefaultExpr(filter),
+    ]);
+  }
+
+  /**
+   * @beta
+   * Returns a subset of this array.
+   *
+   * @example
+   * ```typescript
+   * // Get 5 elements from the 'items' array starting from index 2
+   * field("items").arraySlice(2, 5);
+   *
+   * // Get n number of elements from the 'items' array starting from index 2
+   * field("items").arraySlice(2, field("count"));
+   * ```
+   *
+   * @param offset The starting offset.
+   * @param length The optional length of the slice.
+   * @returns A new `Expression` representing the sliced array.
+   */
+  arraySlice(
+    offset: number | Expression,
+    length?: number | Expression,
+  ): FunctionExpression {
+    const args: Expression[] = [this, valueToDefaultExpr(offset)];
+    if (length !== undefined) {
+      args.push(valueToDefaultExpr(length));
+    }
+    return new FunctionExpression('array_slice', args);
+  }
+
+  /**
+   * @beta
    * Creates an expression that reverses an array.
    *
    * @example
@@ -6197,6 +6247,106 @@ export function reverse(stringExpression: Expression): FunctionExpression;
 export function reverse(field: string): FunctionExpression;
 export function reverse(expr: Expression | string): FunctionExpression {
   return fieldOrExpression(expr).reverse();
+}
+
+/**
+ * @beta
+ * Creates an expression that filters an array using a provided alias and predicate expression.
+ *
+ * ```typescript
+ * // Get a filtered array of the 'scores' field containing only elements greater than 50.
+ * arrayFilter("scores", "score", greaterThan(variable("score"), 50));
+ * ```
+ *
+ * @param fieldName The name of the field containing the array.
+ * @param alias The variable name to use for each element.
+ * @param filter The predicate expression to evaluate for each element.
+ * @returns A new `Expression` representing the filtered array.
+ */
+export function arrayFilter(
+  fieldName: string,
+  alias: string,
+  filter: Expression,
+): FunctionExpression;
+
+/**
+ * @beta
+ * Creates an expression that filters an array using a provided alias and predicate expression.
+ *
+ * ```typescript
+ * // Filter "scores" to include only values greater than 50
+ * arrayFilter(field("scores"), "score", greaterThan(variable("score"), 50));
+ * ```
+ *
+ * @param arrayExpression The expression representing the array.
+ * @param alias The variable name to use for each element.
+ * @param filter The predicate expression to evaluate for each element.
+ * @returns A new `Expression` representing the filtered array.
+ */
+export function arrayFilter(
+  arrayExpression: Expression,
+  alias: string,
+  filter: Expression,
+): FunctionExpression;
+export function arrayFilter(
+  array: Expression | string,
+  alias: string,
+  filter: Expression,
+): FunctionExpression {
+  return fieldOrExpression(array).arrayFilter(alias, filter);
+}
+
+/**
+ * @beta
+ * Creates an expression that returns a subset of an array.
+ *
+ * ```typescript
+ * // Get 5 elements from the 'items' array field starting from index 2
+ * arraySlice("items", 2, 5);
+ *
+ * // Get n elements from the 'items' array field starting from index 2
+ * arraySlice("items", 2, field("length"));
+ * ```
+ *
+ * @param arrayName The name of the field containing the array.
+ * @param offset The starting offset.
+ * @param length The optional length of the slice.
+ * @returns A new `Expression` representing the sliced array.
+ */
+export function arraySlice(
+  arrayName: string,
+  offset: number | Expression,
+  length?: number | Expression,
+): FunctionExpression;
+
+/**
+ * @beta
+ * Creates an expression that returns a subset of an array.
+ *
+ * ```typescript
+ * // Get 5 elements from an array expression starting from index 2
+ * arraySlice(field("items"), 2, 5);
+ *
+ * // Get n elements from an array expression starting from index 2
+ * arraySlice(field("items"), 2, field("length"));
+ * ```
+ *
+ * @param arrayExpression The expression representing the array.
+ * @param offset The starting offset.
+ * @param length The optional length of the slice.
+ * @returns A new `Expression` representing the sliced array.
+ */
+export function arraySlice(
+  arrayExpression: Expression,
+  offset: number | Expression,
+  length?: number | Expression,
+): FunctionExpression;
+export function arraySlice(
+  array: Expression | string,
+  offset: number | Expression,
+  length?: number | Expression,
+): FunctionExpression {
+  return fieldOrExpression(array).arraySlice(offset, length);
 }
 
 /**
