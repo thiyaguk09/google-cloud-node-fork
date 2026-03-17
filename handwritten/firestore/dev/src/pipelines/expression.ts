@@ -8756,7 +8756,7 @@ export function nor(
  * switchOn(
  *   equal(field("status"), 1), constant("Active"),
  *   equal(field("status"), 2), constant("Pending"),
- *   constant("Unknown")
+ *   "Unknown"
  * )
  * ```
  *
