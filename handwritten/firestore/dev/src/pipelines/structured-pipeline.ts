@@ -90,4 +90,9 @@ export class StructuredPipeline
       ),
     };
   }
+
+  // TODO (dlarocque): Should this accept ignoreUndefinedProperties?
+  _validateUserData(name: string): void {
+    throw new Error('IMPLEMENT ME');
+  }
 }
