@@ -11,14 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import synthtool as s
 import synthtool.gcp as gcp
 import synthtool.languages.node_mono_repo as node
 import logging
-
 logging.basicConfig(level=logging.DEBUG)
 
 common_templates = gcp.CommonTemplates()
-templates = common_templates.node_library()
-s.copy(templates)
+templates = common_templates.node_mono_repo_library(relative_dir="core/common")
+s.copy(templates, destination="core/common", excludes=["README.md"])
