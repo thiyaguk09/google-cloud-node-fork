@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(account, service) {
-  // [START merchantapi_v1_generated_AccountsService_CreateAndConfigureAccount_async]
+function main(parent, account) {
+  // [START merchantapi_v1_generated_AccountsService_CreateTestAccount_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,29 +29,14 @@ function main(account, service) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
+   *  Required. The account resource name to create the test account under.
+   *  Format: accounts/{account}
+   */
+  // const parent = 'abc123'
+  /**
    *  Required. The account to be created.
    */
   // const account = {}
-  /**
-   *  Optional. Users to be added to the account.
-   */
-  // const user = [1,2,3,4]
-  /**
-   *  Required. An account service between the account to be created and the
-   *  provider account is initialized as part of the creation. At least one such
-   *  service needs to be provided. Currently exactly one of these needs to be
-   *  `account_aggregation` and `accounts.createAndConfigure` method can be
-   *  used to create a sub-account under an existing advanced account through
-   *  this method. Additional `account_management` or
-   *  `products_management` services may be provided.
-   */
-  // const service = [1,2,3,4]
-  /**
-   *  Optional. If a relationship is created with a provider, you can set an
-   *  alias for it with this field. The calling user must be an admin on the
-   *  provider to be able to set an alias.
-   */
-  // const setAlias = [1,2,3,4]
 
   // Imports the Accounts library
   const {AccountsServiceClient} = require('@google-shopping/accounts').v1;
@@ -59,20 +44,20 @@ function main(account, service) {
   // Instantiates a client
   const accountsClient = new AccountsServiceClient();
 
-  async function callCreateAndConfigureAccount() {
+  async function callCreateTestAccount() {
     // Construct request
     const request = {
+      parent,
       account,
-      service,
     };
 
     // Run request
-    const response = await accountsClient.createAndConfigureAccount(request);
+    const response = await accountsClient.createTestAccount(request);
     console.log(response);
   }
 
-  callCreateAndConfigureAccount();
-  // [END merchantapi_v1_generated_AccountsService_CreateAndConfigureAccount_async]
+  callCreateTestAccount();
+  // [END merchantapi_v1_generated_AccountsService_CreateTestAccount_async]
 }
 
 process.on('unhandledRejection', err => {
