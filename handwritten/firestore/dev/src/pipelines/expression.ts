@@ -2494,6 +2494,7 @@ export abstract class Expression
    * @param part - The part to extract from the timestamp (e.g., "year", "month", "day").
    * @param timezone - The timezone to use for extraction. Valid values are from
    * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+   * Defaults to "UTC" if not specified.
    * @returns A new `Expression` representing the extracted part as an integer.
    */
   timestampExtract(
@@ -2514,6 +2515,7 @@ export abstract class Expression
    * @param part - The expression evaluating to the part to extract.
    * @param timezone - The timezone to use for extraction. Valid values are from
    * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+   * Defaults to "UTC" if not specified.
    * @returns A new `Expression` representing the extracted part as an integer.
    */
   timestampExtract(
@@ -9783,6 +9785,7 @@ export function timestampDiff(
  * @param part - The part to extract from the timestamp (e.g., "year", "month", "day").
  * @param timezone - The timezone to use for extraction. Valid values are from
  * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+ * Defaults to "UTC" if not specified.
  * @returns A new `Expression` representing the extracted part as an integer.
  */
 export function timestampExtract(
@@ -9805,6 +9808,7 @@ export function timestampExtract(
  * @param part - The expression evaluating to the part to extract.
  * @param timezone - The timezone to use for extraction. Valid values are from
  * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+ * Defaults to "UTC" if not specified.
  * @returns A new `Expression` representing the extracted part as an integer.
  */
 export function timestampExtract(
@@ -9827,6 +9831,7 @@ export function timestampExtract(
  * @param part - The part to extract from the timestamp (e.g., "year", "month", "day").
  * @param timezone - The timezone to use for extraction. Valid values are from
  * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+ * Defaults to "UTC" if not specified.
  * @returns A new `Expression` representing the extracted part as an integer.
  */
 export function timestampExtract(
@@ -9849,6 +9854,7 @@ export function timestampExtract(
  * @param part - The expression evaluating to the part to extract.
  * @param timezone - The timezone to use for extraction. Valid values are from
  * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+ * Defaults to "UTC" if not specified.
  * @returns A new `Expression` representing the extracted part as an integer.
  */
 export function timestampExtract(
