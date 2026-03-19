@@ -3497,56 +3497,34 @@ async function testCollectionWithDocs(
         const snapshot = await firestore
           .pipeline()
           .collection(randomCol.path)
-          .limit(1)
-          .replaceWith(
-            map({
-              arr: [1, 2, 3, 4, 5],
-            })
-          )
-          .select(
-            arrayFilter(
-              'arr',
-              'element',
-              greaterThan(variable('element'), 2)
-            ).as('filtered')
-          )
-          .execute();
+                      .where(equal("title", "The Lord of the Rings"))
+            .select(
+              arrayFilter(
+                'tags',
+                'tag',
+                notEqual(variable('tag'), 'magic')
+              ).as('notMagicTags'),
+              field('tags').arrayFilter('tag', notEqual(variable('tag'), 'epic')).as('notEpicTags'),
+              field('tags').arrayFilter('tag', equal(variable('tag'), 'fantasy')).as('noMatchingTags'),
 
-        const res = snapshot.results[0].data();
-        expect(res.filtered).to.have.members([3, 4, 5]);
+            ).execute()
+        
+
+        expectResults(snapshot, {
+          notMagicTags: ["adventure", "epic"],
+          notEpicTags: ["adventure", "magic"],
+          noMatchingTags: []
+        });
       });
 
-      it('supports arrayFilter with no matching elements', async () => {
+      it('supports arrayFilter with mixed types and nulls', async () => {
         const snapshot = await firestore
           .pipeline()
           .collection(randomCol.path)
           .limit(1)
           .replaceWith(
             map({
-              arr: [1, 2, 3],
-            })
-          )
-          .select(
-            arrayFilter(
-              'arr',
-              'element',
-              greaterThan(variable('element'), 5)
-            ).as('filtered')
-          )
-          .execute();
-
-        const res = snapshot.results[0].data();
-        expect(res.filtered).to.deep.equal([]);
-      });
-
-      it('supports arrayFilter with mixed types', async () => {
-        const snapshot = await firestore
-          .pipeline()
-          .collection(randomCol.path)
-          .limit(1)
-          .replaceWith(
-            map({
-              arr: [1, 'foo', 20.0, 'bar', 30, '40'],
+              arr: [1, 'foo',null, 20.0, 'bar', 30, '40', null],
             })
           )
           .select(
@@ -3561,50 +3539,26 @@ async function testCollectionWithDocs(
         const res = snapshot.results[0].data();
         expect(res.filtered).to.have.members([20.0, 30]);
       });
-
-      it('supports arrayFilter with nulls in array', async () => {
-        const snapshot = await firestore
-          .pipeline()
-          .collection(randomCol.path)
-          .limit(1)
-          .replaceWith(
-            map({
-              arr: [1, null, 3, 4],
-            })
-          )
-          .select(
-            arrayFilter(
-              'arr',
-              'element',
-              greaterThan(variable('element'), 2)
-            ).as('filtered')
-          )
-          .execute();
-
-        const res = snapshot.results[0].data();
-        expect(res.filtered).to.have.members([3, 4]);
-      });
     });
 
     it('supports arraySlice', async () => {
       const snapshot = await firestore
         .pipeline()
         .collection(randomCol.path)
-        .limit(1)
-        .replaceWith(
-          map({
-            arr: [1, 2, 3, 4, 5],
-          })
-        )
+.where(equal("title", "The Lord of the Rings")) 
         .select(
-          arraySlice('arr', 1, 3).as('sliced'),
-          arraySlice('arr', 2).as('slicedToEnd')
+          arraySlice('arr', 1, 1).as('staticMethodSlice'),
+          arraySlice('arr', 1).as('staticMethodSliceToEnd'),
+          field('tags').arraySlice(1, 1).as('instanceMethodSlice'),
+          field('tags').arraySlice(1).as('instanceMethodSliceToEnd'),
         )
         .execute();
 
       const res = snapshot.results[0].data();
-      expect(res.sliced).to.have.members([2, 3, 4]);
-      expect(res.slicedToEnd).to.have.members([3, 4, 5]);
+      expect(res.staticMethodSlice).to.have.members(["magic"]);
+      expect(res.staticMethodSliceToEnd).to.have.members(["epic", "fantasy"]);
+      expect(res.instanceMethodSlice).to.have.members(["magic"]);
+      expect(res.instanceMethodSliceToEnd).to.have.members(["epic", "fantasy"]);
     });
 
     it('supports arrayFirstN', async () => {
