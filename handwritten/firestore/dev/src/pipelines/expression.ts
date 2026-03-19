@@ -2431,6 +2431,111 @@ export abstract class Expression
 
   /**
    * @beta
+   * Creates an expression that calculates the difference between this timestamp and another timestamp.
+   *
+   * @example
+   * ```typescript
+   * // Calculate the difference determined by fields 'startTime' and 'unit'.
+   * field("endTime").timestampDiff(field("startTime"), field("unit"));
+   * ```
+   *
+   * @param start - The expression evaluating to the starting timestamp.
+   * @param unit - The expression evaluates to a unit of time, must be one of 'microsecond', 'millisecond', 'second', 'minute', 'hour', 'day'.
+   * @returns A new `Expression` representing the difference as an integer.
+   */
+  timestampDiff(start: Expression, unit: Expression): FunctionExpression;
+
+  /**
+   * @beta
+   * Creates an expression that calculates the difference between this timestamp and another timestamp.
+   *
+   * @example
+   * ```typescript
+   * // Calculate the difference in days between 'endTime' and 'startTime' fields.
+   * field("endTime").timestampDiff("startTime", "day");
+   * ```
+   *
+   * @param start - The field name of the starting timestamp.
+   * @param unit - The unit of time for the difference (e.g., "day", "hour").
+   * @returns A new `Expression` representing the difference as an integer.
+   */
+  timestampDiff(
+    start: string | Expression,
+    unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day'
+  ): FunctionExpression;
+  timestampDiff(
+    start: string | Expression,
+    unit:
+      | 'microsecond'
+      | 'millisecond'
+      | 'second'
+      | 'minute'
+      | 'hour'
+      | 'day'
+      | Expression
+  ): FunctionExpression {
+    return new FunctionExpression(
+      'timestamp_diff',
+      [this, fieldOrExpression(start), valueToDefaultExpr(unit)],
+    );
+  }
+
+  /**
+   * @beta
+   * Creates an expression that extracts a specified part from this timestamp expression.
+   *
+   * @example
+   * ```typescript
+   * // Extract the year from the 'createdAt' field.
+   * field('createdAt').timestampExtract('year')
+   * ```
+   *
+   * @param part - The part to extract from the timestamp (e.g., "year", "month", "day").
+   * @param timezone - The timezone to use for extraction. Valid values are from
+   * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+   * @returns A new `Expression` representing the extracted part as an integer.
+   */
+  timestampExtract(
+    part: firestore.Pipelines.TimePart,
+    timezone?: string | Expression
+  ): FunctionExpression;
+
+  /**
+   * @beta
+   * Creates an expression that extracts a specified part from this timestamp expression.
+   *
+   * @example
+   * ```typescript
+   * // Extract the part specified by the field 'extractionPart' from 'createdAt'.
+   * field('createdAt').timestampExtract(field('extractionPart'))
+   * ```
+   *
+   * @param part - The expression evaluating to the part to extract.
+   * @param timezone - The timezone to use for extraction. Valid values are from
+   * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+   * @returns A new `Expression` representing the extracted part as an integer.
+   */
+  timestampExtract(
+    part: Expression,
+    timezone?: string | Expression
+  ): FunctionExpression;
+  timestampExtract(
+    part: firestore.Pipelines.TimePart | Expression,
+    timezone?: string | Expression
+  ): FunctionExpression {
+    const internalPart = isString(part) ? part.toLowerCase() : part;
+    const args = [this, valueToDefaultExpr(internalPart)];
+    if (timezone) {
+      args.push(valueToDefaultExpr(timezone));
+    }
+    return new FunctionExpression(
+      'timestamp_extract',
+      args,
+    );
+  }
+
+  /**
+   * @beta
    * Creates an expression that returns the document ID from a path.
    *
    * @example
@@ -9382,7 +9487,7 @@ export function split(
  * @example
  * ```typescript
  * // Truncate the 'createdAt' timestamp to the beginning of the day.
- * field('createdAt').timestampTruncate('day')
+ * timestampTruncate('createdAt', 'day')
  * ```
  *
  * @param fieldName Truncate the timestamp value contained in this field.
@@ -9403,7 +9508,7 @@ export function timestampTruncate(
  * @example
  * ```typescript
  * // Truncate the 'createdAt' timestamp to the granularity specified in the field 'granularity'.
- * field('createdAt').timestampTruncate(field('granularity'))
+ * timestampTruncate('createdAt', field('granularity'))
  * ```
  *
  * @param fieldName Truncate the timestamp value contained in this field.
@@ -9424,7 +9529,7 @@ export function timestampTruncate(
  * @example
  * ```typescript
  * // Truncate the 'createdAt' timestamp to the beginning of the day.
- * field('createdAt').timestampTruncate('day')
+ *  timestampTruncate(field('createdAt'), 'day')
  * ```
  *
  * @param timestampExpression Truncate the timestamp value that is returned by this expression.
@@ -9445,7 +9550,7 @@ export function timestampTruncate(
  * @example
  * ```typescript
  * // Truncate the 'createdAt' timestamp to the granularity specified in the field 'granularity'.
- * field('createdAt').timestampTruncate(field('granularity'))
+ * timestampTruncate(field('createdAt'), field('granularity'))
  * ```
  *
  * @param timestampExpression Truncate the timestamp value that is returned by this expression.
@@ -9470,6 +9575,233 @@ export function timestampTruncate(
   return fieldOrExpression(fieldNameOrExpression).timestampTruncate(
     internalGranularity,
     timezone,
+  );
+}
+
+/**
+ * @beta
+ * Creates an expression that calculates the difference between two timestamps.
+ *
+ * @example
+ * ```typescript
+ * // Calculate the difference in days between 'endTime' and 'startTime' fields.
+ * timestampDiff('endTime', 'startTime', 'day')
+ * ```
+ *
+ * @param endFieldName - The name of the field representing the ending timestamp.
+ * @param startFieldName - The name of the field representing the starting timestamp.
+ * @param unit - The unit of time for the difference (e.g., "day", "hour").
+ * @returns A new `Expression` representing the difference as an integer.
+ */
+export function timestampDiff(
+  endFieldName: string,
+  startFieldName: string,
+  unit:
+    | 'microsecond'
+    | 'millisecond'
+    | 'second'
+    | 'minute'
+    | 'hour'
+    | 'day'
+    | Expression
+): FunctionExpression;
+
+/**
+ * @beta
+ * Creates an expression that calculates the difference between two timestamps.
+ *
+ * @example
+ * ```typescript
+ * // Calculate the difference in days between 'endTime' field and a starting timestamp expression.
+ * timestampDiff('endTime', field('startTime'), 'day')
+ * ```
+ *
+ * @param endFieldName - The name of the field representing the ending timestamp.
+ * @param startExpression - The starting timestamp for the difference calculation.
+ * @param unit - The unit of time for the difference (e.g., "day", "hour").
+ * @returns A new `Expression` representing the difference as an integer.
+ */
+export function timestampDiff(
+  endFieldName: string,
+  startExpression: Expression,
+  unit:
+    | 'microsecond'
+    | 'millisecond'
+    | 'second'
+    | 'minute'
+    | 'hour'
+    | 'day'
+    | Expression
+): FunctionExpression;
+
+/**
+ * @beta
+ * Creates an expression that calculates the difference between two timestamps.
+ *
+ * @example
+ * ```typescript
+ * // Calculate the difference in days between an ending timestamp expression and 'startTime' field.
+ * timestampDiff(field('endTime'), 'startTime', 'day')
+ * ```
+ *
+ * @param endExpression - The ending timestamp for the difference calculation.
+ * @param startFieldName - The name of the field representing the starting timestamp.
+ * @param unit - The unit of time for the difference (e.g., "day", "hour").
+ * @returns A new `Expression` representing the difference as an integer.
+ */
+export function timestampDiff(
+  endExpression: Expression,
+  startFieldName: string,
+  unit:
+    | 'microsecond'
+    | 'millisecond'
+    | 'second'
+    | 'minute'
+    | 'hour'
+    | 'day'
+    | Expression
+): FunctionExpression;
+
+/**
+ * @beta
+ * Creates an expression that calculates the difference between two timestamps.
+ *
+ * @example
+ * ```typescript
+ * // Calculate the difference in days between two timestamp expressions.
+ * timestampDiff(field('endTime'), field('startTime'), 'day')
+ * ```
+ *
+ * @param endExpression - The ending timestamp for the difference calculation.
+ * @param startExpression - The starting timestamp for the difference calculation.
+ * @param unit - The unit of time for the difference (e.g., "day", "hour").
+ * @returns A new `Expression` representing the difference as an integer.
+ */
+export function timestampDiff(
+  endExpression: Expression,
+  startExpression: Expression,
+  unit:
+    | 'microsecond'
+    | 'millisecond'
+    | 'second'
+    | 'minute'
+    | 'hour'
+    | 'day'
+    | Expression
+): FunctionExpression;
+export function timestampDiff(
+  endFieldNameOrExpression: string | Expression,
+  startFieldNameOrExpression: string | Expression,
+  unit:
+    | 'microsecond'
+    | 'millisecond'
+    | 'second'
+    | 'minute'
+    | 'hour'
+    | 'day'
+    | Expression
+): FunctionExpression {
+  const normalizedEnd = fieldOrExpression(endFieldNameOrExpression);
+  const normalizedStart = fieldOrExpression(startFieldNameOrExpression);
+  const normalizedUnit = valueToDefaultExpr(unit);
+  return normalizedEnd.timestampDiff(normalizedStart, normalizedUnit);
+}
+
+/**
+ * @beta
+ * Creates an expression that extracts a specified part from a timestamp.
+ *
+ * @example
+ * ```typescript
+ * // Extract the year from the 'createdAt' timestamp.
+ * timestampExtract('createdAt', 'year')
+ * ```
+ *
+ * @param fieldName - The name of the field representing the timestamp.
+ * @param part - The part to extract from the timestamp (e.g., "year", "month", "day").
+ * @param timezone - The timezone to use for extraction. Valid values are from
+ * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+ * @returns A new `Expression` representing the extracted part as an integer.
+ */
+export function timestampExtract(
+  fieldName: string,
+  part: firestore.Pipelines.TimePart,
+  timezone?: string | Expression
+): FunctionExpression;
+
+/**
+ * @beta
+ * Creates an expression that extracts a specified part from a timestamp.
+ *
+ * @example
+ * ```typescript
+ * // Extract the part specified by the field 'part' from 'createdAt'.
+ * timestampExtract('createdAt', field('part'))
+ * ```
+ *
+ * @param fieldName - The name of the field representing the timestamp.
+ * @param part - The expression evaluating to the part to extract.
+ * @param timezone - The timezone to use for extraction. Valid values are from
+ * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+ * @returns A new `Expression` representing the extracted part as an integer.
+ */
+export function timestampExtract(
+  fieldName: string,
+  part: Expression,
+  timezone?: string | Expression
+): FunctionExpression;
+
+/**
+ * @beta
+ * Creates an expression that extracts a specified part from a timestamp.
+ *
+ * @example
+ * ```typescript
+ * // Extract the year from the timestamp returned by the expression.
+ * timestampExtract(field('createdAt'), 'year')
+ * ```
+ *
+ * @param timestampExpression - The expression evaluating to the timestamp.
+ * @param part - The part to extract from the timestamp (e.g., "year", "month", "day").
+ * @param timezone - The timezone to use for extraction. Valid values are from
+ * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+ * @returns A new `Expression` representing the extracted part as an integer.
+ */
+export function timestampExtract(
+  timestampExpression: Expression,
+  part: firestore.Pipelines.TimePart,
+  timezone?: string | Expression
+): FunctionExpression;
+
+/**
+ * @beta
+ * Creates an expression that extracts a specified part from a timestamp.
+ *
+ * @example
+ * ```typescript
+ * // Extract the part specified by the field 'part' from the timestamp.
+ * timestampExtract(field('createdAt'), field('part'))
+ * ```
+ *
+ * @param timestampExpression - The expression evaluating to the timestamp.
+ * @param part - The expression evaluating to the part to extract.
+ * @param timezone - The timezone to use for extraction. Valid values are from
+ * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+ * @returns A new `Expression` representing the extracted part as an integer.
+ */
+export function timestampExtract(
+  timestampExpression: Expression,
+  part: Expression,
+  timezone?: string | Expression
+): FunctionExpression;
+export function timestampExtract(
+  fieldNameOrExpression: string | Expression,
+  part: firestore.Pipelines.TimePart | Expression,
+  timezone?: string | Expression
+): FunctionExpression {
+  return fieldOrExpression(fieldNameOrExpression).timestampExtract(
+    valueToDefaultExpr(isString(part) ? part.toLowerCase() : part),
+    timezone
   );
 }
 
