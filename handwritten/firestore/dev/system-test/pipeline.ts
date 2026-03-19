@@ -5090,15 +5090,9 @@ describe.skipClassic('Pipeline class', () => {
         )
         .select(
           timestampDiff(field('end'), field('start'), 'hour').as('diffHour'),
-          field('end')
-            .timestampDiff(field('start'), 'minute')
-            .as('diffMinute'),
-          field('end')
-            .timestampDiff(field('start'), 'second')
-            .as('diffSecond'),
-          field('start')
-            .timestampDiff(field('end'), 'hour')
-            .as('diffHourNeg'),
+          field('end').timestampDiff(field('start'), 'minute').as('diffMinute'),
+          field('end').timestampDiff(field('start'), 'second').as('diffSecond'),
+          field('start').timestampDiff(field('end'), 'hour').as('diffHourNeg'),
         )
         .execute();
 

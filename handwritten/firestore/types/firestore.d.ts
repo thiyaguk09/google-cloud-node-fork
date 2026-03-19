@@ -5604,7 +5604,13 @@ declare namespace FirebaseFirestore {
        */
       timestampDiff(
         start: string | Expression,
-        unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day'
+        unit:
+          | 'microsecond'
+          | 'millisecond'
+          | 'second'
+          | 'minute'
+          | 'hour'
+          | 'day',
       ): FunctionExpression;
 
       /**
@@ -5624,7 +5630,7 @@ declare namespace FirebaseFirestore {
        */
       timestampExtract(
         part: TimePart,
-        timezone?: string | Expression
+        timezone?: string | Expression,
       ): FunctionExpression;
 
       /**
@@ -5644,7 +5650,7 @@ declare namespace FirebaseFirestore {
        */
       timestampExtract(
         part: Expression,
-        timezone?: string | Expression
+        timezone?: string | Expression,
       ): FunctionExpression;
 
       /**
@@ -11440,7 +11446,7 @@ declare namespace FirebaseFirestore {
         | 'minute'
         | 'hour'
         | 'day'
-        | Expression
+        | Expression,
     ): FunctionExpression;
 
     /**
@@ -11468,7 +11474,7 @@ declare namespace FirebaseFirestore {
         | 'minute'
         | 'hour'
         | 'day'
-        | Expression
+        | Expression,
     ): FunctionExpression;
 
     /**
@@ -11496,7 +11502,7 @@ declare namespace FirebaseFirestore {
         | 'minute'
         | 'hour'
         | 'day'
-        | Expression
+        | Expression,
     ): FunctionExpression;
 
     /**
@@ -11524,7 +11530,7 @@ declare namespace FirebaseFirestore {
         | 'minute'
         | 'hour'
         | 'day'
-        | Expression
+        | Expression,
     ): FunctionExpression;
 
     /**
@@ -11546,7 +11552,7 @@ declare namespace FirebaseFirestore {
     export function timestampExtract(
       fieldName: string,
       part: TimePart,
-      timezone?: string | Expression
+      timezone?: string | Expression,
     ): FunctionExpression;
 
     /**
@@ -11568,7 +11574,7 @@ declare namespace FirebaseFirestore {
     export function timestampExtract(
       fieldName: string,
       part: Expression,
-      timezone?: string | Expression
+      timezone?: string | Expression,
     ): FunctionExpression;
 
     /**
@@ -11590,7 +11596,7 @@ declare namespace FirebaseFirestore {
     export function timestampExtract(
       timestampExpression: Expression,
       part: TimePart,
-      timezone?: string | Expression
+      timezone?: string | Expression,
     ): FunctionExpression;
 
     /**
@@ -11612,7 +11618,7 @@ declare namespace FirebaseFirestore {
     export function timestampExtract(
       timestampExpression: Expression,
       part: Expression,
-      timezone?: string | Expression
+      timezone?: string | Expression,
     ): FunctionExpression;
 
     /**

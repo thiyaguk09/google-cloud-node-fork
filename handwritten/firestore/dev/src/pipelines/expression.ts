@@ -2461,7 +2461,7 @@ export abstract class Expression
    */
   timestampDiff(
     start: string | Expression,
-    unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day'
+    unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day',
   ): FunctionExpression;
   timestampDiff(
     start: string | Expression,
@@ -2472,12 +2472,13 @@ export abstract class Expression
       | 'minute'
       | 'hour'
       | 'day'
-      | Expression
+      | Expression,
   ): FunctionExpression {
-    return new FunctionExpression(
-      'timestamp_diff',
-      [this, fieldOrExpression(start), valueToDefaultExpr(unit)],
-    );
+    return new FunctionExpression('timestamp_diff', [
+      this,
+      fieldOrExpression(start),
+      valueToDefaultExpr(unit),
+    ]);
   }
 
   /**
@@ -2497,7 +2498,7 @@ export abstract class Expression
    */
   timestampExtract(
     part: firestore.Pipelines.TimePart,
-    timezone?: string | Expression
+    timezone?: string | Expression,
   ): FunctionExpression;
 
   /**
@@ -2517,21 +2518,18 @@ export abstract class Expression
    */
   timestampExtract(
     part: Expression,
-    timezone?: string | Expression
+    timezone?: string | Expression,
   ): FunctionExpression;
   timestampExtract(
     part: firestore.Pipelines.TimePart | Expression,
-    timezone?: string | Expression
+    timezone?: string | Expression,
   ): FunctionExpression {
     const internalPart = isString(part) ? part.toLowerCase() : part;
     const args = [this, valueToDefaultExpr(internalPart)];
     if (timezone) {
       args.push(valueToDefaultExpr(timezone));
     }
-    return new FunctionExpression(
-      'timestamp_extract',
-      args,
-    );
+    return new FunctionExpression('timestamp_extract', args);
   }
 
   /**
@@ -9667,7 +9665,7 @@ export function timestampDiff(
     | 'minute'
     | 'hour'
     | 'day'
-    | Expression
+    | Expression,
 ): FunctionExpression;
 
 /**
@@ -9695,7 +9693,7 @@ export function timestampDiff(
     | 'minute'
     | 'hour'
     | 'day'
-    | Expression
+    | Expression,
 ): FunctionExpression;
 
 /**
@@ -9723,7 +9721,7 @@ export function timestampDiff(
     | 'minute'
     | 'hour'
     | 'day'
-    | Expression
+    | Expression,
 ): FunctionExpression;
 
 /**
@@ -9751,7 +9749,7 @@ export function timestampDiff(
     | 'minute'
     | 'hour'
     | 'day'
-    | Expression
+    | Expression,
 ): FunctionExpression;
 export function timestampDiff(
   endFieldNameOrExpression: string | Expression,
@@ -9763,7 +9761,7 @@ export function timestampDiff(
     | 'minute'
     | 'hour'
     | 'day'
-    | Expression
+    | Expression,
 ): FunctionExpression {
   const normalizedEnd = fieldOrExpression(endFieldNameOrExpression);
   const normalizedStart = fieldOrExpression(startFieldNameOrExpression);
@@ -9790,7 +9788,7 @@ export function timestampDiff(
 export function timestampExtract(
   fieldName: string,
   part: firestore.Pipelines.TimePart,
-  timezone?: string | Expression
+  timezone?: string | Expression,
 ): FunctionExpression;
 
 /**
@@ -9812,7 +9810,7 @@ export function timestampExtract(
 export function timestampExtract(
   fieldName: string,
   part: Expression,
-  timezone?: string | Expression
+  timezone?: string | Expression,
 ): FunctionExpression;
 
 /**
@@ -9834,7 +9832,7 @@ export function timestampExtract(
 export function timestampExtract(
   timestampExpression: Expression,
   part: firestore.Pipelines.TimePart,
-  timezone?: string | Expression
+  timezone?: string | Expression,
 ): FunctionExpression;
 
 /**
@@ -9856,16 +9854,16 @@ export function timestampExtract(
 export function timestampExtract(
   timestampExpression: Expression,
   part: Expression,
-  timezone?: string | Expression
+  timezone?: string | Expression,
 ): FunctionExpression;
 export function timestampExtract(
   fieldNameOrExpression: string | Expression,
   part: firestore.Pipelines.TimePart | Expression,
-  timezone?: string | Expression
+  timezone?: string | Expression,
 ): FunctionExpression {
   return fieldOrExpression(fieldNameOrExpression).timestampExtract(
     valueToDefaultExpr(isString(part) ? part.toLowerCase() : part),
-    timezone
+    timezone,
   );
 }
 
