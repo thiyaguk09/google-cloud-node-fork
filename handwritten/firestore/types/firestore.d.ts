@@ -5682,6 +5682,10 @@ declare namespace FirebaseFirestore {
        * Creates an expression that checks if the result of this expression is of the given type.
        *
        * @remarks Null or undefined fields evaluate to skip/error. Use `ifAbsent()` / `isAbsent()` to evaluate missing data.
+       * Supported values for `type` are:
+       * `'null'`, `'array'`, `'boolean'`, `'bytes'`, `'timestamp'`, `'geo_point'`, `'number'`,
+       * `'int32'`, `'int64'`, `'float64'`, `'decimal128'`, `'map'`, `'reference'`, `'string'`,
+       * `'vector'`, `'max_key'`, `'min_key'`, `'object_id'`, `'regex'`, `'request_timestamp'`.
        *
        * @example
        * ```typescript
@@ -5692,7 +5696,7 @@ declare namespace FirebaseFirestore {
        * @param type The type to check for.
        * @returns A new `BooleanExpression` that evaluates to true if the expression's result is of the given type, false otherwise.
        */
-      isType(type: Type): BooleanExpression;
+      isType(type: string): BooleanExpression;
 
       // TODO(new-expression): Add new expression method declarations above this line
       /**
@@ -11433,243 +11437,6 @@ declare namespace FirebaseFirestore {
 
     /**
      * @beta
-     * Creates an expression that calculates the difference between two timestamps.
-     *
-     * @example
-     * ```typescript
-     * // Calculate the difference in days between 'endTime' and 'startTime' fields.
-     * timestampDiff('endTime', 'startTime', 'day')
-     * ```
-     *
-     * @param endFieldName - The name of the field representing the ending timestamp.
-     * @param startFieldName - The name of the field representing the starting timestamp.
-     * @param unit - The unit of time for the difference (e.g., "day", "hour").
-     * @returns A new {@code Expression} representing the difference as an integer.
-     */
-    export function timestampDiff(
-      endFieldName: string,
-      startFieldName: string,
-      unit:
-        | 'microsecond'
-        | 'millisecond'
-        | 'second'
-        | 'minute'
-        | 'hour'
-        | 'day'
-        | Expression,
-    ): FunctionExpression;
-
-    /**
-     * @beta
-     * Creates an expression that calculates the difference between two timestamps.
-     *
-     * @example
-     * ```typescript
-     * // Calculate the difference in days between 'endTime' field and a starting timestamp expression.
-     * timestampDiff('endTime', field('startTime'), 'day')
-     * ```
-     *
-     * @param endFieldName - The name of the field representing the ending timestamp.
-     * @param startExpression - The starting timestamp for the difference calculation.
-     * @param unit - The unit of time for the difference (e.g., "day", "hour").
-     * @returns A new {@code Expression} representing the difference as an integer.
-     */
-    export function timestampDiff(
-      endFieldName: string,
-      startExpression: Expression,
-      unit:
-        | 'microsecond'
-        | 'millisecond'
-        | 'second'
-        | 'minute'
-        | 'hour'
-        | 'day'
-        | Expression,
-    ): FunctionExpression;
-
-    /**
-     * @beta
-     * Creates an expression that calculates the difference between two timestamps.
-     *
-     * @example
-     * ```typescript
-     * // Calculate the difference in days between an ending timestamp expression and 'startTime' field.
-     * timestampDiff(field('endTime'), 'startTime', 'day')
-     * ```
-     *
-     * @param endExpression - The ending timestamp for the difference calculation.
-     * @param startFieldName - The name of the field representing the starting timestamp.
-     * @param unit - The unit of time for the difference (e.g., "day", "hour").
-     * @returns A new {@code Expression} representing the difference as an integer.
-     */
-    export function timestampDiff(
-      endExpression: Expression,
-      startFieldName: string,
-      unit:
-        | 'microsecond'
-        | 'millisecond'
-        | 'second'
-        | 'minute'
-        | 'hour'
-        | 'day'
-        | Expression,
-    ): FunctionExpression;
-
-    /**
-     * @beta
-     * Creates an expression that calculates the difference between two timestamps.
-     *
-     * @example
-     * ```typescript
-     * // Calculate the difference in days between two timestamp expressions.
-     * timestampDiff(field('endTime'), field('startTime'), 'day')
-     * ```
-     *
-     * @param endExpression - The ending timestamp for the difference calculation.
-     * @param startExpression - The starting timestamp for the difference calculation.
-     * @param unit - The unit of time for the difference (e.g., "day", "hour").
-     * @returns A new {@code Expression} representing the difference as an integer.
-     */
-    export function timestampDiff(
-      endExpression: Expression,
-      startExpression: Expression,
-      unit:
-        | 'microsecond'
-        | 'millisecond'
-        | 'second'
-        | 'minute'
-        | 'hour'
-        | 'day'
-        | Expression,
-    ): FunctionExpression;
-
-    /**
-     * @beta
-     * Creates an expression that extracts a specified part from a timestamp.
-     *
-     * @example
-     * ```typescript
-     * // Extract the year from the 'createdAt' timestamp.
-     * timestampExtract('createdAt', 'year')
-     * ```
-     *
-     * @param fieldName - The name of the field representing the timestamp.
-     * @param part - The part to extract from the timestamp (e.g., "year", "month", "day").
-     * @param timezone - The timezone to use for extraction. Valid values are from
-     * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
-     * Defaults to "UTC" if not specified.
-     * @returns A new {@code Expression} representing the extracted part as an integer.
-     */
-    export function timestampExtract(
-      fieldName: string,
-      part: TimePart,
-      timezone?: string | Expression,
-    ): FunctionExpression;
-
-    /**
-     * @beta
-     * Creates an expression that extracts a specified part from a timestamp.
-     *
-     * @example
-     * ```typescript
-     * // Extract the part specified by the field 'part' from 'createdAt'.
-     * timestampExtract('createdAt', field('part'))
-     * ```
-     *
-     * @param fieldName - The name of the field representing the timestamp.
-     * @param part - The expression evaluating to the part to extract.
-     * @param timezone - The timezone to use for extraction. Valid values are from
-     * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
-     * Defaults to "UTC" if not specified.
-     * @returns A new {@code Expression} representing the extracted part as an integer.
-     */
-    export function timestampExtract(
-      fieldName: string,
-      part: Expression,
-      timezone?: string | Expression,
-    ): FunctionExpression;
-
-    /**
-     * @beta
-     * Creates an expression that extracts a specified part from a timestamp.
-     *
-     * @example
-     * ```typescript
-     * // Extract the year from the timestamp returned by the expression.
-     * timestampExtract(field('createdAt'), 'year')
-     * ```
-     *
-     * @param timestampExpression - The expression evaluating to the timestamp.
-     * @param part - The part to extract from the timestamp (e.g., "year", "month", "day").
-     * @param timezone - The timezone to use for extraction. Valid values are from
-     * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
-     * Defaults to "UTC" if not specified.
-     * @returns A new {@code Expression} representing the extracted part as an integer.
-     */
-    export function timestampExtract(
-      timestampExpression: Expression,
-      part: TimePart,
-      timezone?: string | Expression,
-    ): FunctionExpression;
-
-    /**
-     * @beta
-     * Creates an expression that extracts a specified part from a timestamp.
-     *
-     * @example
-     * ```typescript
-     * // Extract the part specified by the field 'part' from the timestamp.
-     * timestampExtract(field('createdAt'), field('part'))
-     * ```
-     *
-     * @param timestampExpression - The expression evaluating to the timestamp.
-     * @param part - The expression evaluating to the part to extract.
-     * @param timezone - The timezone to use for extraction. Valid values are from
-     * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
-     * Defaults to "UTC" if not specified.
-     * @returns A new {@code Expression} representing the extracted part as an integer.
-     */
-    export function timestampExtract(
-      timestampExpression: Expression,
-      part: Expression,
-      timezone?: string | Expression,
-    ): FunctionExpression;
-
-    /**
-     * @beta
-     *
-     * An enumeration of the different types generated by the Firestore backend.
-     *
-     * <ul>
-     *  <li>Numerics evaluate directly to backend representation (`int64` or `float64`), not JS `number`.</li>
-     *  <li>JavaScript `Date` and firestore `Timestamp` objects strictly evaluate to `'timestamp'`.</li>
-     *  <li>Advanced configurations parsing backend types (such as `decimal128`, `max_key` or `min_key` from BSON) are also incorporated in this union string type. Note that `decimal128` is a backend-only numeric type that the JavaScript SDK cannot create natively, but can be evaluated in pipelines.</li>
-     * </ul>
-     */
-    export type Type =
-      | 'null'
-      | 'array'
-      | 'boolean'
-      | 'bytes'
-      | 'timestamp'
-      | 'geo_point'
-      | 'number'
-      | 'int32'
-      | 'int64'
-      | 'float64'
-      | 'decimal128'
-      | 'map'
-      | 'reference'
-      | 'string'
-      | 'vector'
-      | 'max_key'
-      | 'min_key'
-      | 'object_id'
-      | 'regex'
-      | 'request_timestamp';
-
-    /**
-     * @beta
      * Creates an expression that returns the data type of the data in the specified field.
      *
      * @example
@@ -11700,6 +11467,10 @@ declare namespace FirebaseFirestore {
      * Creates an expression that checks if the value in the specified field is of the given type.
      *
      * @remarks Null or undefined fields evaluate to skip/error. Use `ifAbsent()` / `isAbsent()` to evaluate missing data.
+     * Supported values for `type` are:
+     * `'null'`, `'array'`, `'boolean'`, `'bytes'`, `'timestamp'`, `'geo_point'`, `'number'`,
+     * `'int32'`, `'int64'`, `'float64'`, `'decimal128'`, `'map'`, `'reference'`, `'string'`,
+     * `'vector'`, `'max_key'`, `'min_key'`, `'object_id'`, `'regex'`, `'request_timestamp'`.
      *
      * @example
      * ```typescript
@@ -11711,12 +11482,16 @@ declare namespace FirebaseFirestore {
      * @param type The type to check for.
      * @returns A new `BooleanExpression` that evaluates to true if the field's value is of the given type, false otherwise.
      */
-    export function isType(fieldName: string, type: Type): BooleanExpression;
+    export function isType(fieldName: string, type: string): BooleanExpression;
     /**
      * @beta
      * Creates an expression that checks if the result of an expression is of the given type.
      *
      * @remarks Null or undefined fields evaluate to skip/error. Use `ifAbsent()` / `isAbsent()` to evaluate missing data.
+     * Supported values for `type` are:
+     * `'null'`, `'array'`, `'boolean'`, `'bytes'`, `'timestamp'`, `'geo_point'`, `'number'`,
+     * `'int32'`, `'int64'`, `'float64'`, `'decimal128'`, `'map'`, `'reference'`, `'string'`,
+     * `'vector'`, `'max_key'`, `'min_key'`, `'object_id'`, `'regex'`, `'request_timestamp'`.
      *
      * @example
      * ```typescript
@@ -11730,7 +11505,7 @@ declare namespace FirebaseFirestore {
      */
     export function isType(
       expression: Expression,
-      type: Type,
+      type: string,
     ): BooleanExpression;
 
     // TODO(new-expression): Add new top-level expression function declarations above this line
