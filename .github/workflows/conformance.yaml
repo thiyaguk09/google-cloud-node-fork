@@ -17,11 +17,18 @@ on:
   push:
     branches:
     - main
+    paths:
+    - 'handwritten/bigtable/**'
   pull_request:
+    paths:
+    - 'handwritten/bigtable/**'
 name: conformance
 jobs:
   conformance:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: handwritten/bigtable
     strategy:
       matrix:
         node: [ 18, 20 ]
@@ -31,7 +38,7 @@ jobs:
       with:
         repository: googleapis/cloud-bigtable-clients-test
         ref: main
-        path: cloud-bigtable-clients-test
+        path: handwritten/bigtable/cloud-bigtable-clients-test
     - uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node }}

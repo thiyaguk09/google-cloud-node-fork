@@ -23,7 +23,7 @@ import shutil
 
 logging.basicConfig(level=logging.DEBUG)
 
-staging = Path("owl-bot-staging")
+staging = Path("owl-bot-staging/bigtable")
 
 if staging.is_dir():
     versions = ['v2']
@@ -65,14 +65,14 @@ if staging.is_dir():
             '.kokoro/test.sh',
         ] + list(admin_files)
         logging.info(f"excluding files for non-admin: {excludes}")
-        s.copy([library], excludes = excludes)
+        s.copy([library], destination="handwritten/bigtable", excludes = excludes)
 
     # Copy the admin library pieces and knit them in.
     # Don't override system-test for admin/v2, just keep the v2 version.
     for version in versions:
         admin_version = f"admin/{version}"
         library = src_paths[admin_version]
-        inProtoPath = f"protos/google/bigtable/{admin_version}"
+        inProtoPath = f"handwritten/bigtable/protos/google/bigtable/{admin_version}"
         protos = library / inProtoPath
         classes = library / 'src' / version
         samples = library / 'samples' / 'generated'
@@ -145,14 +145,14 @@ if staging.is_dir():
         os.system(f"mkdir -p {inProtoPath}")
         s.copy([protos / '*'], destination=inProtoPath)
         os.system(f"mkdir -p src/{admin_version}")
-        s.copy([classes / '*'], destination=f"src/{admin_version}")
+        s.copy([classes / '*'], destination=f"handwritten/bigtable/src/{admin_version}")
         os.system(f"mkdir -p samples/generated/{admin_version}")
-        s.copy([samples / 'v2' / '*admin*'], destination=f"samples/generated/{admin_version}")
+        s.copy([samples / 'v2' / '*admin*'], destination=f"handwritten/bigtable/samples/generated/{admin_version}")
         os.system(f"mkdir -p test/{admin_version}")
-        s.copy([tests / '*admin*.ts'], destination=f"test/{admin_version}")
+        s.copy([tests / '*admin*.ts'], destination=f"handwritten/bigtable/test/{admin_version}")
 
     # Replace the client name for generated system-test.
-    system_test_files=['system-test/fixtures/sample/src/index.ts','system-test/fixtures/sample/src/index.js']
+    system_test_files=['handwritten/bigtable/system-test/fixtures/sample/src/index.ts','handwritten/bigtable/system-test/fixtures/sample/src/index.js']
     for file in system_test_files:
         s.replace(file, 'BigtableClient', 'Bigtable')
         s.replace(file, 'client.close', '// client.close') # this does not work with the manual layer
@@ -162,16 +162,19 @@ if staging.is_dir():
     shutil.rmtree(staging)
 
 common_templates = gcp.CommonTemplates()
-templates = common_templates.node_library(
+templates = common_templates.node_mono_repo_library(
+  relative_dir="handwritten/bigtable", 
   source_location='build/src'
 )
-s.copy(templates,excludes=[
+s.copy(templates,destination="handwritten/bigtable", excludes=[
     '.github/auto-approve.yml',
     '.github/sync-repo-settings.yaml',
     '.github/workflows/ci.yaml',
     '.kokoro/samples-test.sh',  # get to green
     '.kokoro/system-test.sh',
     '.kokoro/test.sh',
+    '.mocharc.js',
+    'README.md'
 ])
 
-node.postprocess_gapic_library_hermetic()
+node.postprocess_gapic_library_hermetic(relative_dir="handwritten/bigtable")
