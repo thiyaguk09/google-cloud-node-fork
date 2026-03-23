@@ -189,16 +189,19 @@ describe.skipClassic('Pipeline class', () => {
   let beginDocCreation = 0;
   let endDocCreation = 0;
 
-  async function testCollectionWithDocs(docs: {
-    [id: string]: DocumentData;
-  }): Promise<CollectionReference<DocumentData>> {
+  async function testCollectionWithDocs(
+    targetCol: CollectionReference,
+    docs: {
+      [id: string]: DocumentData;
+    },
+  ): Promise<CollectionReference<DocumentData>> {
     beginDocCreation = new Date().valueOf();
     for (const id in docs) {
-      const ref = randomCol.doc(id);
+      const ref = targetCol.doc(id);
       await ref.set(docs[id]);
     }
     endDocCreation = new Date().valueOf();
-    return randomCol;
+    return targetCol;
   }
 
   function expectResults(result: PipelineSnapshot, ...docs: string[]): void;
@@ -224,7 +227,9 @@ describe.skipClassic('Pipeline class', () => {
     }
   }
 
-  async function setupBookDocs(): Promise<CollectionReference<DocumentData>> {
+  async function setupBookDocs(
+    targetCol: CollectionReference,
+  ): Promise<CollectionReference<DocumentData>> {
     const bookDocs: {[id: string]: DocumentData} = {
       book1: {
         title: "The Hitchhiker's Guide to the Galaxy",
@@ -334,12 +339,12 @@ describe.skipClassic('Pipeline class', () => {
         embedding: FieldValue.vector([1, 1, 1, 1, 1, 1, 1, 1, 1, 10]),
       },
     };
-    return testCollectionWithDocs(bookDocs);
+    return testCollectionWithDocs(targetCol, bookDocs);
   }
 
   before(async () => {
     randomCol = getTestRoot();
-    await setupBookDocs();
+    await setupBookDocs(randomCol);
     firestore = randomCol.firestore;
   });
 
@@ -347,90 +352,137 @@ describe.skipClassic('Pipeline class', () => {
 
   describe('pipeline results', () => {
     describe('DML stages', () => {
-      it('can execute delete stage', async () => {
-        const docRef = randomCol.doc('testDelete');
-        await docRef.set({foo: 'bar'});
+      let dmlCol: CollectionReference;
 
+      beforeEach(async () => {
+        dmlCol = getTestRoot();
+        await setupBookDocs(dmlCol);
+      });
+
+      it('can execute delete stage multiple documents', async () => {
         const deletePpl = firestore
           .pipeline()
-          .collection(randomCol.path)
-          .where(equal(field('__name__').documentId(), docRef.id))
+          .collection(dmlCol.path)
+          .where(equal(field('genre'), 'Science Fiction'))
           .delete();
 
-        const deleteRes = await deletePpl.execute();
-        expectResults(deleteRes, {documents_modified: 1});
+        const promise = deletePpl.execute();
 
-        // Verify 'testDelete' document was deleted
-        const docSnap = await docRef.get();
-        expect(docSnap.exists).to.be.false;
+        if (process.env.FIRESTORE_TARGET_BACKEND?.toUpperCase() === 'NIGHTLY') {
+          const deleteRes = await promise;
+          expectResults(deleteRes, {documents_modified: 2});
+
+          const docSnap1 = await dmlCol.doc('book1').get();
+          expect(docSnap1.exists).to.be.false;
+
+          const docSnap10 = await dmlCol.doc('book10').get();
+          expect(docSnap10.exists).to.be.false;
+        } else {
+          await expect(promise).to.be.rejected;
+        }
       });
 
       it('can execute delete stage within a transaction', async () => {
-        const docRef = randomCol.doc('testDelete');
-        await docRef.set({foo: 'bar'});
-        await firestore.runTransaction(async transaction => {
+        const promise = firestore.runTransaction(async transaction => {
           const deletePpl = firestore
             .pipeline()
-            .collection(randomCol.path)
-            .where(equal(field('__name__').documentId(), docRef.id))
+            .collection(dmlCol.path)
+            .where(equal(field('__name__').documentId(), 'book2'))
             .delete();
 
           const deleteRes = await transaction.execute(deletePpl);
           expectResults(deleteRes, {documents_modified: 1});
         });
 
-        // Verify 'testDelete' document was deleted
-        const docSnap = await docRef.get();
-        expect(docSnap.exists).to.be.false;
+        if (process.env.FIRESTORE_TARGET_BACKEND?.toUpperCase() === 'NIGHTLY') {
+          await promise;
+          const docSnap = await dmlCol.doc('book2').get();
+          expect(docSnap.exists).to.be.false;
+        } else {
+          await expect(promise).to.be.rejected;
+        }
       });
 
-      it('can execute update stage', async () => {
-        randomCol.doc('testUpdate');
-
+      it('can execute update stage with addFields', async () => {
         const ppl = firestore
           .pipeline()
-          .collection(randomCol.path)
-          .where(equal(field('__name__'), 'testDelete'))
-          .addFields(
-            field('__name__').as('id'),
-            'upserted_value' as unknown as Pipelines.Selectable, // Hardcoded values inside addFields need specific treatment or aren't supported
-          )
-          .update(randomCol.path);
+          .collection(dmlCol.path)
+          .where(equal(field('__name__').documentId(), 'book3'))
+          .addFields(field('__name__').documentId().as('id'))
+          .update([constant('baz').as('foo')]);
 
-        await ppl.execute();
+        const promise = ppl.execute();
+
+        if (process.env.FIRESTORE_TARGET_BACKEND?.toUpperCase() === 'NIGHTLY') {
+          const res = await promise;
+          expectResults(res, {documents_modified: 1});
+
+          const docSnap = await dmlCol.doc('book3').get();
+          expect(docSnap.get('foo')).to.equal('baz');
+          expect(docSnap.get('id')).to.equal('book3');
+        } else {
+          await expect(promise).to.be.rejected;
+        }
       });
 
-      it('can execute upsert stage', async () => {
-        randomCol.doc('testUpsert');
-
-        const ppl = firestore
+      it('can update multiple documents and remove fields', async () => {
+        const promise = firestore
           .pipeline()
-          .collection(randomCol.path)
-          .where(equal(field('__name__'), 'testDelete'))
-          .addFields(
-            // Use selectables for addFields
-            field('__name__').as('id'),
-            'upserted_value' as unknown as Pipelines.Selectable, // Hardcoded values inside addFields need specific treatment or aren't supported
-          )
-          .upsert(randomCol.path);
+          .collection(dmlCol.path)
+          .where(equal(field('genre'), 'Science Fiction'))
+          .removeFields('awards')
+          .update([constant('Updated').as('status')])
+          .execute();
 
-        await ppl.execute();
+        if (process.env.FIRESTORE_TARGET_BACKEND?.toUpperCase() === 'NIGHTLY') {
+          const res = await promise;
+          expectResults(res, {documents_modified: 2});
+
+          const docSnap1 = await dmlCol.doc('book1').get();
+          expect(docSnap1.get('status')).to.equal('Updated');
+          expect(docSnap1.get('awards')).to.be.undefined;
+
+          const docSnap10 = await dmlCol.doc('book10').get();
+          expect(docSnap10.get('status')).to.equal('Updated');
+          expect(docSnap10.get('awards')).to.be.undefined;
+        } else {
+          await expect(promise).to.be.rejected;
+        }
       });
 
-      it('can execute insert stage', async () => {
-        randomCol.doc('testInsert');
-
-        const ppl = firestore
+      it('can update with expressions', async () => {
+        const promise = firestore
           .pipeline()
-          .collection(randomCol.path)
-          .where(equal(field('__name__'), 'testDelete')) // arbitrary matching
-          .addFields(
-            field('__name__').as('id'),
-            'inserted_value' as unknown as Pipelines.Selectable,
-          )
-          .insert(randomCol.path);
+          .collection(dmlCol.path)
+          .where(equal(field('__name__').documentId(), 'book1'))
+          .update([add(field('rating'), constant(1.0)).as('rating')])
+          .execute();
 
-        await ppl.execute();
+        if (process.env.FIRESTORE_TARGET_BACKEND?.toUpperCase() === 'NIGHTLY') {
+          const res = await promise;
+          expectResults(res, {documents_modified: 1});
+
+          const docSnap = await dmlCol.doc('book1').get();
+          expect(docSnap.get('rating')).to.equal(5.2);
+        } else {
+          await expect(promise).to.be.rejected;
+        }
+      });
+
+      it('can update non existing document modifies zero documents', async () => {
+        const nonExistingId = 'nonExistingId_123';
+        const promise = firestore
+          .pipeline()
+          .documents([dmlCol.doc(nonExistingId)])
+          .update([constant('Updated').as('status')])
+          .execute();
+
+        if (process.env.FIRESTORE_TARGET_BACKEND?.toUpperCase() === 'NIGHTLY') {
+          const res = await promise;
+          expectResults(res, {documents_modified: 0});
+        } else {
+          await expect(promise).to.be.rejected;
+        }
       });
     });
 

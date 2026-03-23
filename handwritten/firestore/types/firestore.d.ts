@@ -12323,66 +12323,19 @@ declare namespace FirebaseFirestore {
       delete(): Pipeline;
       /**
        * @beta
-       * Performs a delete operation on documents from previous stages.
+       * Performs an update operation using documents from previous stages.
        *
-       * @param collectionNameOrRef - The collection to delete from.
        * @return A new {@link Pipeline} object with this stage appended to the stage list.
        */
-      delete(collectionNameOrRef: string | CollectionReference): Pipeline;
+      update(): Pipeline;
       /**
        * @beta
-       * Performs a delete operation on documents from previous stages.
+       * Performs an update operation using documents from previous stages.
        *
-       * @param options - The {@link DeleteStageOptions} to apply to the stage.
+       * @param transformedFields - The list of transformations to apply.
        * @return A new {@link Pipeline} object with this stage appended to the stage list.
        */
-      delete(options: DeleteStageOptions): Pipeline;
-      /**
-       * @beta
-       * Performs an upsert operation using documents from previous stages.
-       *
-       * @return A new {@link Pipeline} object with this stage appended to the stage list.
-       */
-      upsert(): Pipeline;
-      /**
-       * @beta
-       * Performs an upsert operation using documents from previous stages.
-       *
-       * @param collectionNameOrRef - The collection to upsert to.
-       * @return A new {@link Pipeline} object with this stage appended to the stage list.
-       */
-      upsert(collectionNameOrRef: string | CollectionReference): Pipeline;
-      /**
-       * @beta
-       * Performs an upsert operation using documents from previous stages.
-       *
-       * @param options - The {@link UpsertStageOptions} to apply to the stage.
-       * @return A new {@link Pipeline} object with this stage appended to the stage list.
-       */
-      upsert(options: UpsertStageOptions): Pipeline;
-      /**
-       * @beta
-       * Performs an insert operation using documents from previous stages.
-       *
-       * @return A new {@link Pipeline} object with this stage appended to the stage list.
-       */
-      insert(): Pipeline;
-      /**
-       * @beta
-       * Performs an insert operation using documents from previous stages.
-       *
-       * @param collectionNameOrRef - The collection to insert to.
-       * @return A new {@link Pipeline} object with this stage appended to the stage list.
-       */
-      insert(collectionNameOrRef: string | CollectionReference): Pipeline;
-      /**
-       * @beta
-       * Performs an insert operation using documents from previous stages.
-       *
-       * @param options - The {@link InsertStageOptions} to apply to the stage.
-       * @return A new {@link Pipeline} object with this stage appended to the stage list.
-       */
-      insert(options: InsertStageOptions): Pipeline;
+      update(transformedFields: AliasedExpression[]): Pipeline;
       /**
        * @beta
        * Filters the documents from previous stages to only include those matching the specified {@link
@@ -13248,63 +13201,6 @@ declare namespace FirebaseFirestore {
       docs: Array<string | DocumentReference>;
     };
 
-    /**
-     * @internal
-     * Defines the possible return types of a DeleteStage.
-     */
-    export type DeleteReturn = 'EMPTY' | 'DOCUMENT_ID';
-
-    /**
-     * @beta
-     * Options defining how a DeleteStage is evaluated. This is currently a placeholder.
-     */
-    export type DeleteStageOptions = StageOptions & {};
-
-    /**
-     * @internal
-     * Defines the possible return types of an UpdateStage.
-     */
-    export type UpdateReturn = 'EMPTY' | 'DOCUMENT_ID';
-
-    /**
-     * @internal
-     * Options defining how an UpdateStage is evaluated. This is currently a placeholder.
-     */
-    export type UpdateStageOptions = StageOptions & {};
-
-    /**
-     * @internal
-     * Defines the possible return types of an UpsertStage.
-     */
-    export type UpsertReturn = 'EMPTY' | 'DOCUMENT_ID';
-
-    /**
-     * @internal
-     * Defines the conflict resolution strategy for an UpsertStage.
-     */
-    export type ConflictResolution = 'OVERWRITE' | 'MERGE' | 'FAIL' | 'KEEP';
-
-    /**
-     * @internal
-     * Options defining how an UpsertStage is evaluated.
-     */
-    export type UpsertStageOptions = StageOptions & {
-      returns?: UpsertReturn;
-      conflict_resolution?: ConflictResolution;
-      transformations?: Record<string, unknown>;
-    };
-
-    /**
-     * @internal
-     * Defines the possible return types of an InsertStage.
-     */
-    export type InsertReturn = 'EMPTY' | 'DOCUMENT_ID';
-
-    /**
-     * @beta
-     * Options defining how an InsertStage is evaluated. This is currently a placeholder.
-     */
-    export type InsertStageOptions = StageOptions & {};
     /**
      * @beta
      * Options defining how an AddFieldsStage is evaluated. See {@link Pipeline.addFields}.

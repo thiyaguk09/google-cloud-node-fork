@@ -21,6 +21,7 @@ import {ProtoSerializable, Serializer} from '../serializer';
 
 import {
   AggregateFunction,
+  AliasedExpression,
   BooleanExpression,
   Expression,
   Field,
@@ -29,7 +30,7 @@ import {
 } from './expression';
 import {OptionsUtil} from './options-util';
 import {CollectionReference} from '../reference/collection-reference';
-import {validateUserDataHelper} from './pipeline-util';
+import {validateUserDataHelper, selectablesToMap} from './pipeline-util';
 import {Pipeline} from './pipelines';
 
 /**
@@ -765,132 +766,52 @@ export class RawStage implements Stage {
  */
 export class DeleteStage implements Stage {
   name = 'delete';
-  readonly optionsUtil = new OptionsUtil({
-    returns: {serverName: 'returns'},
-  });
+  readonly optionsUtil = new OptionsUtil({});
 
-  constructor(
-    private target?: firestore.CollectionReference,
-    private rawOptions?: firestore.Pipelines.DeleteStageOptions,
-  ) {}
+  constructor() {}
 
   _toProto(serializer: Serializer): api.Pipeline.IStage {
     const args: api.IValue[] = [];
-    if (this.target) {
-      args.push({referenceValue: this.target.path});
-    }
 
     return {
       name: this.name,
       args,
-      options: this.optionsUtil.getOptionsProto(
-        serializer,
-        {},
-        this.rawOptions,
-      ),
+      options: this.optionsUtil.getOptionsProto(serializer, {}, {}),
     };
   }
+
+  _validateUserData(ignoreUndefinedProperties: boolean): void {}
 }
+
 /**
  * Update stage.
  */
 export class UpdateStage implements Stage {
   name = 'update';
-  readonly optionsUtil = new OptionsUtil({
-    returns: {serverName: 'returns'},
-    conflict_resolution: {serverName: 'conflict_resolution'},
-    transformations: {serverName: 'transformations'},
-    transactional: {serverName: 'transactional'},
-  });
+  readonly optionsUtil = new OptionsUtil({});
 
-  constructor(
-    private target?: firestore.CollectionReference,
-    private rawOptions?: firestore.Pipelines.UpdateStageOptions,
-  ) {}
+  constructor(private transformedFields?: AliasedExpression[]) {}
 
   _toProto(serializer: Serializer): api.Pipeline.IStage {
     const args: api.IValue[] = [];
-    if (this.target) {
-      args.push({referenceValue: this.target.path});
+
+    if (this.transformedFields && this.transformedFields.length > 0) {
+      const mapped = selectablesToMap(this.transformedFields);
+      args.push(serializer.encodeValue(mapped)!);
+    } else {
+      args.push(serializer.encodeValue(new Map())!);
     }
 
     return {
       name: this.name,
       args,
-      options: this.optionsUtil.getOptionsProto(
-        serializer,
-        {},
-        this.rawOptions,
-      ),
+      options: this.optionsUtil.getOptionsProto(serializer, {}, {}),
     };
   }
-}
 
-/**
- * Upsert stage.
- */
-export class UpsertStage implements Stage {
-  name = 'upsert';
-  readonly optionsUtil = new OptionsUtil({
-    returns: {serverName: 'returns'},
-    conflict_resolution: {serverName: 'conflict_resolution'},
-    transformations: {serverName: 'transformations'},
-    transactional: {serverName: 'transactional'},
-  });
-
-  constructor(
-    private target?: firestore.CollectionReference,
-    private rawOptions?: firestore.Pipelines.UpsertStageOptions,
-  ) {}
-
-  _toProto(serializer: Serializer): api.Pipeline.IStage {
-    const args: api.IValue[] = [];
-    if (this.target) {
-      args.push({referenceValue: this.target.path});
+  _validateUserData(ignoreUndefinedProperties: boolean): void {
+    if (this.transformedFields) {
+      validateUserDataHelper(this.transformedFields, ignoreUndefinedProperties);
     }
-
-    return {
-      name: this.name,
-      args,
-      options: this.optionsUtil.getOptionsProto(
-        serializer,
-        {},
-        this.rawOptions,
-      ),
-    };
-  }
-}
-
-/**
- * Insert stage.
- */
-export class InsertStage implements Stage {
-  name = 'insert';
-  readonly optionsUtil = new OptionsUtil({
-    returns: {serverName: 'returns'},
-    transformations: {serverName: 'transformations'},
-    transactional: {serverName: 'transactional'},
-  });
-
-  constructor(
-    private target?: firestore.CollectionReference,
-    private rawOptions?: firestore.Pipelines.InsertStageOptions,
-  ) {}
-
-  _toProto(serializer: Serializer): api.Pipeline.IStage {
-    const args: api.IValue[] = [];
-    if (this.target) {
-      args.push({referenceValue: this.target.path});
-    }
-
-    return {
-      name: this.name,
-      args,
-      options: this.optionsUtil.getOptionsProto(
-        serializer,
-        {},
-        this.rawOptions,
-      ),
-    };
   }
 }
