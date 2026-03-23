@@ -14,7 +14,11 @@
     "google cloud",
     "google cloud platform"
   ],
-  "repository": "googleapis/nodejs-bigtable",
+  "repository": {
+    "type": "git",
+    "directory": "handwritten/bigtable",
+    "url": "https://github.com/googleapis/google-cloud-node.git"
+  },
   "license": "Apache-2.0",
   "author": "Google Inc.",
   "main": "build/src/index.js",
@@ -111,5 +115,6 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "homepage": "https://github.com/googleapis/google-cloud-node/tree/main/handwritten/bigtable"
 }

@@ -13,7 +13,7 @@
 # limitations under the License.
 import synthtool as s
 import synthtool.gcp as gcp
-import synthtool.languages.node as node
+import synthtool.languages.node_mono_repo as node
 import logging
 import os
 from pathlib import Path
