@@ -3116,8 +3116,8 @@ export abstract class Expression
    * and(field('tireWidth').greaterThanOrEqual(contant(2.2)), field('tireWidth').lessThanOrEqual(constant(2.4)))
    * ```
    *
-   * @param lowerBound - Lower bound (inclusive) of the range.
-   * @param upperBound - Upper bound (inclusive) of the range.
+   * @param lowerBound - An `Expression` that evaluates to the lower bound (inclusive) of the range.
+   * @param upperBound - An `Expression` that evaluates to the upper bound (inclusive) of the range.
    */
   between(lowerBound: Expression, upperBound: Expression): BooleanExpression;
 
