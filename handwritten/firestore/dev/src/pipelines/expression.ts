@@ -3103,84 +3103,84 @@ export abstract class Expression
     ]).asBoolean();
   }
 
-  // /**
-  //  * Evaluates if the result of this `expression` is between
-  //  * the `lowerBound` (inclusive) and `upperBound` (inclusive).
-  //  *
-  //  * @example
-  //  * ```
-  //  * // Evaluate if the 'tireWidth' is between 2.2 and 2.4
-  //  * field('tireWidth').between(constant(2.2), constant(2.4))
-  //  *
-  //  * // This is functionally equivalent to
-  //  * and(field('tireWidth').greaterThanOrEqual(contant(2.2)), field('tireWidth').lessThanOrEqual(constant(2.4)))
-  //  * ```
-  //  *
-  //  * @param lowerBound - Lower bound (inclusive) of the range.
-  //  * @param upperBound - Upper bound (inclusive) of the range.
-  //  */
-  // between(lowerBound: Expression, upperBound: Expression): BooleanExpression;
-  //
-  // /**
-  //  * Evaluates if the result of this `expression` is between
-  //  * the `lowerBound` (inclusive) and `upperBound` (inclusive).
-  //  *
-  //  * @example
-  //  * ```
-  //  * // Evaluate if the 'tireWidth' is between 2.2 and 2.4
-  //  * field('tireWidth').between(2.2, 2.4)
-  //  *
-  //  * // This is functionally equivalent to
-  //  * and(field('tireWidth').greaterThanOrEqual(2.2), field('tireWidth').lessThanOrEqual(2.4))
-  //  * ```
-  //  *
-  //  * @param lowerBound - Lower bound (inclusive) of the range.
-  //  * @param upperBound - Upper bound (inclusive) of the range.
-  //  */
-  // between(lowerBound: unknown, upperBound: unknown): BooleanExpression;
-  //
-  // between(lowerBound: unknown, upperBound: unknown): BooleanExpression {
-  //   return new FunctionExpression('between', [
-  //     this,
-  //     valueToDefaultExpr(lowerBound),
-  //     valueToDefaultExpr(upperBound),
-  //   ]).asBoolean();
-  // }
-  //
-  // /**
-  //  * Evaluates to an HTML-formatted text snippet that renders terms matching
-  //  * the search query in `<b>bold</b>`.
-  //  *
-  //  * @remarks This Expression can only be used within a `Search` stage.
-  //  *
-  //  * @param rquery Define the search query using the search DSL.
-  //  */
-  // snippet(rquery: string): Expression;
-  //
-  // /**
-  //  * Evaluates to an HTML-formatted text snippet that renders terms matching
-  //  * the search query in `<b>bold</b>`.
-  //  *
-  //  * @remarks This Expression can only be used within a `Search` stage.
-  //  *
-  //  * @param options Define how snippeting behaves.
-  //  */
-  // snippet(options: firestore.Pipelines.SnippetOptions): Expression;
-  //
-  // snippet(
-  //   queryOrOptions: string | firestore.Pipelines.SnippetOptions,
-  // ): Expression {
-  //   const options: firestore.Pipelines.SnippetOptions = isString(queryOrOptions)
-  //     ? {rquery: queryOrOptions}
-  //     : queryOrOptions;
-  //   const rquery = options.rquery;
-  //   const internalOptions = {
-  //     maxSnippetWidth: options.maxSnippetWidth,
-  //     maxSnippets: options.maxSnippets,
-  //     separator: options.separator,
-  //   };
-  //   return new SnippetExpression([this, constant(rquery)], internalOptions);
-  // }
+  /**
+   * Evaluates if the result of this `expression` is between
+   * the `lowerBound` (inclusive) and `upperBound` (inclusive).
+   *
+   * @example
+   * ```typescript
+   * // Evaluate if the 'tireWidth' is between 2.2 and 2.4
+   * field('tireWidth').between(constant(2.2), constant(2.4))
+   *
+   * // This is functionally equivalent to
+   * and(field('tireWidth').greaterThanOrEqual(contant(2.2)), field('tireWidth').lessThanOrEqual(constant(2.4)))
+   * ```
+   *
+   * @param lowerBound - Lower bound (inclusive) of the range.
+   * @param upperBound - Upper bound (inclusive) of the range.
+   */
+  between(lowerBound: Expression, upperBound: Expression): BooleanExpression;
+
+  /**
+   * Evaluates if the result of this `expression` is between
+   * the `lowerBound` (inclusive) and `upperBound` (inclusive).
+   *
+   * @example
+   * ```
+   * // Evaluate if the 'tireWidth' is between 2.2 and 2.4
+   * field('tireWidth').between(2.2, 2.4)
+   *
+   * // This is functionally equivalent to
+   * and(field('tireWidth').greaterThanOrEqual(2.2), field('tireWidth').lessThanOrEqual(2.4))
+   * ```
+   *
+   * @param lowerBound - Lower bound (inclusive) of the range.
+   * @param upperBound - Upper bound (inclusive) of the range.
+   */
+  between(lowerBound: unknown, upperBound: unknown): BooleanExpression;
+
+  between(lowerBound: unknown, upperBound: unknown): BooleanExpression {
+    return new FunctionExpression('between', [
+      this,
+      valueToDefaultExpr(lowerBound),
+      valueToDefaultExpr(upperBound),
+    ]).asBoolean();
+  }
+
+  /**
+   * Evaluates to an HTML-formatted text snippet that renders terms matching
+   * the search query in `<b>bold</b>`.
+   *
+   * @remarks This Expression can only be used within a `Search` stage.
+   *
+   * @param rquery Define the search query using the search DTS (TODO(search) link).
+   */
+  snippet(rquery: string): Expression;
+
+  /**
+   * Evaluates to an HTML-formatted text snippet that renders terms matching
+   * the search query in `<b>bold</b>`.
+   *
+   * @remarks This Expression can only be used within a `Search` stage.
+   *
+   * @param options Define how snippeting behaves.
+   */
+  snippet(options: firestore.Pipelines.SnippetOptions): Expression;
+
+  snippet(
+    queryOrOptions: string | firestore.Pipelines.SnippetOptions,
+  ): Expression {
+    const options: firestore.Pipelines.SnippetOptions = isString(queryOrOptions)
+      ? {rquery: queryOrOptions}
+      : queryOrOptions;
+    const rquery = options.rquery;
+    const internalOptions = {
+      maxSnippetWidth: options.maxSnippetWidth,
+      maxSnippets: options.maxSnippets,
+      separator: options.separator,
+    };
+    return new SnippetExpression([this, constant(rquery)], internalOptions);
+  }
 
   // TODO(new-expression): Add new expression method definitions above this line
 
