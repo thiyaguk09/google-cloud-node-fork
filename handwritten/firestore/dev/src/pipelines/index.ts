@@ -68,6 +68,8 @@ export {
   arrayMinimum,
   arrayMaximumN,
   arrayMinimumN,
+  arrayFilter,
+  arraySlice,
   field,
   xor,
   AggregateFunction,

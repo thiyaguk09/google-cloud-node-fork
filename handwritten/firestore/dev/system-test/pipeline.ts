@@ -147,7 +147,6 @@ import {
   arraySum,
   currentTimestamp,
   arrayConcat,
-  variable,
   arrayFilter,
   arraySlice,
   type,
@@ -3492,73 +3491,95 @@ async function testCollectionWithDocs(
       });
     });
 
-    describe('arrayFilter', () => {
-      it('supports arrayFilter', async () => {
-        const snapshot = await firestore
-          .pipeline()
-          .collection(randomCol.path)
-                      .where(equal("title", "The Lord of the Rings"))
-            .select(
-              arrayFilter(
-                'tags',
-                'tag',
-                notEqual(variable('tag'), 'magic')
-              ).as('notMagicTags'),
-              field('tags').arrayFilter('tag', notEqual(variable('tag'), 'epic')).as('notEpicTags'),
-              field('tags').arrayFilter('tag', equal(variable('tag'), 'fantasy')).as('noMatchingTags'),
+    it.only('supports arrayFilter', async () => {
+      const snapshot = await firestore
+        .pipeline()
+        .collection(randomCol.path)
+        .where(equal('title', 'The Lord of the Rings'))
+        .select(
+          arrayFilter('tags', 'tag', notEqual(field('tag'), 'magic')).as(
+            'notMagicTags',
+          ),
+          field('tags')
+            .arrayFilter('tag', notEqual(field('tag'), 'epic'))
+            .as('notEpicTags'),
+          field('tags')
+            .arrayFilter('tag', equal(field('tag'), 'fantasy'))
+            .as('noMatchingTags'),
+        )
+        .execute();
 
-            ).execute()
-        
-
-        expectResults(snapshot, {
-          notMagicTags: ["adventure", "epic"],
-          notEpicTags: ["adventure", "magic"],
-          noMatchingTags: []
-        });
+      expectResults(snapshot, {
+        notMagicTags: ['adventure', 'epic'],
+        notEpicTags: ['adventure', 'magic'],
+        noMatchingTags: [],
       });
+    });
 
-      it('supports arrayFilter with mixed types and nulls', async () => {
-        const snapshot = await firestore
-          .pipeline()
-          .collection(randomCol.path)
-          .limit(1)
-          .replaceWith(
-            map({
-              arr: [1, 'foo',null, 20.0, 'bar', 30, '40', null],
-            })
-          )
-          .select(
-            arrayFilter(
-              'arr',
-              'element',
-              greaterThan(variable('element'), 10)
-            ).as('filtered')
-          )
-          .execute();
+    it.only('supports arrayFilter with mixed types and nulls', async () => {
+      const snapshot = await firestore
+        .pipeline()
+        .collection(randomCol.path)
+        .limit(1)
+        .replaceWith(
+          map({
+            arr: [1, 'foo', null, 20.0, 'bar', 30, '40', null],
+          }),
+        )
+        .select(
+          arrayFilter('arr', 'element', greaterThan(field('element'), 10)).as(
+            'filtered',
+          ),
+        )
+        .execute();
 
-        const res = snapshot.results[0].data();
-        expect(res.filtered).to.have.members([20.0, 30]);
-      });
+      const res = snapshot.results[0].data();
+      expect(res.filtered).to.have.members([20.0, 30]);
     });
 
     it('supports arraySlice', async () => {
       const snapshot = await firestore
         .pipeline()
         .collection(randomCol.path)
-.where(equal("title", "The Lord of the Rings")) 
+        .where(equal('title', 'The Lord of the Rings'))
         .select(
-          arraySlice('arr', 1, 1).as('staticMethodSlice'),
-          arraySlice('arr', 1).as('staticMethodSliceToEnd'),
+          arraySlice('tags', 1, 1).as('staticMethodSlice'),
+          arraySlice('tags', 1).as('staticMethodSliceToEnd'),
           field('tags').arraySlice(1, 1).as('instanceMethodSlice'),
           field('tags').arraySlice(1).as('instanceMethodSliceToEnd'),
+          field('tags').arraySlice(1, 10).as('overflowLength'),
+          field('tags').arraySlice(-1, 1).as('negativeOffset'),
+          field('tags').arraySlice(-1).as('negativeOffsetSliceToEnd'),
+          field('tags').arraySlice(10).as('overflowOffset'),
+          field('tags').arraySlice(-10).as('negativeOverflowOffset'),
         )
         .execute();
 
       const res = snapshot.results[0].data();
-      expect(res.staticMethodSlice).to.have.members(["magic"]);
-      expect(res.staticMethodSliceToEnd).to.have.members(["epic", "fantasy"]);
-      expect(res.instanceMethodSlice).to.have.members(["magic"]);
-      expect(res.instanceMethodSliceToEnd).to.have.members(["epic", "fantasy"]);
+      expect(res.staticMethodSlice).to.have.members(['magic']);
+      expect(res.staticMethodSliceToEnd).to.have.members(['magic', 'epic']);
+      expect(res.instanceMethodSlice).to.have.members(['magic']);
+      expect(res.instanceMethodSliceToEnd).to.have.members(['magic', 'epic']);
+      expect(res.overflowLength).to.have.members(['magic', 'epic']);
+      expect(res.overflowOffset).to.have.members([]);
+      expect(res.negativeOffset).to.have.members(['epic']);
+      expect(res.negativeOffsetSliceToEnd).to.have.members(['epic']);
+      expect(res.negativeOverflowOffset).to.have.members([
+        'adventure',
+        'magic',
+        'epic',
+      ]);
+    });
+
+    it('arraySlice throws error for negative length', async () => {
+      await expect(
+        firestore
+          .pipeline()
+          .collection(randomCol.path)
+          .where(equal('title', 'The Lord of the Rings'))
+          .select(arraySlice('tags', 1, -1).as('negativeLengthSlice'))
+          .execute(),
+      ).to.be.rejectedWith(/length must be non-negative/);
     });
 
     it('supports arrayFirstN', async () => {

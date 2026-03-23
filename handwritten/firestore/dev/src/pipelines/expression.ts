@@ -656,14 +656,14 @@ export abstract class Expression
    * ```
    *
    * @param alias The variable name to use for each element.
-   * @param filter The predicate expression to evaluate for each element.
+   * @param filter The predicate boolean expression to evaluate for each element.
    * @returns A new `Expression` representing the filtered array.
    */
-  arrayFilter(alias: string, filter: Expression): FunctionExpression {
+  arrayFilter(alias: string, filter: BooleanExpression): FunctionExpression {
     return new FunctionExpression('array_filter', [
       this,
       valueToDefaultExpr(alias),
-      valueToDefaultExpr(filter),
+      filter,
     ]);
   }
 
@@ -6260,13 +6260,13 @@ export function reverse(expr: Expression | string): FunctionExpression {
  *
  * @param fieldName The name of the field containing the array.
  * @param alias The variable name to use for each element.
- * @param filter The predicate expression to evaluate for each element.
+ * @param filter The predicate boolean expression to evaluate for each element.
  * @returns A new `Expression` representing the filtered array.
  */
 export function arrayFilter(
   fieldName: string,
   alias: string,
-  filter: Expression,
+  filter: BooleanExpression,
 ): FunctionExpression;
 
 /**
@@ -6280,18 +6280,18 @@ export function arrayFilter(
  *
  * @param arrayExpression The expression representing the array.
  * @param alias The variable name to use for each element.
- * @param filter The predicate expression to evaluate for each element.
+ * @param filter The predicate boolean expression to evaluate for each element.
  * @returns A new `Expression` representing the filtered array.
  */
 export function arrayFilter(
   arrayExpression: Expression,
   alias: string,
-  filter: Expression,
+  filter: BooleanExpression,
 ): FunctionExpression;
 export function arrayFilter(
   array: Expression | string,
   alias: string,
-  filter: Expression,
+  filter: BooleanExpression,
 ): FunctionExpression {
   return fieldOrExpression(array).arrayFilter(alias, filter);
 }
