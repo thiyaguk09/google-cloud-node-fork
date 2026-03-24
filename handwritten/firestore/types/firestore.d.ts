@@ -4991,16 +4991,7 @@ declare namespace FirebaseFirestore {
        * @param amount The amount of time to add.
        * @returns A new {@code Expression} representing the resulting timestamp.
        */
-      timestampAdd(
-        unit:
-          | 'microsecond'
-          | 'millisecond'
-          | 'second'
-          | 'minute'
-          | 'hour'
-          | 'day',
-        amount: number,
-      ): FunctionExpression;
+      timestampAdd(unit: TimeUnit, amount: number): FunctionExpression;
       /**
        * @beta
        * Creates an expression that subtracts a specified amount of time from this timestamp expression.
@@ -5034,16 +5025,7 @@ declare namespace FirebaseFirestore {
        * @param amount The amount of time to subtract.
        * @returns A new {@code FunctionExpression} representing the resulting timestamp after subtraction.
        */
-      timestampSubtract(
-        unit:
-          | 'microsecond'
-          | 'millisecond'
-          | 'second'
-          | 'minute'
-          | 'hour'
-          | 'day',
-        amount: number,
-      ): FunctionExpression;
+      timestampSubtract(unit: TimeUnit, amount: number): FunctionExpression;
       /**
        * @beta
        * Creates an expression that returns the document ID from a DocumentReference.
@@ -5610,16 +5592,7 @@ declare namespace FirebaseFirestore {
        * @param unit - The unit of time for the difference (e.g., "day", "hour").
        * @returns A new `Expression` representing the difference as an integer.
        */
-      timestampDiff(
-        start: string | Expression,
-        unit:
-          | 'microsecond'
-          | 'millisecond'
-          | 'second'
-          | 'minute'
-          | 'hour'
-          | 'day',
-      ): FunctionExpression;
+      timestampDiff(start: string | Expression, unit: TimeUnit): FunctionExpression;
 
       /**
        * @beta
@@ -5750,15 +5723,22 @@ declare namespace FirebaseFirestore {
 
     /**
      * @beta
-     * Time granularity used for timestamp functions.
+     * Time unit used for timestamp functions.
      */
-    export type TimeGranularity =
+    export type TimeUnit =
       | 'microsecond'
       | 'millisecond'
       | 'second'
       | 'minute'
       | 'hour'
       | 'day'
+
+    /**
+     * @beta
+     * Time granularity used for timestamp functions.
+     */
+    export type TimeGranularity =
+      | TimeUnit
       | 'week'
       | 'week(monday)'
       | 'week(tuesday)'
@@ -5767,11 +5747,11 @@ declare namespace FirebaseFirestore {
       | 'week(friday)'
       | 'week(saturday)'
       | 'week(sunday)'
-      | 'isoWeek'
+      | 'isoweek'
       | 'month'
       | 'quarter'
       | 'year'
-      | 'isoYear';
+      | 'isoyear';
 
     /**
      * @beta
@@ -10525,13 +10505,7 @@ declare namespace FirebaseFirestore {
      */
     export function timestampAdd(
       timestamp: Expression,
-      unit:
-        | 'microsecond'
-        | 'millisecond'
-        | 'second'
-        | 'minute'
-        | 'hour'
-        | 'day',
+      unit: TimeUnit,
       amount: number,
     ): FunctionExpression;
     /**
@@ -10550,13 +10524,7 @@ declare namespace FirebaseFirestore {
      */
     export function timestampAdd(
       fieldName: string,
-      unit:
-        | 'microsecond'
-        | 'millisecond'
-        | 'second'
-        | 'minute'
-        | 'hour'
-        | 'day',
+      unit: TimeUnit,
       amount: number,
     ): FunctionExpression;
     /**
@@ -10594,13 +10562,7 @@ declare namespace FirebaseFirestore {
      */
     export function timestampSubtract(
       timestamp: Expression,
-      unit:
-        | 'microsecond'
-        | 'millisecond'
-        | 'second'
-        | 'minute'
-        | 'hour'
-        | 'day',
+      unit: TimeUnit,
       amount: number,
     ): FunctionExpression;
     /**
@@ -10619,13 +10581,7 @@ declare namespace FirebaseFirestore {
      */
     export function timestampSubtract(
       fieldName: string,
-      unit:
-        | 'microsecond'
-        | 'millisecond'
-        | 'second'
-        | 'minute'
-        | 'hour'
-        | 'day',
+      unit: TimeUnit,
       amount: number,
     ): FunctionExpression;
 
@@ -11434,6 +11390,215 @@ declare namespace FirebaseFirestore {
       granularity: Expression,
       timezone?: string | Expression,
     ): FunctionExpression;
+
+    /**
+     * @beta
+     * Creates an expression that calculates the difference between two timestamps.
+     *
+     * @example
+     * ```typescript
+     * // Calculate the difference in days between 'endTime' and 'startTime' fields.
+     * timestampDiff('endTime', 'startTime', 'day')
+     * ```
+     *
+     * @param endFieldName - The name of the field representing the ending timestamp.
+     * @param startFieldName - The name of the field representing the starting timestamp.
+     * @param unit - The unit of time for the difference (e.g., "day", "hour").
+     * @returns A new {@code Expression} representing the difference as an integer.
+     */
+    export function timestampDiff(
+      endFieldName: string,
+      startFieldName: string,
+      unit: TimeUnit | Expression,
+    ): FunctionExpression;
+
+    /**
+     * @beta
+     * Creates an expression that calculates the difference between two timestamps.
+     *
+     * @example
+     * ```typescript
+     * // Calculate the difference in days between 'endTime' field and a starting timestamp expression.
+     * timestampDiff('endTime', field('startTime'), 'day')
+     * ```
+     *
+     * @param endFieldName - The name of the field representing the ending timestamp.
+     * @param startExpression - The starting timestamp for the difference calculation.
+     * @param unit - The unit of time for the difference (e.g., "day", "hour").
+     * @returns A new {@code Expression} representing the difference as an integer.
+     */
+    export function timestampDiff(
+      endFieldName: string,
+      startExpression: Expression,
+      unit: TimeUnit | Expression,
+    ): FunctionExpression;
+
+    /**
+     * @beta
+     * Creates an expression that calculates the difference between two timestamps.
+     *
+     * @example
+     * ```typescript
+     * // Calculate the difference in days between an ending timestamp expression and 'startTime' field.
+     * timestampDiff(field('endTime'), 'startTime', 'day')
+     * ```
+     *
+     * @param endExpression - The ending timestamp for the difference calculation.
+     * @param startFieldName - The name of the field representing the starting timestamp.
+     * @param unit - The unit of time for the difference (e.g., "day", "hour").
+     * @returns A new {@code Expression} representing the difference as an integer.
+     */
+    export function timestampDiff(
+      endExpression: Expression,
+      startFieldName: string,
+      unit: TimeUnit | Expression,
+    ): FunctionExpression;
+
+    /**
+     * @beta
+     * Creates an expression that calculates the difference between two timestamps.
+     *
+     * @example
+     * ```typescript
+     * // Calculate the difference in days between two timestamp expressions.
+     * timestampDiff(field('endTime'), field('startTime'), 'day')
+     * ```
+     *
+     * @param endExpression - The ending timestamp for the difference calculation.
+     * @param startExpression - The starting timestamp for the difference calculation.
+     * @param unit - The unit of time for the difference (e.g., "day", "hour").
+     * @returns A new {@code Expression} representing the difference as an integer.
+     */
+    export function timestampDiff(
+      endExpression: Expression,
+      startExpression: Expression,
+      unit: TimeUnit | Expression,
+    ): FunctionExpression;
+
+    /**
+     * @beta
+     * Creates an expression that extracts a specified part from a timestamp.
+     *
+     * @example
+     * ```typescript
+     * // Extract the year from the 'createdAt' timestamp.
+     * timestampExtract('createdAt', 'year')
+     * ```
+     *
+     * @param fieldName - The name of the field representing the timestamp.
+     * @param part - The part to extract from the timestamp (e.g., "year", "month", "day").
+     * @param timezone - The timezone to use for extraction. Valid values are from
+     * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+     * Defaults to "UTC" if not specified.
+     * @returns A new {@code Expression} representing the extracted part as an integer.
+     */
+    export function timestampExtract(
+      fieldName: string,
+      part: TimePart,
+      timezone?: string | Expression,
+    ): FunctionExpression;
+
+    /**
+     * @beta
+     * Creates an expression that extracts a specified part from a timestamp.
+     *
+     * @example
+     * ```typescript
+     * // Extract the part specified by the field 'part' from 'createdAt'.
+     * timestampExtract('createdAt', field('part'))
+     * ```
+     *
+     * @param fieldName - The name of the field representing the timestamp.
+     * @param part - The expression evaluating to the part to extract.
+     * @param timezone - The timezone to use for extraction. Valid values are from
+     * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+     * Defaults to "UTC" if not specified.
+     * @returns A new {@code Expression} representing the extracted part as an integer.
+     */
+    export function timestampExtract(
+      fieldName: string,
+      part: Expression,
+      timezone?: string | Expression,
+    ): FunctionExpression;
+
+    /**
+     * @beta
+     * Creates an expression that extracts a specified part from a timestamp.
+     *
+     * @example
+     * ```typescript
+     * // Extract the year from the timestamp returned by the expression.
+     * timestampExtract(field('createdAt'), 'year')
+     * ```
+     *
+     * @param timestampExpression - The expression evaluating to the timestamp.
+     * @param part - The part to extract from the timestamp (e.g., "year", "month", "day").
+     * @param timezone - The timezone to use for extraction. Valid values are from
+     * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+     * Defaults to "UTC" if not specified.
+     * @returns A new {@code Expression} representing the extracted part as an integer.
+     */
+    export function timestampExtract(
+      timestampExpression: Expression,
+      part: TimePart,
+      timezone?: string | Expression,
+    ): FunctionExpression;
+
+    /**
+     * @beta
+     * Creates an expression that extracts a specified part from a timestamp.
+     *
+     * @example
+     * ```typescript
+     * // Extract the part specified by the field 'part' from the timestamp.
+     * timestampExtract(field('createdAt'), field('part'))
+     * ```
+     *
+     * @param timestampExpression - The expression evaluating to the timestamp.
+     * @param part - The expression evaluating to the part to extract.
+     * @param timezone - The timezone to use for extraction. Valid values are from
+     * the TZ database (e.g., "America/Los_Angeles") or in the format "Etc/GMT-1."
+     * Defaults to "UTC" if not specified.
+     * @returns A new {@code Expression} representing the extracted part as an integer.
+     */
+    export function timestampExtract(
+      timestampExpression: Expression,
+      part: Expression,
+      timezone?: string | Expression,
+    ): FunctionExpression;
+
+    /**
+     * @beta
+     *
+     * An enumeration of the different types generated by the Firestore backend.
+     *
+     * <ul>
+     *  <li>Numerics evaluate directly to backend representation (`int64` or `float64`), not JS `number`.</li>
+     *  <li>JavaScript `Date` and firestore `Timestamp` objects strictly evaluate to `'timestamp'`.</li>
+     *  <li>Advanced configurations parsing backend types (such as `decimal128`, `max_key` or `min_key` from BSON) are also incorporated in this union string type. Note that `decimal128` is a backend-only numeric type that the JavaScript SDK cannot create natively, but can be evaluated in pipelines.</li>
+     * </ul>
+     */
+    export type Type =
+      | 'null'
+      | 'array'
+      | 'boolean'
+      | 'bytes'
+      | 'timestamp'
+      | 'geo_point'
+      | 'number'
+      | 'int32'
+      | 'int64'
+      | 'float64'
+      | 'decimal128'
+      | 'map'
+      | 'reference'
+      | 'string'
+      | 'vector'
+      | 'max_key'
+      | 'min_key'
+      | 'object_id'
+      | 'regex'
+      | 'request_timestamp';
 
     /**
      * @beta

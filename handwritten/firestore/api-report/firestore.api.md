@@ -1137,7 +1137,7 @@ abstract class Expression implements firestore.Pipelines.Expression, HasUserData
     ifError(catchValue: unknown): FunctionExpression;
     isAbsent(): BooleanExpression;
     isError(): BooleanExpression;
-    isType(type: Type): BooleanExpression;
+    isType(type: string): BooleanExpression;
     join(delimiterExpression: Expression): Expression;
     join(delimiter: string): Expression;
     last(): AggregateFunction;
@@ -1206,13 +1206,13 @@ abstract class Expression implements firestore.Pipelines.Expression, HasUserData
     subtract(subtrahend: number): FunctionExpression;
     sum(): AggregateFunction;
     timestampAdd(unit: Expression, amount: Expression): FunctionExpression;
-    timestampAdd(unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day', amount: number): FunctionExpression;
+    timestampAdd(unit: firestore.Pipelines.TimeUnit, amount: number): FunctionExpression;
     timestampDiff(start: Expression, unit: Expression): FunctionExpression;
-    timestampDiff(start: string | Expression, unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day'): FunctionExpression;
+    timestampDiff(start: string | Expression, unit: firestore.Pipelines.TimeUnit): FunctionExpression;
     timestampExtract(part: firestore.Pipelines.TimePart, timezone?: string | Expression): FunctionExpression;
     timestampExtract(part: Expression, timezone?: string | Expression): FunctionExpression;
     timestampSubtract(unit: Expression, amount: Expression): FunctionExpression;
-    timestampSubtract(unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day', amount: number): FunctionExpression;
+    timestampSubtract(unit: firestore.Pipelines.TimeUnit, amount: number): FunctionExpression;
     timestampToUnixMicros(): FunctionExpression;
     timestampToUnixMillis(): FunctionExpression;
     timestampToUnixSeconds(): FunctionExpression;
@@ -1418,6 +1418,8 @@ class Firestore implements firestore.Firestore {
     // Warning: (tsdoc-param-tag-with-invalid-name) The @param block should be followed by a valid parameter name: The identifier cannot non-word characters
     // Warning: (tsdoc-param-tag-with-invalid-type) The @param block should not include a JSDoc-style '{type}'
     constructor(settings?: firestore.Settings);
+    // @internal
+    get alwaysUseImplicitOrderBy(): boolean;
     // Warning: (tsdoc-escape-right-brace) The "}" character should be escaped using a backslash to avoid confusion with a TSDoc inline tag
     // Warning: (tsdoc-malformed-inline-tag) Expecting a TSDoc tag starting with "{@"
     batch(): WriteBatch;
@@ -1650,10 +1652,10 @@ function isAbsent(field: string): BooleanExpression;
 function isError(value: Expression): BooleanExpression;
 
 // @beta
-function isType(fieldName: string, type: Type): BooleanExpression;
+function isType(fieldName: string, type: string): BooleanExpression;
 
 // @beta
-function isType(expression: Expression, type: Type): BooleanExpression;
+function isType(expression: Expression, type: string): BooleanExpression;
 
 // @beta
 function join(arrayFieldName: string, delimiter: string): Expression;
@@ -2118,7 +2120,6 @@ declare namespace Pipelines {
         arrayConcat,
         type,
         isType,
-        Type,
         timestampTruncate,
         timestampExtract,
         timestampDiff,
@@ -2360,7 +2361,7 @@ export class Query<AppModelType = firestore.DocumentData, DbModelType extends fi
     // Warning: (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
     //
     // @internal
-    toProto(transactionOrReadTime?: Uint8Array | Timestamp | api.ITransactionOptions, explainOptions?: firestore.ExplainOptions): api.IRunQueryRequest;
+    toProto(transactionOrReadTime?: Uint8Array | Timestamp | api.ITransactionOptions, explainOptions?: firestore.ExplainOptions, forceImplicitOrderBy?: boolean): api.IRunQueryRequest;
     // Warning: (tsdoc-param-tag-with-invalid-type) The @param block should not include a JSDoc-style '{type}'
     // Warning: (tsdoc-param-tag-with-invalid-type) The @param block should not include a JSDoc-style '{type}'
     // Warning: (tsdoc-param-tag-with-invalid-type) The @param block should not include a JSDoc-style '{type}'
@@ -2710,22 +2711,22 @@ export class Timestamp implements firestore.Timestamp {
 function timestampAdd(timestamp: Expression, unit: Expression, amount: Expression): FunctionExpression;
 
 // @beta
-function timestampAdd(timestamp: Expression, unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day', amount: number): FunctionExpression;
+function timestampAdd(timestamp: Expression, unit: firestore.Pipelines.TimeUnit, amount: number): FunctionExpression;
 
 // @beta
-function timestampAdd(fieldName: string, unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day', amount: number): FunctionExpression;
+function timestampAdd(fieldName: string, unit: firestore.Pipelines.TimeUnit, amount: number): FunctionExpression;
 
 // @beta
-function timestampDiff(endFieldName: string, startFieldName: string, unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day' | Expression): FunctionExpression;
+function timestampDiff(endFieldName: string, startFieldName: string, unit: firestore.Pipelines.TimeUnit | Expression): FunctionExpression;
 
 // @beta
-function timestampDiff(endFieldName: string, startExpression: Expression, unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day' | Expression): FunctionExpression;
+function timestampDiff(endFieldName: string, startExpression: Expression, unit: firestore.Pipelines.TimeUnit | Expression): FunctionExpression;
 
 // @beta
-function timestampDiff(endExpression: Expression, startFieldName: string, unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day' | Expression): FunctionExpression;
+function timestampDiff(endExpression: Expression, startFieldName: string, unit: firestore.Pipelines.TimeUnit | Expression): FunctionExpression;
 
 // @beta
-function timestampDiff(endExpression: Expression, startExpression: Expression, unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day' | Expression): FunctionExpression;
+function timestampDiff(endExpression: Expression, startExpression: Expression, unit: firestore.Pipelines.TimeUnit | Expression): FunctionExpression;
 
 // @beta
 function timestampExtract(fieldName: string, part: firestore.Pipelines.TimePart, timezone?: string | Expression): FunctionExpression;
@@ -2743,10 +2744,10 @@ function timestampExtract(timestampExpression: Expression, part: Expression, tim
 function timestampSubtract(timestamp: Expression, unit: Expression, amount: Expression): FunctionExpression;
 
 // @beta
-function timestampSubtract(timestamp: Expression, unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day', amount: number): FunctionExpression;
+function timestampSubtract(timestamp: Expression, unit: firestore.Pipelines.TimeUnit, amount: number): FunctionExpression;
 
 // @beta
-function timestampSubtract(fieldName: string, unit: 'microsecond' | 'millisecond' | 'second' | 'minute' | 'hour' | 'day', amount: number): FunctionExpression;
+function timestampSubtract(fieldName: string, unit: firestore.Pipelines.TimeUnit, amount: number): FunctionExpression;
 
 // @beta
 function timestampToUnixMicros(expr: Expression): FunctionExpression;
@@ -2905,9 +2906,6 @@ function trunc(fieldName: string, decimalPlaces: number | Expression): FunctionE
 
 // @beta
 function trunc(expression: Expression, decimalPlaces: number | Expression): FunctionExpression;
-
-// @beta
-type Type = 'null' | 'array' | 'boolean' | 'bytes' | 'timestamp' | 'geo_point' | 'number' | 'int32' | 'int64' | 'float64' | 'decimal128' | 'map' | 'reference' | 'string' | 'vector' | 'max_key' | 'min_key' | 'object_id' | 'regex' | 'request_timestamp';
 
 // Warning: (tsdoc-escape-right-brace) The "}" character should be escaped using a backslash to avoid confusion with a TSDoc inline tag
 // Warning: (tsdoc-malformed-inline-tag) Expecting a TSDoc tag starting with "{@"
@@ -3148,9 +3146,9 @@ function xor(first: BooleanExpression, second: BooleanExpression, ...additionalC
 // build/types/src/index.d.ts:371:8 - (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
 // build/types/src/index.d.ts:378:8 - (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
 // build/types/src/index.d.ts:387:8 - (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
-// build/types/src/index.d.ts:881:8 - (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
-// build/types/src/index.d.ts:900:8 - (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
-// build/types/src/index.d.ts:915:8 - (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
+// build/types/src/index.d.ts:886:8 - (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
+// build/types/src/index.d.ts:905:8 - (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
+// build/types/src/index.d.ts:920:8 - (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
 // build/types/src/path.d.ts:29:4 - (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
 // build/types/src/path.d.ts:31:4 - (tsdoc-undefined-tag) The TSDoc tag "@class" is not defined in this configuration
 // build/types/src/path.d.ts:146:4 - (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
