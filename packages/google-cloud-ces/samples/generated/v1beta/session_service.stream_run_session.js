@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name, exportFormat) {
-  // [START ces_v1beta_generated_AgentService_ExportApp_async]
+function main(config, inputs) {
+  // [START ces_v1beta_generated_SessionService_StreamRunSession_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,48 +29,36 @@ function main(name, exportFormat) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The resource name of the app to export.
+   *  Required. The configuration for the session.
    */
-  // const name = 'abc123'
+  // const config = {}
   /**
-   *  Required. The format to export the app in.
+   *  Required. Inputs for the session.
    */
-  // const exportFormat = {}
-  /**
-   *  Optional. The Google Cloud
-   *  Storage (https://cloud.google.com/storage/docs/) URI to which to export the
-   *  app. The format of this URI must be `gs://<bucket-name>/<object-name>`. The
-   *  exported app archive will be written directly to the specified GCS object.
-   */
-  // const gcsUri = 'abc123'
-  /**
-   *  Optional. The resource name of the app version to export.
-   *  Format:
-   *  `projects/{project}/locations/{location}/apps/{app}/versions/{version}`.
-   */
-  // const appVersion = 'abc123'
+  // const inputs = [1,2,3,4]
 
   // Imports the Ces library
-  const {AgentServiceClient} = require('@google-cloud/ces').v1beta;
+  const {SessionServiceClient} = require('@google-cloud/ces').v1beta;
 
   // Instantiates a client
-  const cesClient = new AgentServiceClient();
+  const cesClient = new SessionServiceClient();
 
-  async function callExportApp() {
+  async function callStreamRunSession() {
     // Construct request
     const request = {
-      name,
-      exportFormat,
+      config,
+      inputs,
     };
 
     // Run request
-    const [operation] = await cesClient.exportApp(request);
-    const [response] = await operation.promise();
-    console.log(response);
+    const stream = await cesClient.streamRunSession(request);
+    stream.on('data', (response) => { console.log(response) });
+    stream.on('error', (err) => { throw(err) });
+    stream.on('end', () => { /* API call completed */ });
   }
 
-  callExportApp();
-  // [END ces_v1beta_generated_AgentService_ExportApp_async]
+  callStreamRunSession();
+  // [END ces_v1beta_generated_SessionService_StreamRunSession_async]
 }
 
 process.on('unhandledRejection', err => {
