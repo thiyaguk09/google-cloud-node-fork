@@ -2981,35 +2981,41 @@ export abstract class Expression
    * Creates an expression that returns the `elseValue` argument if this expression results in a null value, else
    * return the result of this expression evaluation.
    *
+   * @remarks
+   * This function provides a fallback for both absent and explicit null values. In contrast, {@link ifAbsent}
+   * only triggers for missing fields.
+   *
    * @example
    * ```typescript
-   * // Returns the value of the 'optional_field', or returns 'default_value'
-   * // if the field is null.
-   * field("optional_field").ifNull("default_value")
+   * // Returns the user's preferred name, or if that is null or absent, returns their full name.
+   * field("preferredName").ifNull(field("fullName"))
    * ```
    *
-   * @param elseValue The value that will be returned if this Expression evaluates to a null value.
+   * @param elseExpression The Expression that will be evaluated if this Expression evaluates to a null or absent value.
    * @returns A new [Expression] representing the ifNull operation.
    */
-  ifNull(elseValue: unknown): Expression;
+  ifNull(elseExpression: Expression): FunctionExpression;
 
   /**
    * @beta
    * Creates an expression that returns the `elseValue` argument if this expression results in a null value, else
    * return the result of this expression evaluation.
    *
+   * @remarks
+   * This function provides a fallback for both absent and explicit null values. In contrast, {@link ifAbsent}
+   * only triggers for missing fields.
+   *
    * @example
    * ```typescript
-   * // Returns the value of the 'optional_field', or if that is
-   * // null, then returns the value of the field `
-   * field("optional_field").ifNull(field('default_field'))
+   * // Returns the user's display name, or returns "Anonymous" if the field is null or absent.
+   * field("displayName").ifNull("Anonymous")
    * ```
    *
-   * @param elseExpression The Expression that will be evaluated if this Expression evaluates to a null value.
+   * @param elseValue The value that will be returned if this Expression evaluates to a null or absent value.
    * @returns A new [Expression] representing the ifNull operation.
    */
-  ifNull(elseExpression: unknown): Expression;
-  ifNull(elseValueOrExpression: Expression | unknown): Expression {
+  ifNull(elseValue: unknown): FunctionExpression;
+  ifNull(elseValueOrExpression: Expression | unknown): FunctionExpression {
     return new FunctionExpression('if_null', [
       this,
       valueToDefaultExpr(elseValueOrExpression),
@@ -3018,15 +3024,14 @@ export abstract class Expression
 
   /**
    * @beta
-   * Creates an expression that Returns the first non-null, non-absent argument, without evaluating
+   * Creates an expression that returns the first non-null, non-absent argument, without evaluating
    * the rest of the arguments. When all arguments are null or absent, returns the last argument.
    *
    * @example
    * ```typescript
-   * // Return "Anonymous" if the 'name' field is null.
-   * field("name").coalesce("Anonymous");
-   * // Return "val1" if "val1" is not null, otherwise "val2", or "default" if both are null.
-   * field("val1").coalesce(field("val2"), "default");
+   * // Returns the value of the first non-null, non-absent field among 'preferredName', 'fullName',
+   * // or the last argument if all previous fields are null.
+   * field("preferredName").coalesce(field("fullName"), "Anonymous");
    * ```
    *
    * @param replacement - The value to use if this expression evaluates to null.
@@ -3034,10 +3039,10 @@ export abstract class Expression
    * @returns A new [Expression] representing the coalesce operation.
    */
   coalesce(
-    second: Expression | unknown,
+    replacement: Expression | unknown,
     ...others: Array<Expression | unknown>
-  ): Expression {
-    const values = [second, ...others];
+  ): FunctionExpression {
+    const values = [replacement, ...others];
     return new FunctionExpression('coalesce', [
       this,
       ...values.map(valueToDefaultExpr),
@@ -9380,50 +9385,65 @@ export function ifAbsent(
 
 /**
  * @beta
- * Creates an expression that returns the `elseExpr` argument if `ifExpr` is null or absent, else
+ * Creates an expression that returns the `elseExpr` argument if `ifExpr` is null, else
  * return the result of the `ifExpr` argument evaluation.
+ *
+ * @remarks
+ * This function provides a fallback for both absent and explicit null values. In contrast,
+ * {@link ifAbsent} only triggers for missing fields.
  *
  * @example
  * ```typescript
- * // Returns the value of the 'optional_field', or returns value of the 'default_field'
- * // if the 'optional_field' value is null or absent.
- * ifNull(field("optional_field"), field("default_field"))
+ * // Returns the user's preferred name, or if that is null or absent, returns their full name.
+ * ifNull(field("preferredName"), field("fullName"))
  * ```
  *
  * @param ifExpr The expression to check for null or absence.
  * @param elseExpr The expression that will be evaluated and returned if `ifExpr` is null or absent.
  * @returns A new `Expression` representing the ifNull operation.
  */
-export function ifNull(ifExpr: Expression, elseExpr: Expression): Expression;
+export function ifNull(
+  ifExpr: Expression,
+  elseExpr: Expression,
+): FunctionExpression;
 
 /**
  * @beta
- * Creates an expression that returns the `elseValue` argument if `ifExpr` is null or absent, else
+ * Creates an expression that returns the `elseValue` argument if `ifExpr` is null, else
  * return the result of the `ifExpr` argument evaluation.
+ *
+ * @remarks
+ * This function provides a fallback for both absent and explicit null values. In contrast,
+ * {@link ifAbsent} only triggers for missing fields.
  *
  * @example
  * ```typescript
- * // Returns the value of the 'optional_field', or returns 'default_value'
- * // if the 'optional_field' value is null or absent.
- * ifNull(field("optional_field"), "default_value")
+ * // Returns the user's display name, or returns "Anonymous" if the field is null or absent.
+ * ifNull(field("displayName"), "Anonymous")
  * ```
  *
- * @param ifExpr The expression to check for absence.
+ * @param ifExpr The expression to check for null or absence.
  * @param elseValue The value that will be returned if `ifExpr` evaluates to a null or absent value.
  * @returns A new `Expression` representing the ifNull operation.
  */
-export function ifNull(ifExpr: Expression, elseValue: unknown): Expression;
+export function ifNull(
+  ifExpr: Expression,
+  elseValue: unknown,
+): FunctionExpression;
 
 /**
  * @beta
- * Creates an expression that returns the `elseExpr` argument if `ifFieldName` is null or absent, else
+ * Creates an expression that returns the `elseExpr` argument if `ifFieldName` is null, else
  * return the value of the field.
+ *
+ * @remarks
+ * This function provides a fallback for both absent and explicit null values. In contrast,
+ * {@link ifAbsent} only triggers for missing fields.
  *
  * @example
  * ```typescript
- * // Returns the value of the 'optional_field', or returns the value of
- * // 'default_field' if 'optional_field' is null or absent.
- * ifNull("optional_field", field("default_field"))
+ * // Returns the user's preferred name, or if that is null or absent, returns their full name.
+ * ifNull("preferredName", field("fullName"))
  * ```
  *
  * @param ifFieldName The field to check for null or absence.
@@ -9431,29 +9451,38 @@ export function ifNull(ifExpr: Expression, elseValue: unknown): Expression;
  * null or absent.
  * @returns A new `Expression` representing the ifNull operation.
  */
-export function ifNull(ifFieldName: string, elseExpr: Expression): Expression;
+export function ifNull(
+  ifFieldName: string,
+  elseExpr: Expression,
+): FunctionExpression;
 
 /**
  * @beta
- * Creates an expression that returns the `elseValue` argument if `ifFieldName` is null or absent, else
+ * Creates an expression that returns the `elseValue` argument if `ifFieldName` is null, else
  * return the value of the field.
+ *
+ * @remarks
+ * This function provides a fallback for both absent and explicit null values. In contrast,
+ * {@link ifAbsent} only triggers for missing fields.
  *
  * @example
  * ```typescript
- * // Returns the value of the 'optional_field', or returns 'default_value'
- * // if the field is null or absent.
- * ifNull("optional_field", "default_value")
+ * // Returns the user's display name, or returns "Anonymous" if the field is null or absent.
+ * ifNull("displayName", "Anonymous")
  * ```
  *
  * @param ifFieldName The field to check for null or absence.
  * @param elseValue The value that will be returned if `ifFieldName` is null or absent.
  * @returns A new `Expression` representing the ifNull operation.
  */
-export function ifNull(ifFieldName: string, elseValue: unknown): Expression;
+export function ifNull(
+  ifFieldName: string,
+  elseValue: unknown,
+): FunctionExpression;
 export function ifNull(
   fieldNameOrExpression: string | Expression,
   elseValue: Expression | unknown,
-): Expression {
+): FunctionExpression {
   return fieldOrExpression(fieldNameOrExpression).ifNull(
     valueToDefaultExpr(elseValue),
   );
@@ -9461,14 +9490,14 @@ export function ifNull(
 
 /**
  * @beta
- * Returns the first non-null, non-absent argument, without evaluating
+ * Creates an expression that returns the first non-null, non-absent argument, without evaluating
  * the rest of the arguments. When all arguments are null or absent, returns the last argument.
  *
  * @example
  * ```typescript
- * // Returns the value of 'optional_field', or if that is
- * // null, then returns the value of 'default_field'
- * coalesce(field("optional_field"), field("default_field"))
+ * // Returns the value of the first non-null, non-absent field among 'preferredName', 'fullName',
+ * // or the last argument if all previous fields are null.
+ * coalesce(field("preferredName"), field("fullName"), constant("Anonymous"))
  * ```
  *
  * @param expression The first expression to check for null.
@@ -9480,18 +9509,18 @@ export function coalesce(
   expression: Expression,
   replacement: Expression | unknown,
   ...others: Array<Expression | unknown>
-): Expression;
+): FunctionExpression;
 
 /**
  * @beta
- * Returns the first non-null, non-absent argument, without evaluating
+ * Creates an expression that returns the first non-null, non-absent argument, without evaluating
  * the rest of the arguments. When all arguments are null or absent, returns the last argument.
  *
  * @example
  * ```typescript
- * // Returns the value of 'optional_field', or if that is
- * // null, then returns the value of 'default_field'
- * coalesce("optional_field", field("default_field"))
+ * // Returns the value of the first non-null, non-absent field among 'preferredName', 'fullName',
+ * // or the last argument if all previous fields are null.
+ * coalesce("preferredName", field("fullName"), constant("Anonymous"))
  * ```
  *
  * @param fieldName The name of the first field to check for null.
@@ -9503,14 +9532,16 @@ export function coalesce(
   fieldName: string,
   replacement: Expression | unknown,
   ...others: Array<Expression | unknown>
-): Expression;
-
+): FunctionExpression;
 export function coalesce(
-  first: Expression | string,
-  second: Expression | unknown,
+  fieldNameOrExpression: Expression | string,
+  replacement: Expression | unknown,
   ...others: Array<Expression | unknown>
-): Expression {
-  return fieldOrExpression(first).coalesce(second, ...others);
+): FunctionExpression {
+  return fieldOrExpression(fieldNameOrExpression).coalesce(
+    replacement,
+    ...others,
+  );
 }
 
 /**

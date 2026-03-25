@@ -499,10 +499,10 @@ function charLength(fieldName: string): FunctionExpression;
 function charLength(stringExpression: Expression): FunctionExpression;
 
 // @beta
-function coalesce(first: Expression, second: Expression | unknown, ...others: Array<Expression | unknown>): Expression;
+function coalesce(expression: Expression, replacement: Expression | unknown, ...others: Array<Expression | unknown>): FunctionExpression;
 
 // @beta
-function coalesce(firstFieldName: string, second: Expression | unknown, ...others: Array<Expression | unknown>): Expression;
+function coalesce(fieldName: string, replacement: Expression | unknown, ...others: Array<Expression | unknown>): FunctionExpression;
 
 // Warning: (tsdoc-undefined-tag) The TSDoc tag "@class" is not defined in this configuration
 //
@@ -1105,7 +1105,7 @@ abstract class Expression implements firestore.Pipelines.Expression, HasUserData
     byteLength(): FunctionExpression;
     ceil(): FunctionExpression;
     charLength(): FunctionExpression;
-    coalesce(second: Expression | unknown, ...others: Array<Expression | unknown>): Expression;
+    coalesce(replacement: Expression | unknown, ...others: Array<Expression | unknown>): FunctionExpression;
     collectionId(): FunctionExpression;
     concat(second: Expression | unknown, ...others: Array<Expression | unknown>): FunctionExpression;
     cosineDistance(vectorExpression: Expression): FunctionExpression;
@@ -1142,8 +1142,8 @@ abstract class Expression implements firestore.Pipelines.Expression, HasUserData
     ifAbsent(elseExpression: unknown): Expression;
     ifError(catchExpr: Expression): FunctionExpression;
     ifError(catchValue: unknown): FunctionExpression;
-    ifNull(elseValue: unknown): Expression;
-    ifNull(elseExpression: unknown): Expression;
+    ifNull(elseExpression: Expression): FunctionExpression;
+    ifNull(elseValue: unknown): FunctionExpression;
     isAbsent(): BooleanExpression;
     isError(): BooleanExpression;
     isType(type: string): BooleanExpression;
@@ -1653,16 +1653,16 @@ function ifError(tryExpr: Expression, catchExpr: Expression): FunctionExpression
 function ifError(tryExpr: Expression, catchValue: unknown): FunctionExpression;
 
 // @beta
-function ifNull(ifExpr: Expression, elseExpr: Expression): Expression;
+function ifNull(ifExpr: Expression, elseExpr: Expression): FunctionExpression;
 
 // @beta
-function ifNull(ifExpr: Expression, elseValue: unknown): Expression;
+function ifNull(ifExpr: Expression, elseValue: unknown): FunctionExpression;
 
 // @beta
-function ifNull(ifFieldName: string, elseExpr: Expression): Expression;
+function ifNull(ifFieldName: string, elseExpr: Expression): FunctionExpression;
 
 // @beta
-function ifNull(ifFieldName: string, elseValue: unknown): Expression;
+function ifNull(ifFieldName: string, elseValue: unknown): FunctionExpression;
 
 // @beta
 function isAbsent(value: Expression): BooleanExpression;
