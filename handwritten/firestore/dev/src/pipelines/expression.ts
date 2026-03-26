@@ -2422,7 +2422,7 @@ export abstract class Expression
    * field("endTime").timestampDiff("startTime", "day");
    * ```
    *
-   * @param start - The field name of the starting timestamp.
+   * @param start - The field name of the starting timestamp or an expression evaluating to a timestamp.
    * @param unit - The unit of time for the difference (e.g., "day", "hour").
    * @returns A new `Expression` representing the difference as an integer.
    */
