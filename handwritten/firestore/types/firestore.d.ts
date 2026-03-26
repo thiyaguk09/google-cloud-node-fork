@@ -5452,7 +5452,7 @@ declare namespace FirebaseFirestore {
 
       /**
        * @beta
-       * Creates an expression that returns the `elseValue` argument if this expression results in a null value, else
+       * Creates an expression that returns the `elseValue` argument if this expression evaluates to null, else
        * return the result of this expression evaluation.
        *
        * @remarks
@@ -5461,18 +5461,18 @@ declare namespace FirebaseFirestore {
        *
        * @example
        * ```typescript
-       * // Returns the user's display name, or returns "Anonymous" if the field is null or absent.
+       * // Returns the user's display name, or returns "Anonymous" if the field is null.
        * field("displayName").ifNull("Anonymous")
        * ```
        *
-       * @param elseValue The value that will be returned if this Expression evaluates to a null value.
+       * @param elseValue The value that will be returned if this Expression evaluates to null.
        * @returns A new `Expression` representing the ifNull operation.
        */
       ifNull(elseValue: unknown): FunctionExpression;
 
       /**
        * @beta
-       * Creates an expression that returns the `elseValue` argument if this expression results in a null value, else
+       * Creates an expression that returns the `elseValue` argument if this expression evaluates to null, else
        * return the result of this expression evaluation.
        *
        * @remarks
@@ -5481,18 +5481,18 @@ declare namespace FirebaseFirestore {
        *
        * @example
        * ```typescript
-       * // Returns the user's preferred name, or if that is null or absent, returns their full name.
+       * // Returns the user's preferred name, or if that is null, returns their full name.
        * field("preferredName").ifNull(field("fullName"))
        * ```
        *
-       * @param elseExpression The Expression that will be evaluated if this Expression evaluates to a null value.
+       * @param elseExpression The Expression that will be evaluated if this Expression evaluates to null.
        * @returns A new `Expression` representing the ifNull operation.
        */
       ifNull(elseExpression: Expression): FunctionExpression;
 
       /**
        * @beta
-       * Creates an expression that Returns the first non-null, non-absent argument, without evaluating
+       * Creates an expression that returns the first non-null, non-absent argument, without evaluating
        * the rest of the arguments. When all arguments are null or absent, returns the last argument.
        *
        * @example
@@ -11055,12 +11055,12 @@ declare namespace FirebaseFirestore {
      *
      * @example
      * ```typescript
-     * // Returns the user's preferred name, or if that is null or absent, returns their full name.
+     * // Returns the user's preferred name, or if that is null, returns their full name.
      * ifNull(field("preferredName"), field("fullName"))
      * ```
      *
      * @param ifExpr The expression to check for null.
-     * @param elseExpr The value that will be returned if `ifExpr` evaluates to a null value.
+     * @param elseExpr The value that will be returned if `ifExpr` evaluates to null.
      * @returns A new {@code Expression} representing the ifNull operation.
      */
     export function ifNull(
@@ -11079,12 +11079,12 @@ declare namespace FirebaseFirestore {
      *
      * @example
      * ```typescript
-     * // Returns the user's display name, or returns "Anonymous" if the field is null or absent.
+     * // Returns the user's display name, or returns "Anonymous" if the field is null.
      * ifNull(field("displayName"), "Anonymous")
      * ```
      *
      * @param ifExpr The expression to check for null.
-     * @param elseValue The value that will be returned if `ifExpr` evaluates to a null value.
+     * @param elseValue The value that will be returned if `ifExpr` evaluates to null.
      * @returns A new {@code Expression} representing the ifNull operation.
      */
     export function ifNull(
@@ -11103,7 +11103,7 @@ declare namespace FirebaseFirestore {
      *
      * @example
      * ```typescript
-     * // Returns the user's preferred name, or if that is null or absent, returns their full name.
+     * // Returns the user's preferred name, or if that is null, returns their full name.
      * ifNull("preferredName", field("fullName"))
      * ```
      *
@@ -11128,7 +11128,7 @@ declare namespace FirebaseFirestore {
      *
      * @example
      * ```typescript
-     * // Returns the user's display name, or returns "Anonymous" if the field is null or absent.
+     * // Returns the user's display name, or returns "Anonymous" if the field is null.
      * ifNull("displayName", "Anonymous")
      * ```
      *
