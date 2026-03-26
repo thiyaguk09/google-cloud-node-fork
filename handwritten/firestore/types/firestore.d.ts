@@ -5592,7 +5592,10 @@ declare namespace FirebaseFirestore {
        * @param unit - The unit of time for the difference (e.g., "day", "hour").
        * @returns A new `Expression` representing the difference as an integer.
        */
-      timestampDiff(start: string | Expression, unit: TimeUnit): FunctionExpression;
+      timestampDiff(
+        start: string | Expression,
+        unit: TimeUnit,
+      ): FunctionExpression;
 
       /**
        * @beta
@@ -5731,7 +5734,7 @@ declare namespace FirebaseFirestore {
       | 'second'
       | 'minute'
       | 'hour'
-      | 'day'
+      | 'day';
 
     /**
      * @beta
