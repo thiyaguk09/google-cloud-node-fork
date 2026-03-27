@@ -69,6 +69,7 @@ import {
   isError,
   substring,
   documentId,
+  parent,
   arrayContainsAll,
   mapRemove,
   mapMerge,
@@ -4574,6 +4575,29 @@ describe.skipClassic('Pipeline class', () => {
         .execute();
       expectResults(snapshot, {
         docId: 'book4',
+      });
+    });
+
+    it('supports parent', async () => {
+      const snapshot = await firestore
+        .pipeline()
+        .collection(randomCol.path)
+        .limit(1)
+        .select(
+          parent(randomCol.doc('book4/reviews/review1')).as('parentRefStatic'),
+          constant(randomCol.doc('book4/reviews/review1'))
+            .parent()
+            .as('parentRefInstance'),
+        )
+        .select(
+          field('parentRefStatic').documentId().as('parentIdStatic'),
+          field('parentRefInstance').documentId().as('parentIdInstance'),
+        )
+        .execute();
+
+      expectResults(snapshot, {
+        parentIdStatic: 'book4',
+        parentIdInstance: 'book4',
       });
     });
 

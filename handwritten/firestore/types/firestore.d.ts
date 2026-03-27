@@ -5041,6 +5041,20 @@ declare namespace FirebaseFirestore {
       documentId(): FunctionExpression;
       /**
        * @beta
+       *
+       * Creates an expression that returns the parent document of a document reference.
+       *
+       * @example
+       * ```typescript
+       * // Get the parent document of a document reference.
+       * field("__path__").parent();
+       * ```
+       *
+       * @returns A new `Expression` representing the parent operation.
+       */
+      parent(): FunctionExpression;
+      /**
+       * @beta
        * Creates an expression that returns a substring of the results of this expression.
        *
        * @param position Index of the first character of the substring.
@@ -6615,6 +6629,41 @@ declare namespace FirebaseFirestore {
     export function documentId(
       documentPathExpr: Expression,
     ): FunctionExpression;
+
+    /**
+     * @beta
+     *
+     * Creates an expression that returns the parent document of a document reference.
+     *
+     * @example
+     * ```typescript
+     * // Get the parent document of a document reference.
+     * parent(myDocumentReference);
+     * ```
+     *
+     * @param documentPath - A string path or DocumentReference to get the parent from.
+     * @returns A new {@code Expression} representing the parent operation.
+     */
+    export function parent(
+      documentPath: string | DocumentReference,
+    ): FunctionExpression;
+
+    /**
+     * @beta
+     *
+     * Creates an expression that returns the parent document of a document reference.
+     *
+     * @example
+     * ```typescript
+     * // Get the parent document of a document reference.
+     * parent(field("__path__"));
+     * ```
+     *
+     * @param documentPathExpr - An Expression evaluating to a document reference.
+     * @returns A new {@code Expression} representing the parent operation.
+     */
+    export function parent(documentPathExpr: Expression): FunctionExpression;
+
     /**
      * @beta
      * Creates an expression that returns a substring of a string or byte array.

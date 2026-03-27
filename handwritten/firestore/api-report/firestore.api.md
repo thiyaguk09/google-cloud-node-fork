@@ -1170,6 +1170,7 @@ abstract class Expression implements firestore.Pipelines.Expression, HasUserData
     notEqual(value: unknown): BooleanExpression;
     notEqualAny(values: Array<Expression | unknown>): BooleanExpression;
     notEqualAny(arrayExpression: Expression): BooleanExpression;
+    parent(): FunctionExpression;
     pow(exponent: Expression): FunctionExpression;
     pow(exponent: number): FunctionExpression;
     // (undocumented)
@@ -1888,9 +1889,15 @@ class Ordering implements HasUserData {
 }
 
 // @beta
+function parent_2(documentPath: string | firestore.DocumentReference): FunctionExpression;
+
+// @beta
+function parent_2(documentPathExpr: Expression): FunctionExpression;
+
+// @beta
 class Pipeline implements firestore.Pipelines.Pipeline {
     // Warning: (ae-forgotten-export) The symbol "Stage" needs to be exported by the entry point index.d.ts
-    constructor(db: Firestore, stages: Stage[]);
+    constructor(db: Firestore | undefined, stages: Stage[]);
     addFields(field: firestore.Pipelines.Selectable, ...additionalFields: firestore.Pipelines.Selectable[]): Pipeline;
     // Warning: (tsdoc-escape-right-brace) The "}" character should be escaped using a backslash to avoid confusion with a TSDoc inline tag
     addFields(options: firestore.Pipelines.AddFieldsStageOptions): Pipeline;
@@ -1939,8 +1946,8 @@ class Pipeline implements firestore.Pipelines.Pipeline {
     union(options: firestore.Pipelines.UnionStageOptions): Pipeline;
     unnest(selectable: firestore.Pipelines.Selectable, indexField?: string): Pipeline;
     unnest(options: firestore.Pipelines.UnnestStageOptions): Pipeline;
-    // Warning: (tsdoc-undefined-tag) The TSDoc tag "@private" is not defined in this configuration
-    _validateUserData<T extends Map<string, HasUserData> | HasUserData[] | HasUserData>(_: string, val: T): T;
+    // (undocumented)
+    _validateUserData(ignoreUndefinedProperties: boolean): void;
     where(condition: firestore.Pipelines.BooleanExpression): Pipeline;
     where(options: firestore.Pipelines.WhereStageOptions): Pipeline;
 }
@@ -2068,6 +2075,7 @@ declare namespace Pipelines {
         isError,
         substring,
         documentId,
+        parent_2 as parent,
         arrayContainsAll,
         constant,
         Field,

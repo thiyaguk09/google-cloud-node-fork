@@ -94,6 +94,7 @@ export {
   isError,
   substring,
   documentId,
+  parent,
   arrayContainsAll,
   constant,
   Field,
