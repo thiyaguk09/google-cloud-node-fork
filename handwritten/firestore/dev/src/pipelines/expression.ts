@@ -3153,7 +3153,7 @@ export abstract class Expression
    *
    * @remarks This Expression can only be used within a `Search` stage.
    *
-   * @param rquery Define the search query using the search DTS (TODO(search) link).
+   * @param rquery Define the search query using the search DSL.
    */
   snippet(rquery: string): Expression;
 
@@ -10356,7 +10356,7 @@ export function isType(
  * @remarks This Expression can only be used within a `Search` stage.
  *
  * @param searchField Search the specified field.
- * @param rquery Define the search query using the search DTS.
+ * @param rquery Define the search query using the search DSL.
  */
 export function matches(
   searchField: string | Field,
@@ -10382,7 +10382,7 @@ export function documentMatches(
 
 /**
  * Evaluates to the search score that reflects the topicality of the document
- * to all of the text predicates (`queryMatch`)
+ * to all the text predicates (for example: `documentMatches`)
  * in the search query. If `SearchOptions.query` is not set or does not contain
  * any text predicates, then this topicality score will always be `0`.
  *
@@ -10399,7 +10399,7 @@ export function score(): Expression {
  * @remarks This Expression can only be used within a `Search` stage.
  *
  * @param searchField Search the specified field for matching terms.
- * @param rquery Define the search query using the search DTS (TODO(search) link).
+ * @param rquery Define the search query using the search DSL.
  */
 export function snippet(
   searchField: string | Field,
@@ -10413,7 +10413,7 @@ export function snippet(
  * @remarks This Expression can only be used within a `Search` stage.
  *
  * @param searchField Search the specified field for matching terms.
- * @param options Define the search query using the search DTS (TODO(search) link).
+ * @param options Define the search query using the search DSL.
  */
 export function snippet(
   searchField: string | Field,
