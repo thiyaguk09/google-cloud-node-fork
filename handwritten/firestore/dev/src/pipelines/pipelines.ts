@@ -1616,8 +1616,8 @@ export class Pipeline implements firestore.Pipelines.Pipeline {
     )
       ? options.query
       : documentMatches(options.query);
-    const normalizedSelect: Record<string, Expression> | undefined =
-      options.select ? selectablesToObject(options.select) : undefined;
+    // const normalizedSelect: Record<string, Expression> | undefined =
+    //   options.select ? selectablesToObject(options.select) : undefined;
     const normalizedAddFields: Record<string, Expression> | undefined =
       options.addFields ? selectablesToObject(options.addFields) : undefined;
     const normalizedSort: firestore.Pipelines.Ordering[] | undefined =
@@ -1626,7 +1626,7 @@ export class Pipeline implements firestore.Pipelines.Pipeline {
     const internalOptions: InternalSearchStageOptions = {
       ...options,
       query: normalizedQuery,
-      select: normalizedSelect,
+      // select: normalizedSelect,
       addFields: normalizedAddFields,
       sort: normalizedSort,
     };
