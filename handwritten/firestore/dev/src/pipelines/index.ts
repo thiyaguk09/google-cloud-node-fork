@@ -69,6 +69,8 @@ export {
   arrayMaximumN,
   arrayMinimumN,
   arrayFilter,
+  arrayTransform,
+  arrayTransformWithIndex,
   arraySlice,
   field,
   xor,

@@ -148,6 +148,8 @@ import {
   currentTimestamp,
   arrayConcat,
   arrayFilter,
+  arrayTransform,
+  arrayTransformWithIndex,
   arraySlice,
   type,
   isType,
@@ -3497,14 +3499,14 @@ async function testCollectionWithDocs(
         .collection(randomCol.path)
         .where(equal('title', 'The Lord of the Rings'))
         .select(
-          arrayFilter('tags', 'tag', notEqual(field('tag'), 'magic')).as(
+          arrayFilter('tags', 'tag', notEqual(variable('tag'), 'magic')).as(
             'notMagicTags',
           ),
           field('tags')
-            .arrayFilter('tag', notEqual(field('tag'), 'epic'))
+            .arrayFilter('tag', notEqual(variable('tag'), 'epic'))
             .as('notEpicTags'),
           field('tags')
-            .arrayFilter('tag', equal(field('tag'), 'fantasy'))
+            .arrayFilter('tag', equal(variable('tag'), 'fantasy'))
             .as('noMatchingTags'),
         )
         .execute();
@@ -3516,7 +3518,7 @@ async function testCollectionWithDocs(
       });
     });
 
-    it.only('supports arrayFilter with mixed types and nulls', async () => {
+    it('supports arrayFilter with mixed types and nulls', async () => {
       const snapshot = await firestore
         .pipeline()
         .collection(randomCol.path)
@@ -3527,14 +3529,98 @@ async function testCollectionWithDocs(
           }),
         )
         .select(
-          arrayFilter('arr', 'element', greaterThan(field('element'), 10)).as(
-            'filtered',
-          ),
+          arrayFilter(
+            'arr',
+            'element',
+            greaterThan(variable('element'), 10),
+          ).as('filtered'),
         )
         .execute();
 
       const res = snapshot.results[0].data();
       expect(res.filtered).to.have.members([20.0, 30]);
+    });
+
+    it('supports arrayTransform and arrayTransformWithIndex', async () => {
+      const snapshot = await firestore
+        .pipeline()
+        .collection(randomCol.path)
+        .limit(1)
+        .replaceWith(map({arr: [10, 20, 30]}))
+        .select(
+          arrayTransform(
+            'arr',
+            'element',
+            multiply(variable('element'), 10),
+          ).as('staticTransform'),
+          field('arr')
+            .arrayTransform('element', multiply(variable('element'), 10))
+            .as('instanceTransform'),
+          arrayTransformWithIndex(
+            'arr',
+            'element',
+            'i',
+            add(variable('element'), variable('i')),
+          ).as('staticTransformWithIndex'),
+          field('arr')
+            .arrayTransformWithIndex(
+              'element',
+              'i',
+              add(variable('element'), variable('i')),
+            )
+            .as('instanceTransformWithIndex'),
+        )
+        .execute();
+
+      expectResults(snapshot, {
+        staticTransform: [100, 200, 300],
+        instanceTransform: [100, 200, 300],
+        staticTransformWithIndex: [10, 21, 32],
+        instanceTransformWithIndex: [10, 21, 32],
+      });
+    });
+
+    it('supports arrayTransform with empty array and nulls', async () => {
+      const snapshot = await firestore
+        .pipeline()
+        .collection(randomCol.path)
+        .limit(1)
+        .replaceWith(
+          map({
+            arr: [1, null, 3],
+            empty: [],
+          }),
+        )
+        .select(
+          field('arr')
+            .arrayTransform('element', add(variable('element'), 1))
+            .as('transformedWithNulls'),
+          field('empty')
+            .arrayTransform('element', add(variable('element'), 1))
+            .as('transformedEmpty'),
+          field('arr')
+            .arrayTransformWithIndex(
+              'element',
+              'idx',
+              add(variable('element'), variable('idx')),
+            )
+            .as('transformedWithIndex'),
+          field('empty')
+            .arrayTransformWithIndex(
+              'element',
+              'idx',
+              add(variable('element'), variable('idx')),
+            )
+            .as('transformedEmptyWithIndex'),
+        )
+        .execute();
+
+      expectResults(snapshot, {
+        transformedWithNulls: [2, null, 4],
+        transformedEmpty: [],
+        transformedWithIndex: [1, null, 5],
+        transformedEmptyWithIndex: [],
+      });
     });
 
     it('supports arraySlice', async () => {
