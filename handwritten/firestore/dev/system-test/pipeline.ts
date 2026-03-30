@@ -3493,7 +3493,7 @@ async function testCollectionWithDocs(
       });
     });
 
-    it.only('supports arrayFilter', async () => {
+    it('supports arrayFilter', async () => {
       const snapshot = await firestore
         .pipeline()
         .collection(randomCol.path)
