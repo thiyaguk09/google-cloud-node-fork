@@ -2463,7 +2463,7 @@ describe.skipClassic('Pipeline class', () => {
         .select(
           'title',
           logicalMaximum(constant(1960), field('published'), 1961).as(
-            'published-safe',
+            'publishedSafe',
           ),
         )
         .sort(field('title').ascending())
@@ -2471,9 +2471,9 @@ describe.skipClassic('Pipeline class', () => {
         .execute();
       expectResults(
         snapshot,
-        {title: '1984', 'published-safe': 1961},
-        {title: 'Crime and Punishment', 'published-safe': 1961},
-        {title: 'Dune', 'published-safe': 1965},
+        {title: '1984', 'publishedSafe': 1961},
+        {title: 'Crime and Punishment', 'publishedSafe': 1961},
+        {title: 'Dune', 'publishedSafe': 1965},
       );
     });
 
@@ -2484,7 +2484,7 @@ describe.skipClassic('Pipeline class', () => {
         .select(
           'title',
           logicalMinimum(constant(1960), field('published'), 1961).as(
-            'published-safe',
+            'publishedSafe',
           ),
         )
         .sort(field('title').ascending())
@@ -2492,9 +2492,9 @@ describe.skipClassic('Pipeline class', () => {
         .execute();
       expectResults(
         snapshot,
-        {title: '1984', 'published-safe': 1949},
-        {title: 'Crime and Punishment', 'published-safe': 1866},
-        {title: 'Dune', 'published-safe': 1960},
+        {title: '1984', 'publishedSafe': 1949},
+        {title: 'Crime and Punishment', 'publishedSafe': 1866},
+        {title: 'Dune', 'publishedSafe': 1960},
       );
     });
 
@@ -2508,7 +2508,7 @@ describe.skipClassic('Pipeline class', () => {
             lessThan(field('published'), 1960),
             constant(1960),
             field('published'),
-          ).as('published-safe'),
+          ).as('publishedSafe'),
           field('rating')
             .greaterThanOrEqual(4.5)
             .conditional(constant('great'), constant('good'))
@@ -2519,13 +2519,13 @@ describe.skipClassic('Pipeline class', () => {
         .execute();
       expectResults(
         snapshot,
-        {title: '1984', 'published-safe': 1960, rating: 'good'},
+        {title: '1984', 'publishedSafe': 1960, rating: 'good'},
         {
           title: 'Crime and Punishment',
-          'published-safe': 1960,
+          'publishedSafe': 1960,
           rating: 'good',
         },
-        {title: 'Dune', 'published-safe': 1965, rating: 'great'},
+        {title: 'Dune', 'publishedSafe': 1965, rating: 'great'},
       );
     });
 
@@ -3116,9 +3116,9 @@ describe.skipClassic('Pipeline class', () => {
         snapshot,
         {
           title: "The Hitchhiker's Guide to the Galaxy",
-          'awards.hugo': true,
+          awards: {hugo: true},
         },
-        {title: 'Dune', 'awards.hugo': true},
+        {title: 'Dune', awards: {hugo: true}},
       );
     });
 
@@ -3143,14 +3143,14 @@ describe.skipClassic('Pipeline class', () => {
         .select(
           'title',
           field('nested.level.1'),
-          mapGet('nested', 'level.1').mapGet('level.2').as('nested'),
+          mapGet('nested', 'level.1').mapGet('level.2').as('new_nested'),
         )
         .execute();
 
       expectResults(snapshot, {
         title: 'foo',
-        'nested.level.`1`': 'bar',
-        nested: 'baz',
+        nested: {level: {1: 'bar'}},
+        new_nested: 'baz',
       });
     });
 
@@ -4258,17 +4258,17 @@ describe.skipClassic('Pipeline class', () => {
           }),
         )
         .select(
-          field('foo').round(0).as('0'),
-          round('foo', 1).as('1'),
-          round('foo', constant(2)).as('2'),
-          round(field('foo'), 4).as('4'),
+          field('foo').round(0).as('round0'),
+          round('foo', 1).as('round1'),
+          round('foo', constant(2)).as('round2'),
+          round(field('foo'), 4).as('round4'),
         )
         .execute();
       expectResults(snapshot, {
-        '0': 4,
-        '1': 4.1,
-        '2': 4.12,
-        '4': 4.1235,
+        round0: 4,
+        round1: 4.1,
+        round2: 4.12,
+        round4: 4.1235,
       });
     });
 
@@ -4309,17 +4309,17 @@ describe.skipClassic('Pipeline class', () => {
           }),
         )
         .select(
-          field('foo').trunc(0).as('0'),
-          trunc('foo', 1).as('1'),
-          trunc('foo', constant(2)).as('2'),
-          trunc(field('foo'), 4).as('4'),
+          field('foo').trunc(0).as('trunc0'),
+          trunc('foo', 1).as('trunc1'),
+          trunc('foo', constant(2)).as('trunc2'),
+          trunc(field('foo'), 4).as('trunc4'),
         )
         .execute();
       expectResults(snapshot, {
-        '0': 4,
-        '1': 4.1,
-        '2': 4.12,
-        '4': 4.1234,
+        trunc0: 4,
+        trunc1: 4.1,
+        trunc2: 4.12,
+        trunc4: 4.1234,
       });
     });
 
@@ -4916,15 +4916,15 @@ describe.skipClassic('Pipeline class', () => {
           constant(1).as('pos1'),
         )
         .select(
-          abs('neg10').as('10'),
-          abs(field('neg22')).as('22'),
-          field('pos1').as('1'),
+          abs('neg10').as('abs10'),
+          abs(field('neg22')).as('abs22'),
+          field('pos1').as('abs1'),
         )
         .execute();
       expectResults(snapshot, {
-        '10': 10,
-        '22': 22.22,
-        '1': 1,
+        abs10: 10,
+        abs22: 22.22,
+        abs1: 1,
       });
     });
 
