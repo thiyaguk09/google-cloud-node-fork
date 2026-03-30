@@ -2977,7 +2977,6 @@ export abstract class Expression
   }
 
   /**
-   * @beta
    * Creates an expression that returns the `elseValue` argument if this expression evaluates to null, else
    * return the result of this expression evaluation.
    *
@@ -2997,7 +2996,6 @@ export abstract class Expression
   ifNull(elseExpression: Expression): FunctionExpression;
 
   /**
-   * @beta
    * Creates an expression that returns the `elseValue` argument if this expression evaluates to null, else
    * return the result of this expression evaluation.
    *
@@ -3023,7 +3021,6 @@ export abstract class Expression
   }
 
   /**
-   * @beta
    * Creates an expression that returns the first non-null, non-absent argument, without evaluating
    * the rest of the arguments. When all arguments are null or absent, returns the last argument.
    *
@@ -9384,7 +9381,6 @@ export function ifAbsent(
 }
 
 /**
- * @beta
  * Creates an expression that returns the `elseExpr` argument if `ifExpr` is null, else
  * return the result of the `ifExpr` argument evaluation.
  *
@@ -9408,7 +9404,6 @@ export function ifNull(
 ): FunctionExpression;
 
 /**
- * @beta
  * Creates an expression that returns the `elseValue` argument if `ifExpr` is null, else
  * return the result of the `ifExpr` argument evaluation.
  *
@@ -9432,7 +9427,6 @@ export function ifNull(
 ): FunctionExpression;
 
 /**
- * @beta
  * Creates an expression that returns the `elseExpr` argument if `ifFieldName` is null, else
  * return the value of the field.
  *
@@ -9457,7 +9451,6 @@ export function ifNull(
 ): FunctionExpression;
 
 /**
- * @beta
  * Creates an expression that returns the `elseValue` argument if `ifFieldName` is null, else
  * return the value of the field.
  *
@@ -9489,7 +9482,6 @@ export function ifNull(
 }
 
 /**
- * @beta
  * Creates an expression that returns the first non-null, non-absent argument, without evaluating
  * the rest of the arguments. When all arguments are null or absent, returns the last argument.
  *
@@ -9512,7 +9504,6 @@ export function coalesce(
 ): FunctionExpression;
 
 /**
- * @beta
  * Creates an expression that returns the first non-null, non-absent argument, without evaluating
  * the rest of the arguments. When all arguments are null or absent, returns the last argument.
  *
