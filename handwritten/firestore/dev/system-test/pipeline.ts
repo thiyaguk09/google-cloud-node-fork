@@ -2471,9 +2471,9 @@ describe.skipClassic('Pipeline class', () => {
         .execute();
       expectResults(
         snapshot,
-        {title: '1984', 'publishedSafe': 1961},
-        {title: 'Crime and Punishment', 'publishedSafe': 1961},
-        {title: 'Dune', 'publishedSafe': 1965},
+        {title: '1984', publishedSafe: 1961},
+        {title: 'Crime and Punishment', publishedSafe: 1961},
+        {title: 'Dune', publishedSafe: 1965},
       );
     });
 
@@ -2492,9 +2492,9 @@ describe.skipClassic('Pipeline class', () => {
         .execute();
       expectResults(
         snapshot,
-        {title: '1984', 'publishedSafe': 1949},
-        {title: 'Crime and Punishment', 'publishedSafe': 1866},
-        {title: 'Dune', 'publishedSafe': 1960},
+        {title: '1984', publishedSafe: 1949},
+        {title: 'Crime and Punishment', publishedSafe: 1866},
+        {title: 'Dune', publishedSafe: 1960},
       );
     });
 
@@ -2519,13 +2519,13 @@ describe.skipClassic('Pipeline class', () => {
         .execute();
       expectResults(
         snapshot,
-        {title: '1984', 'publishedSafe': 1960, rating: 'good'},
+        {title: '1984', publishedSafe: 1960, rating: 'good'},
         {
           title: 'Crime and Punishment',
-          'publishedSafe': 1960,
+          publishedSafe: 1960,
           rating: 'good',
         },
-        {title: 'Dune', 'publishedSafe': 1965, rating: 'great'},
+        {title: 'Dune', publishedSafe: 1965, rating: 'great'},
       );
     });
 
