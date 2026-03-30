@@ -498,20 +498,10 @@ function charLength(fieldName: string): FunctionExpression;
 // @beta
 function charLength(stringExpression: Expression): FunctionExpression;
 
-// Warning: (ae-incompatible-release-tags) The symbol "coalesce" is marked as @public, but its signature references "Expression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "coalesce" is marked as @public, but its signature references "FunctionExpression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "coalesce" is marked as @public, but its signature references "Expression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "coalesce" is marked as @public, but its signature references "FunctionExpression" which is marked as @beta
-//
-// @public
+// @beta
 function coalesce(expression: Expression, replacement: Expression | unknown, ...others: Array<Expression | unknown>): FunctionExpression;
 
-// Warning: (ae-incompatible-release-tags) The symbol "coalesce" is marked as @public, but its signature references "Expression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "coalesce" is marked as @public, but its signature references "FunctionExpression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "coalesce" is marked as @public, but its signature references "Expression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "coalesce" is marked as @public, but its signature references "FunctionExpression" which is marked as @beta
-//
-// @public
+// @beta
 function coalesce(fieldName: string, replacement: Expression | unknown, ...others: Array<Expression | unknown>): FunctionExpression;
 
 // Warning: (tsdoc-undefined-tag) The TSDoc tag "@class" is not defined in this configuration
@@ -1662,34 +1652,16 @@ function ifError(tryExpr: Expression, catchExpr: Expression): FunctionExpression
 // @beta
 function ifError(tryExpr: Expression, catchValue: unknown): FunctionExpression;
 
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "Expression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "FunctionExpression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "Expression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "FunctionExpression" which is marked as @beta
-//
-// @public
+// @beta
 function ifNull(ifExpr: Expression, elseExpr: Expression): FunctionExpression;
 
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "Expression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "FunctionExpression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "Expression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "FunctionExpression" which is marked as @beta
-//
-// @public
+// @beta
 function ifNull(ifExpr: Expression, elseValue: unknown): FunctionExpression;
 
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "Expression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "FunctionExpression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "Expression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "FunctionExpression" which is marked as @beta
-//
-// @public
+// @beta
 function ifNull(ifFieldName: string, elseExpr: Expression): FunctionExpression;
 
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "FunctionExpression" which is marked as @beta
-// Warning: (ae-incompatible-release-tags) The symbol "ifNull" is marked as @public, but its signature references "FunctionExpression" which is marked as @beta
-//
-// @public
+// @beta
 function ifNull(ifFieldName: string, elseValue: unknown): FunctionExpression;
 
 // @beta
