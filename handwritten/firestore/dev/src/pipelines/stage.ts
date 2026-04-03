@@ -794,10 +794,10 @@ export type InternalSearchStageOptions = Omit<
   firestore.Pipelines.SearchStageOptions,
   'query' | 'sort' | 'select' | 'addFields'
 > & {
-  query: firestore.Pipelines.BooleanExpression;
-  sort?: Array<firestore.Pipelines.Ordering>;
-  select?: Record<string, firestore.Pipelines.Expression>;
-  addFields?: Record<string, firestore.Pipelines.Expression>;
+  query: BooleanExpression;
+  sort?: Array<Ordering>;
+  select?: Record<string, Expression>;
+  addFields?: Record<string, Expression>;
 };
 
 /**
@@ -807,6 +807,25 @@ export class Search implements Stage {
   name = 'search';
 
   constructor(private options: InternalSearchStageOptions) {}
+
+  _validateUserData(ignoreUndefinedProperties: boolean): void {
+    validateUserDataHelper(this.options.query, ignoreUndefinedProperties);
+    if (this.options.sort) {
+      validateUserDataHelper(this.options.sort, ignoreUndefinedProperties);
+    }
+    if (this.options.select) {
+      validateUserDataHelper(
+        Object.values(this.options.select) as Expression[],
+        ignoreUndefinedProperties,
+      );
+    }
+    if (this.options.addFields) {
+      validateUserDataHelper(
+        Object.values(this.options.addFields) as Expression[],
+        ignoreUndefinedProperties,
+      );
+    }
+  }
 
   readonly optionsUtil = new OptionsUtil({
     query: {
@@ -907,7 +926,7 @@ export class DeleteStage implements Stage {
     };
   }
 
-  _validateUserData(ignoreUndefinedProperties: boolean): void {}
+  _validateUserData(_: boolean): void {}
 }
 
 /**

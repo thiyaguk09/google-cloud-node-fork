@@ -192,20 +192,20 @@ describe.skipClassic('Pipeline class', () => {
   let beginDocCreation = 0;
   let endDocCreation = 0;
 
-  async function testCollectionWithDocs(
-    targetCol: CollectionReference,
-    docs: {
-      [id: string]: DocumentData;
-    },
-  ): Promise<CollectionReference<DocumentData>> {
-    beginDocCreation = new Date().valueOf();
-    for (const id in docs) {
-      const ref = targetCol.doc(id);
-      await ref.set(docs[id]);
-    }
-    endDocCreation = new Date().valueOf();
-    return targetCol;
+async function testCollectionWithDocs(
+  targetCol: CollectionReference,
+  docs: {
+    [id: string]: DocumentData;
+  },
+): Promise<CollectionReference<DocumentData>> {
+  beginDocCreation = new Date().valueOf();
+  for (const id in docs) {
+    const ref = targetCol.doc(id);
+    await ref.set(docs[id]);
   }
+  endDocCreation = new Date().valueOf();
+  return targetCol;
+}
 
   function expectResults(result: PipelineSnapshot, ...docs: string[]): void;
   function expectResults(
@@ -231,6 +231,7 @@ describe.skipClassic('Pipeline class', () => {
   }
 
   async function setupBookDocs(
+    targetCol: CollectionReference,
     targetCol: CollectionReference,
   ): Promise<CollectionReference<DocumentData>> {
     const bookDocs: {[id: string]: DocumentData} = {

@@ -1613,17 +1613,16 @@ export class Pipeline implements firestore.Pipelines.Pipeline {
    */
   search(options: firestore.Pipelines.SearchStageOptions): Pipeline {
     // Convert user land convenience types to internal types
-    const normalizedQuery: firestore.Pipelines.BooleanExpression = isExpr(
-      options.query,
-    )
-      ? options.query
+    const normalizedQuery: BooleanExpression = isExpr(options.query)
+      ? (options.query as BooleanExpression)
       : documentMatches(options.query);
     // const normalizedSelect: Record<string, Expression> | undefined =
     //   options.select ? selectablesToObject(options.select) : undefined;
     const normalizedAddFields: Record<string, Expression> | undefined =
       options.addFields ? selectablesToObject(options.addFields) : undefined;
-    const normalizedSort: firestore.Pipelines.Ordering[] | undefined =
-      isOrdering(options.sort) ? [options.sort] : options.sort;
+    const normalizedSort: Ordering[] | undefined = isOrdering(options.sort)
+      ? [options.sort as Ordering]
+      : (options.sort as Ordering[]);
 
     const internalOptions: InternalSearchStageOptions = {
       ...options,

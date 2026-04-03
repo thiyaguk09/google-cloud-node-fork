@@ -25,6 +25,7 @@ import field = Pipelines.field;
 import sum = Pipelines.sum;
 import descending = Pipelines.descending;
 import constant = Pipelines.constant;
+import documentMatches = Pipelines.documentMatches;
 import IValue = google.firestore.v1.IValue;
 
 const FIRST_CALL = 0;
@@ -355,5 +356,44 @@ describe('stage option serialization', () => {
         ]['stages'][testDefinition.stageIndex ?? 0]['options'],
       ).to.deep.equal(expectedOptions);
     });
+  });
+});
+
+describe('stage _validateUserData', () => {
+  it('search stage validation', async () => {
+    const firestore = await createInstance();
+
+    // Should throw when ignoreUndefinedProperties is false (default)
+    expect(() => {
+      void firestore
+        .pipeline()
+        .collection('foo')
+        .search({
+          query: documentMatches(undefined as unknown as string),
+        })
+        .execute();
+    }).to.throw(
+      'Value for argument "value" is not a valid constant value. Cannot use "undefined" as a Firestore value',
+    );
+
+    // Should not throw when ignoreUndefinedProperties is true
+    const spy = sinon.fake.returns(stream());
+    const firestoreWithIgnore = await createInstance(
+      {
+        executePipeline: spy,
+      },
+      {
+        ignoreUndefinedProperties: true,
+      },
+    );
+
+    await firestoreWithIgnore
+      .pipeline()
+      .collection('foo')
+      .search({
+        query: 'foo',
+        addFields: [constant({foo: undefined}).as('bar')],
+      })
+      .execute();
   });
 });
