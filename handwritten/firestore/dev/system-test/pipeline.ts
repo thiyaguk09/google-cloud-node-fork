@@ -196,14 +196,20 @@ async function testCollectionWithDocs(
   targetCol: CollectionReference,
   docs: {
     [id: string]: DocumentData;
+async function testCollectionWithDocs(
+  targetCol: CollectionReference,
+  docs: {
+    [id: string]: DocumentData;
   },
 ): Promise<CollectionReference<DocumentData>> {
   beginDocCreation = new Date().valueOf();
   for (const id in docs) {
     const ref = targetCol.doc(id);
+    const ref = targetCol.doc(id);
     await ref.set(docs[id]);
   }
   endDocCreation = new Date().valueOf();
+  return targetCol;
   return targetCol;
 }
 
@@ -231,7 +237,6 @@ async function testCollectionWithDocs(
   }
 
   async function setupBookDocs(
-    targetCol: CollectionReference,
     targetCol: CollectionReference,
   ): Promise<CollectionReference<DocumentData>> {
     const bookDocs: {[id: string]: DocumentData} = {
