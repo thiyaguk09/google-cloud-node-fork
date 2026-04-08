@@ -28,6 +28,7 @@ import {
 } from './pipeline-util';
 import {HasUserData, Serializer, validateUserInput} from '../serializer';
 import {cast} from '../util';
+import {Pipeline} from './pipelines';
 
 /**
  * Represents an expression that can be evaluated to a value within the execution of a `Pipeline`.
@@ -3070,6 +3071,22 @@ export abstract class Expression
       this,
       constant(type),
     ]).asBoolean();
+  }
+
+  /**
+   * Creates an expression that returns the value of a field from the document that results from the evaluation of this expression.
+   *
+   * @example
+   * ```typescript
+   * // Get the value of the "city" field in the "address" document.
+   * field("address").getField("city")
+   * ```
+   *
+   * @param key The field to access in the document.
+   * @returns A new `Expression` representing the value of the field in the document.
+   */
+  getField(key: string | Expression): Expression {
+    return new FunctionExpression('get_field', [this, valueToDefaultExpr(key)]);
   }
 
   // TODO(new-expression): Add new expression method definitions above this line
@@ -10236,6 +10253,184 @@ export function isType(
   type: string,
 ): BooleanExpression {
   return fieldOrExpression(fieldNameOrExpression).isType(type);
+}
+
+/**
+ * Creates an expression that gets a field from this map (object).
+ *
+ * @example
+ * ```typescript
+ * // Get the value of the "city" field in the "address" document.
+ * getField(field("address"), "city")
+ * ```
+ *
+ * @param expression The expression evaluating to the map from which the field will be extracted.
+ * @param key The field to access in the document.
+ * @returns A new `Expression` representing the value of the field in the document.
+ */
+export function getField(expression: Expression, key: string): Expression;
+/**
+ * Creates an expression that gets a field from this map (object).
+ *
+ * @example
+ * ```typescript
+ * // Get the value of the "city" field in the "address" document.
+ * getField(field("address"), "city")
+ * ```
+ *
+ * @param expression The expression evaluating to the map from which the field will be extracted.
+ * @param keyExpr The expression representing the key to access in the document.
+ * @returns A new `Expression` representing the value of the field in the document.
+ */
+export function getField(
+  expression: Expression,
+  keyExpr: Expression,
+): Expression;
+/**
+ * Creates an expression that returns the value of a field from the document with the given field name.
+ *
+ * @example
+ * ```typescript
+ * // Get the value of the "city" field in the "address" document.
+ * getField("address", "city")
+ * ```
+ *
+ * @param fieldName The name of the field containing the map/document.
+ * @param key The key to access.
+ * @returns A new `Expression` representing the value of the field in the document.
+ */
+export function getField(fieldName: string, key: string): Expression;
+/**
+ * Creates an expression that returns the value of a field from the document with the given field name.
+ *
+ * @example
+ * ```typescript
+ * // Get the value of the "city" field in the "address" document.
+ * getField("address", variable("addressField"))
+ * ```
+ *
+ * @param fieldName The name of the field containing the map/document.
+ * @param keyExpr The key expression to access.
+ * @returns A new `Expression` representing the value of the field in the document.
+ */
+export function getField(fieldName: string, keyExpr: Expression): Expression;
+export function getField(
+  fieldOrExpr: string | Expression,
+  keyOrExpr: string | Expression,
+): Expression {
+  return fieldOrExpression(fieldOrExpr).getField(keyOrExpr);
+}
+
+/**
+ * @internal
+ * Expression representing a variable reference. This evaluates to the value of a variable
+ * defined in a pipeline.
+ */
+export class VariableExpression extends Expression {
+  expressionType: firestore.Pipelines.ExpressionType = 'Variable';
+
+  /**
+   * @hideconstructor
+   */
+  constructor(private readonly name: string) {
+    super();
+  }
+
+  /**
+   * @internal
+   */
+  _toProto(_serializer: Serializer): api.IValue {
+    return {
+      variableReferenceValue: this.name,
+    };
+  }
+
+  /**
+   * @internal
+   */
+  _validateUserData(_ignoreUndefinedProperties: boolean): void {}
+}
+
+/**
+ * Creates an expression that retrieves the value of a variable bound via `define()`.
+ *
+ * @example
+ * ```typescript
+ * db.pipeline().collection("products")
+ *   .define(
+ *     field("price").multiply(0.9).as("discountedPrice"),
+ *     field("stock").add(10).as("newStock")
+ *   )
+ *   .where(variable("discountedPrice").lessThan(100))
+ *   .select(field("name"), variable("newStock"));
+ * ```
+ *
+ * @param name - The name of the variable to retrieve.
+ * @returns An `Expression` representing the variable's value.
+ */
+export function variable(name: string): Expression {
+  return new VariableExpression(name);
+}
+
+/**
+ * Creates an expression that represents the current document being processed.
+ *
+ * @example
+ * ```typescript
+ * // Define the current document as a variable "doc"
+ * firestore.pipeline().collection("books")
+ *     .define(currentDocument().as("doc"))
+ *     // Access a field from the defined document variable
+ *     .select(variable("doc").getField("title"));
+ * ```
+ *
+ * @returns An `Expression` representing the current document.
+ */
+export function currentDocument(): Expression {
+  return new FunctionExpression('current_document', []);
+}
+
+/**
+ * @internal
+ */
+class PipelineValueExpression extends Expression {
+  expressionType: firestore.Pipelines.ExpressionType = 'PipelineValue';
+
+  /**
+   * @hideconstructor
+   */
+  constructor(private readonly pipeline: firestore.Pipelines.Pipeline) {
+    super();
+  }
+
+  /**
+   * @internal
+   */
+  _toProto(serializer: Serializer): api.IValue {
+    return {
+      // Casting to bypass type checking becuase _validateUserData does not exist in the public types
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      pipelineValue: (this.pipeline as Pipeline)._toProto(serializer),
+    };
+  }
+
+  /**
+   * @internal
+   */
+  _validateUserData(_ignoreUndefinedProperties: boolean): void {
+    // Casting to bypass type checking becuase _validateUserData does not exist in the public types
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (this.pipeline as any)._validateUserData('PipelineValueExpression');
+  }
+}
+
+/**
+ * @internal
+ */
+export function pipelineValue(
+  pipeline: firestore.Pipelines.Pipeline,
+): Expression {
+  return new PipelineValueExpression(pipeline);
 }
 
 // TODO(new-expression): Add new top-level expression function definitions above this line

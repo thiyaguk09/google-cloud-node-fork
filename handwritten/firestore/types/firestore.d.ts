@@ -3197,7 +3197,9 @@ declare namespace FirebaseFirestore {
       | 'Function'
       | 'AggregateFunction'
       | 'ListOfExprs'
-      | 'AliasedExpression';
+      | 'AliasedExpression'
+      | 'Variable'
+      | 'PipelineValue';
     /**
      * Represents an expression that can be evaluated to a value within the execution of a {@link
      * Pipeline}.
@@ -4512,6 +4514,19 @@ declare namespace FirebaseFirestore {
        * @returns A new `Expression` representing the entries of the map.
        */
       mapEntries(): FunctionExpression;
+      /**
+       * Creates an expression that returns the value of a field from the document that results from the evaluation of this expression.
+       *
+       * @example
+       * ```typescript
+       * // Get the value of the "city" field in the "address" document.
+       * field("address").getField("city")
+       * ```
+       *
+       * @param key The field to access in the document.
+       * @returns A new `Expression` representing the value of the field in the document.
+       */
+      getField(key: string | Expression): Expression;
       /**
        * Creates an aggregation that counts the number of stage inputs with valid evaluations of the
        * expression or field.
@@ -9467,6 +9482,103 @@ declare namespace FirebaseFirestore {
     export function mapEntries(mapExpression: Expression): FunctionExpression;
 
     /**
+     * Creates an expression that gets a field from this map (object).
+     *
+     * @example
+     * ```typescript
+     * // Get the value of the "city" field in the "address" document.
+     * getField(field("address"), "city")
+     * ```
+     *
+     * @param expression The expression evaluating to the map from which the field will be extracted.
+     * @param key The field to access in the document.
+     * @returns A new `Expression` representing the value of the field in the document.
+     */
+    export function getField(expression: Expression, key: string): Expression;
+    /**
+     * Creates an expression that gets a field from this map (object).
+     *
+     * @example
+     * ```typescript
+     * // Get the value of the "city" field in the "address" document.
+     * getField("address", "city")
+     *
+     * @param expression The expression evaluating to the map from which the field will be extracted.
+     * @param keyExpr The expression representing the key to access in the document.
+     * @returns A new `Expression` representing the value of the field in the document.
+     */
+    export function getField(
+      expression: Expression,
+      keyExpr: Expression,
+    ): Expression;
+    /**
+     * Creates an expression that returns the value of a field from the document with the given field name.
+     *
+     * @example
+     * ```typescript
+     * // Get the value of the "city" field in the "address" document.
+     * getField("address", "city")
+     * ```
+     *
+     * @param fieldName The name of the field containing the map/document.
+     * @param key The key to access.
+     * @returns A new `Expression` representing the value of the field in the document.
+     */
+    export function getField(fieldName: string, key: string): Expression;
+    /**
+     * Creates an expression that returns the value of a field from the document with the given field name.
+     *
+     * @example
+     * ```typescript
+     * // Get the value of the "city" field in the "address" document.
+     * getField("address", variable("addressField"))
+     * ```
+     *
+     * @param fieldName The name of the field containing the map/document.
+     * @param keyExpr The key expression to access.
+     * @returns A new `Expression` representing the value of the field in the document.
+     */
+    export function getField(
+      fieldName: string,
+      keyExpr: Expression,
+    ): Expression;
+
+    /**
+     * Creates an expression that retrieves the value of a variable bound via `define()`.
+     *
+     * @example
+     * ```typescript
+     * db.pipeline().collection("products")
+     *   .define(
+     *     field("price").multiply(0.9).as("discountedPrice"),
+     *     field("stock").add(10).as("newStock")
+     *   )
+     *   .where(variable("discountedPrice").lessThan(100))
+     *   .select(field("name"), variable("newStock"));
+     * ```
+     *
+     * @param name - The name of the variable to retrieve.
+     * @returns An `Expression` representing the variable's value.
+     */
+    export function variable(name: string): Expression;
+
+    /**
+     * Creates an expression that represents the current document being processed.
+     *
+     * @example
+     * ```typescript
+     * // Define the current document as a variable "doc"
+     * firestore.pipeline().collection("books")
+     *     .define(currentDocument().as("doc"))
+     *     // Access a field from the defined document variable
+     *     .select(variable("doc").getField("title"));
+     * ```
+     *
+     * @returns An `Expression` representing the current document.
+     */
+    export function currentDocument(): Expression;
+
+    /**
      * Creates an aggregation that counts the total number of stage inputs.
      *
      * ```typescript
@@ -11559,6 +11671,24 @@ declare namespace FirebaseFirestore {
        */
       createFrom(query: Query): Pipeline;
     }
+
+    /**
+     * Creates a new Pipeline targeted at a subcollection relative to the current document context.
+     * This creates a pipeline without a database instance, suitable for embedding as a subquery.
+     * If executed directly, this pipeline will fail.
+     *
+     * @param path - The relative path to the subcollection.
+     * @returns A new `Pipeline` object configured to read from the specified subcollection.
+     */
+    export function subcollection(path: string): Pipeline;
+    /**
+     * Creates a new Pipeline targeted at a subcollection relative to the current document context.
+     *
+     * @param options - Options defining how this SubcollectionStage is evaluated.
+     * @returns A new `Pipeline` object configured to read from the specified subcollection.
+     */
+    export function subcollection(options: SubcollectionStageOptions): Pipeline;
+
     /**
      * The Pipeline class provides a flexible and expressive framework for building complex data
      * transformation and query pipelines for Firestore.
@@ -11700,6 +11830,196 @@ declare namespace FirebaseFirestore {
        * @returns A new `Pipeline` object with this stage appended to the stage list.
        */
       removeFields(options: RemoveFieldsStageOptions): Pipeline;
+
+      /**
+       * Binds one or more expressions to variable names within the pipeline's scope.
+       *
+       * The `define` stage establishes a variable environment for the pipeline. It assigns
+       * the provided expressions to specific aliases. These variables remain in scope for all
+       * subsequent stages (and any nested subqueries), where they can be referenced using the
+       * `variable()` function.
+       *
+       * This is primarily used to improve query ergonomics by preventing the duplication of
+       * complex expression trees, or to explicitly pass state from an outer pipeline into an
+       * inner subquery.
+       *
+       * @example
+       * ```typescript
+       * // Bind a mathematical expression to a variable to cleanly reference it multiple times.
+       * db.pipeline().collection("products")
+       *   .define(
+       *     field("price").multiply(0.8).as("discountedPrice")
+       *   )
+       *   .where(variable("discountedPrice").lessThan(50))
+       *   .select("name", variable("discountedPrice"));
+       * ```
+       *
+       * @param aliasedExpression - The first expression to bind to a variable.
+       * @param additionalExpressions - Optional additional expressions to bind to a variable.
+       * @returns A new Pipeline object with this stage appended to the stage list.
+       */
+      define(
+        aliasedExpression: AliasedExpression,
+        ...additionalExpressions: AliasedExpression[]
+      ): Pipeline;
+      /**
+       * Binds one or more expressions to variable names within the pipeline's scope.
+       *
+       * The `define` stage establishes a variable environment for the pipeline. It assigns
+       * the provided expressions to specific aliases. These variables remain in scope for all
+       * subsequent stages (and any nested subqueries), where they can be referenced using the
+       * `variable()` function.
+       *
+       * This is primarily used to improve query ergonomics by preventing the duplication of
+       * complex expression trees, or to explicitly pass state from an outer pipeline into an
+       * inner subquery.
+       *
+       * @example
+       * ```typescript
+       * // Bind a mathematical expression to a variable to cleanly reference it multiple times.
+       * db.pipeline().collection("products")
+       *   .define({
+       *     variables: [field("price").multiply(0.8).as("discountedPrice")]
+       *   })
+       *   .where(variable("discountedPrice").lessThan(50))
+       *   .select("name", variable("discountedPrice"));
+       * ```
+       *
+       * @param options - An object that specifies required and optional parameters for the stage.
+       * @returns A new Pipeline object with this stage appended to the stage list.
+       */
+      define(options: DefineStageOptions): Pipeline;
+
+      /**
+       * Converts this Pipeline into an expression that evaluates to an array of map (objects), where each result document of the pipeline is represented as a map in the returned array.
+       *
+       * <p>Result Unwrapping:</p>
+       * <ul>
+       *  <li>If the items have a single field, their values are unwrapped and returned directly in the array.</li>
+       *  <li>If the items have multiple fields, they are returned as objects in the array.</li>
+       * </ul>
+       *
+       * @example
+       * ```typescript
+       * // Get a list of reviewers for each book
+       * db.pipeline().collection("books")
+       *     .define(field("id").as("current_book_id"))
+       *     .addFields(
+       *         db.pipeline().collection("reviews")
+       *             .where(field("book_id").equal(variable("current_book_id")))
+       *             .select(field("reviewer"))
+       *             .toArrayExpression()
+       *             .as("reviewers");
+       *     )
+       * ```
+       *
+       * Output:
+       * ```json
+       * [
+       *   {
+       *     "id": "1",
+       *     "title": "1984",
+       *     "reviewers": ["Alice", "Bob"]
+       *   }
+       * ]
+       * ```
+       *
+       * Multiple Fields:
+       * ```typescript
+       * // Get a list of reviews (reviewer and rating) for each book
+       * db.pipeline().collection("books")
+       *     .define(field("id").as("book_id"))
+       *     .addFields(
+       *         db.pipeline().collection("reviews")
+       *             .where(field("book_id").equal(variable("book_id")))
+       *             .select(field("reviewer"), field("rating"))
+       *             .toArrayExpression()
+       *             .as("reviews"));
+       * ```
+       *
+       * Output:
+       * ```json
+       * [
+       *   {
+       *     "id": "1",
+       *     "title": "1984",
+       *     "reviews": [
+       *       { "reviewer": "Alice", "rating": 5 },
+       *       { "reviewer": "Bob", "rating": 4 }
+       *     ]
+       *   }
+       * ]
+       * ```
+       *
+       * @returns An `Expression` representing the execution of this pipeline.
+       */
+      toArrayExpression(): Expression;
+
+      /**
+       * Converts this Pipeline into an expression that evaluates to a single scalar result.
+       *
+       * <p><b>Runtime Validation:</b> The runtime validates that the result set contains zero or one item. If
+       * zero items, it evaluates to `null`.</p>
+       *
+       * <p>Result Unwrapping:</p>
+       * <ul>
+       *  <li>If the item has a single field, its value is unwrapped and returned directly.</li>
+       *  <li>If the item has multiple fields, they are returned as an object.</li>
+       * </ul>
+       *
+       * @example
+       * ```typescript
+       * // Calculate average rating for a restaurant
+       * db.pipeline().collection("restaurants")
+       *     .define(field("id").as("current_restaurant_id"))
+       *     .addFields(
+       *       db.pipeline().collection("reviews")
+       *         .where(field("restaurant_id").equal(variable("current_restaurant_id")))
+       *         .aggregate(average("rating").as("avg"))
+       *         // Unwraps the single "avg" field to a scalar double
+       *         .toScalarExpression().as("average_rating")
+       *    );
+       * ```
+       *
+       * Output:
+       * ```json
+       * {
+       *   "name": "The Burger Joint",
+       *   "average_rating": 4.5
+       * }
+       * ```
+       *
+       * Multiple Fields:
+       * ```typescript
+       * // Calculate average rating AND count for a restaurant
+       * db.pipeline().collection("restaurants")
+       *     .define(field("id").as("current_restaurant_id"))
+       *     .addFields(
+       *       db.pipeline().collection("reviews")
+       *         .where(field("restaurant_id").equal(variable("current_restaurant_id")))
+       *         .aggregate(
+       *           average("rating").as("avg"),
+       *           count().as("count")
+       *         )
+       *         // Returns an object with "avg" and "count" fields
+       *         .toScalarExpression().as("stats")
+       *    );
+       * ```
+       *
+       * Output:
+       * ```json
+       * {
+       *   "name": "The Burger Joint",
+       *   "stats": {
+       *     "avg": 4.5,
+       *     "count": 100
+       *   }
+       * }
+       * ```
+       *
+       * @returns An `Expression` representing the execution of this pipeline.
+       */
+      toScalarExpression(): Expression;
 
       /**
        * Selects or creates a set of fields from the outputs of previous stages.
@@ -12597,6 +12917,27 @@ declare namespace FirebaseFirestore {
        */
       forceIndex?: string;
     };
+
+    /**
+     * Options defining how a SubcollectionStage is evaluated.
+     */
+    export type SubcollectionStageOptions = StageOptions & {
+      /**
+       * The relative path to the subcollection.
+       */
+      path: string;
+    };
+
+    /**
+     * Options defining how a DefineStage is evaluated. See {@link Pipeline.define}.
+     */
+    export type DefineStageOptions = StageOptions & {
+      /**
+       * The variables to define.
+       */
+      variables: AliasedExpression[];
+    };
+
     /**
      * Options defining how a DatabaseStage is evaluated. See {@link PipelineSource.database}.
      */
