@@ -3453,10 +3453,22 @@ export class Field
   // }
 
   /**
+   * @beta
+   *
    * Evaluates to the distance in meters between the location specified
    * by this field and the query location.
    *
    * @remarks This Expression can only be used within a `Search` stage.
+   *
+   * @example
+   * ```typescript
+   * const geoDistanceToUser = field('location').geoDistance(new GeoPoint(39.7541, -105.0002));
+   *
+   * db.pipeline().collection('restaurants').search({
+   *   query: geoDistanceToUser.lessThanOrEqual(2000),
+   *   sort: geoDistanceToUser.ascending()
+   * })
+   * ```
    *
    * @param location - Compute distance to this GeoPoint.
    * @returns An `Expression` representing the geoDistance function.
@@ -10396,8 +10408,8 @@ export function documentMatches(
  *
  * Evaluates to the search score that reflects the topicality of the document
  * to all the text predicates (for example: `documentMatches`)
- * in the search query. If `SearchOptions.query` is not set or does not contain
- * any text predicates, then this score will always be `0`.
+ * in the search `query` provided to the `search` stage. If the `query` provided to the search stage
+ * is not set or does not contain any text predicates, then this score will always be `0`.
  *
  * @remarks This Expression can only be used within a `Search` stage.
  *
