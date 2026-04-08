@@ -770,9 +770,7 @@ describe.skipEnterprise('Tracing Tests', () => {
 
   function runTestCases() {
     it('document reference get()', async () => {
-      await runFirestoreOperationInRootSpan(() =>
-        randomCol.doc('bar').get(),
-      );
+      await runFirestoreOperationInRootSpan(() => randomCol.doc('bar').get());
       await waitForCompletedSpans(3);
       expectSpanHierarchy(
         SPAN_NAME_TEST_ROOT,
@@ -791,9 +789,7 @@ describe.skipEnterprise('Tracing Tests', () => {
     });
 
     it('document reference create()', async () => {
-      await runFirestoreOperationInRootSpan(() =>
-        randomCol.doc().create({}),
-      );
+      await runFirestoreOperationInRootSpan(() => randomCol.doc().create({}));
       await waitForCompletedSpans(3);
       expectSpanHierarchy(
         SPAN_NAME_TEST_ROOT,
@@ -874,9 +870,7 @@ describe.skipEnterprise('Tracing Tests', () => {
     });
 
     it('aggregate query get()', async () => {
-      await runFirestoreOperationInRootSpan(() =>
-        randomCol.count().get(),
-      );
+      await runFirestoreOperationInRootSpan(() => randomCol.count().get());
       await waitForCompletedSpans(2);
       expectSpanHierarchy(SPAN_NAME_TEST_ROOT, SPAN_NAME_AGGREGATION_QUERY_GET);
       expectSpanHasEvents(SPAN_NAME_AGGREGATION_QUERY_GET, [
@@ -887,9 +881,7 @@ describe.skipEnterprise('Tracing Tests', () => {
     });
 
     it('collection reference add()', async () => {
-      await runFirestoreOperationInRootSpan(() =>
-        randomCol.add({foo: 'bar'}),
-      );
+      await runFirestoreOperationInRootSpan(() => randomCol.add({foo: 'bar'}));
       await waitForCompletedSpans(4);
       expectSpanHierarchy(
         SPAN_NAME_TEST_ROOT,
@@ -905,9 +897,7 @@ describe.skipEnterprise('Tracing Tests', () => {
 
     // Enterprise: field mask is not supported
     it.skipEnterprise('collection reference list documents', async () => {
-      await runFirestoreOperationInRootSpan(() =>
-        randomCol.listDocuments(),
-      );
+      await runFirestoreOperationInRootSpan(() => randomCol.listDocuments());
       await waitForCompletedSpans(2);
       expectSpanHierarchy(
         SPAN_NAME_TEST_ROOT,
@@ -965,7 +955,9 @@ describe.skipEnterprise('Tracing Tests', () => {
           await transaction.get(docRef1);
           await transaction.getAll(docRef1, docRef2);
           await transaction.get(randomCol.limit(1));
-          await transaction.get(firestore.collection('nonexistent_' + autoId()).count());
+          await transaction.get(
+            firestore.collection('nonexistent_' + autoId()).count(),
+          );
           transaction.set(randomCol.doc(), {foo: 'bar'});
         });
       });
