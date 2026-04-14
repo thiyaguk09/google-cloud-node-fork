@@ -21,11 +21,11 @@ import * as assert from 'assert';
 import * as sinon from 'sinon';
 import {SinonStub} from 'sinon';
 import {describe, it} from 'mocha';
-import * as ruleserviceModule from '../src';
+import * as datatableserviceModule from '../src';
 
 import {PassThrough} from 'stream';
 
-import {protobuf, LROperation, operationsProtos} from 'google-gax';
+import {protobuf} from 'google-gax';
 
 // Dynamically loaded proto JSON is needed to get the type information
 // to fill in default values for request objects
@@ -52,22 +52,6 @@ function stubSimpleCall<ResponseType>(response?: ResponseType, error?: Error) {
 
 function stubSimpleCallWithCallback<ResponseType>(response?: ResponseType, error?: Error) {
     return error ? sinon.stub().callsArgWith(2, error) : sinon.stub().callsArgWith(2, null, response);
-}
-
-function stubLongRunningCall<ResponseType>(response?: ResponseType, callError?: Error, lroError?: Error) {
-    const innerStub = lroError ? sinon.stub().rejects(lroError) : sinon.stub().resolves([response]);
-    const mockOperation = {
-        promise: innerStub,
-    };
-    return callError ? sinon.stub().rejects(callError) : sinon.stub().resolves([mockOperation]);
-}
-
-function stubLongRunningCallWithCallback<ResponseType>(response?: ResponseType, callError?: Error, lroError?: Error) {
-    const innerStub = lroError ? sinon.stub().rejects(lroError) : sinon.stub().resolves([response]);
-    const mockOperation = {
-        promise: innerStub,
-    };
-    return callError ? sinon.stub().callsArgWith(2, callError) : sinon.stub().callsArgWith(2, null, mockOperation);
 }
 
 function stubPageStreamingCall<ResponseType>(responses?: ResponseType[], error?: Error) {
@@ -115,16 +99,16 @@ function stubAsyncIterationCall<ResponseType>(responses?: ResponseType[], error?
     return sinon.stub().returns(asyncIterable);
 }
 
-describe('v1.RuleServiceClient', () => {
+describe('v1.DataTableServiceClient', () => {
     describe('Common methods', () => {
         it('has apiEndpoint', () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient();
+            const client = new datatableserviceModule.v1.DataTableServiceClient();
             const apiEndpoint = client.apiEndpoint;
             assert.strictEqual(apiEndpoint, 'chronicle.googleapis.com');
         });
 
         it('has universeDomain', () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient();
+            const client = new datatableserviceModule.v1.DataTableServiceClient();
             const universeDomain = client.universeDomain;
             assert.strictEqual(universeDomain, "googleapis.com");
         });
@@ -132,7 +116,7 @@ describe('v1.RuleServiceClient', () => {
         if (typeof process === 'object' && typeof process.emitWarning === 'function') {
             it('throws DeprecationWarning if static servicePath is used', () => {
                 const stub = sinon.stub(process, 'emitWarning');
-                const servicePath = ruleserviceModule.v1.RuleServiceClient.servicePath;
+                const servicePath = datatableserviceModule.v1.DataTableServiceClient.servicePath;
                 assert.strictEqual(servicePath, 'chronicle.googleapis.com');
                 assert(stub.called);
                 stub.restore();
@@ -140,20 +124,20 @@ describe('v1.RuleServiceClient', () => {
 
             it('throws DeprecationWarning if static apiEndpoint is used', () => {
                 const stub = sinon.stub(process, 'emitWarning');
-                const apiEndpoint = ruleserviceModule.v1.RuleServiceClient.apiEndpoint;
+                const apiEndpoint = datatableserviceModule.v1.DataTableServiceClient.apiEndpoint;
                 assert.strictEqual(apiEndpoint, 'chronicle.googleapis.com');
                 assert(stub.called);
                 stub.restore();
             });
         }
         it('sets apiEndpoint according to universe domain camelCase', () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({universeDomain: 'example.com'});
+            const client = new datatableserviceModule.v1.DataTableServiceClient({universeDomain: 'example.com'});
             const servicePath = client.apiEndpoint;
             assert.strictEqual(servicePath, 'chronicle.example.com');
         });
 
         it('sets apiEndpoint according to universe domain snakeCase', () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({universe_domain: 'example.com'});
+            const client = new datatableserviceModule.v1.DataTableServiceClient({universe_domain: 'example.com'});
             const servicePath = client.apiEndpoint;
             assert.strictEqual(servicePath, 'chronicle.example.com');
         });
@@ -163,7 +147,7 @@ describe('v1.RuleServiceClient', () => {
                 it('sets apiEndpoint from environment variable', () => {
                     const saved = process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'];
                     process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'] = 'example.com';
-                    const client = new ruleserviceModule.v1.RuleServiceClient();
+                    const client = new datatableserviceModule.v1.DataTableServiceClient();
                     const servicePath = client.apiEndpoint;
                     assert.strictEqual(servicePath, 'chronicle.example.com');
                     if (saved) {
@@ -176,7 +160,7 @@ describe('v1.RuleServiceClient', () => {
                 it('value configured in code has priority over environment variable', () => {
                     const saved = process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'];
                     process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'] = 'example.com';
-                    const client = new ruleserviceModule.v1.RuleServiceClient({universeDomain: 'configured.example.com'});
+                    const client = new datatableserviceModule.v1.DataTableServiceClient({universeDomain: 'configured.example.com'});
                     const servicePath = client.apiEndpoint;
                     assert.strictEqual(servicePath, 'chronicle.configured.example.com');
                     if (saved) {
@@ -188,55 +172,55 @@ describe('v1.RuleServiceClient', () => {
             });
         }
         it('does not allow setting both universeDomain and universe_domain', () => {
-            assert.throws(() => { new ruleserviceModule.v1.RuleServiceClient({universe_domain: 'example.com', universeDomain: 'example.net'}); });
+            assert.throws(() => { new datatableserviceModule.v1.DataTableServiceClient({universe_domain: 'example.com', universeDomain: 'example.net'}); });
         });
 
         it('has port', () => {
-            const port = ruleserviceModule.v1.RuleServiceClient.port;
+            const port = datatableserviceModule.v1.DataTableServiceClient.port;
             assert(port);
             assert(typeof port === 'number');
         });
 
         it('should create a client with no option', () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient();
+            const client = new datatableserviceModule.v1.DataTableServiceClient();
             assert(client);
         });
 
         it('should create a client with gRPC fallback', () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 fallback: true,
             });
             assert(client);
         });
 
         it('has initialize method and supports deferred initialization', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
-            assert.strictEqual(client.ruleServiceStub, undefined);
+            assert.strictEqual(client.dataTableServiceStub, undefined);
             await client.initialize();
-            assert(client.ruleServiceStub);
+            assert(client.dataTableServiceStub);
         });
 
         it('has close method for the initialized client', done => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             client.initialize().catch(err => {throw err});
-            assert(client.ruleServiceStub);
+            assert(client.dataTableServiceStub);
             client.close().then(() => {
                 done();
             }).catch(err => {throw err});
         });
 
         it('has close method for the non-initialized client', done => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
-            assert.strictEqual(client.ruleServiceStub, undefined);
+            assert.strictEqual(client.dataTableServiceStub, undefined);
             client.close().then(() => {
                 done();
             }).catch(err => {throw err});
@@ -244,7 +228,7 @@ describe('v1.RuleServiceClient', () => {
 
         it('has getProjectId method', async () => {
             const fakeProjectId = 'fake-project-id';
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -256,7 +240,7 @@ describe('v1.RuleServiceClient', () => {
 
         it('has getProjectId method with callback', async () => {
             const fakeProjectId = 'fake-project-id';
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -275,55 +259,55 @@ describe('v1.RuleServiceClient', () => {
         });
     });
 
-    describe('createRule', () => {
-        it('invokes createRule without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+    describe('createDataTable', () => {
+        it('invokes createDataTable without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.CreateRuleRequest()
+              new protos.google.cloud.chronicle.v1.CreateDataTableRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateRuleRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateDataTableRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.Rule()
+              new protos.google.cloud.chronicle.v1.DataTable()
             );
-            client.innerApiCalls.createRule = stubSimpleCall(expectedResponse);
-            const [response] = await client.createRule(request);
+            client.innerApiCalls.createDataTable = stubSimpleCall(expectedResponse);
+            const [response] = await client.createDataTable(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.createRule as SinonStub)
+            const actualRequest = (client.innerApiCalls.createDataTable as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createRule as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createDataTable as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes createRule without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes createDataTable without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.CreateRuleRequest()
+              new protos.google.cloud.chronicle.v1.CreateDataTableRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateRuleRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateDataTableRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.Rule()
+              new protos.google.cloud.chronicle.v1.DataTable()
             );
-            client.innerApiCalls.createRule = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.createDataTable = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.createRule(
+                 client.createDataTable(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IRule|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IDataTable|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -333,105 +317,105 @@ describe('v1.RuleServiceClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.createRule as SinonStub)
+            const actualRequest = (client.innerApiCalls.createDataTable as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createRule as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createDataTable as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes createRule with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes createDataTable with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.CreateRuleRequest()
+              new protos.google.cloud.chronicle.v1.CreateDataTableRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateRuleRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateDataTableRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.createRule = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.createRule(request), expectedError);
-            const actualRequest = (client.innerApiCalls.createRule as SinonStub)
+            client.innerApiCalls.createDataTable = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.createDataTable(request), expectedError);
+            const actualRequest = (client.innerApiCalls.createDataTable as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createRule as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createDataTable as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes createRule with closed client', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes createDataTable with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.CreateRuleRequest()
+              new protos.google.cloud.chronicle.v1.CreateDataTableRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateRuleRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateDataTableRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedError = new Error('The client has already been closed.');
             client.close().catch(err => {throw err});
-            await assert.rejects(client.createRule(request), expectedError);
+            await assert.rejects(client.createDataTable(request), expectedError);
         });
     });
 
-    describe('getRule', () => {
-        it('invokes getRule without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+    describe('getDataTable', () => {
+        it('invokes getDataTable without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.GetRuleRequest()
+              new protos.google.cloud.chronicle.v1.GetDataTableRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.GetRuleRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.GetDataTableRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.Rule()
+              new protos.google.cloud.chronicle.v1.DataTable()
             );
-            client.innerApiCalls.getRule = stubSimpleCall(expectedResponse);
-            const [response] = await client.getRule(request);
+            client.innerApiCalls.getDataTable = stubSimpleCall(expectedResponse);
+            const [response] = await client.getDataTable(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getRule as SinonStub)
+            const actualRequest = (client.innerApiCalls.getDataTable as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getRule as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getDataTable as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getRule without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes getDataTable without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.GetRuleRequest()
+              new protos.google.cloud.chronicle.v1.GetDataTableRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.GetRuleRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.GetDataTableRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.Rule()
+              new protos.google.cloud.chronicle.v1.DataTable()
             );
-            client.innerApiCalls.getRule = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.getDataTable = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.getRule(
+                 client.getDataTable(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IRule|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IDataTable|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -441,107 +425,107 @@ describe('v1.RuleServiceClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getRule as SinonStub)
+            const actualRequest = (client.innerApiCalls.getDataTable as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getRule as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getDataTable as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getRule with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes getDataTable with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.GetRuleRequest()
+              new protos.google.cloud.chronicle.v1.GetDataTableRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.GetRuleRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.GetDataTableRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.getRule = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.getRule(request), expectedError);
-            const actualRequest = (client.innerApiCalls.getRule as SinonStub)
+            client.innerApiCalls.getDataTable = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.getDataTable(request), expectedError);
+            const actualRequest = (client.innerApiCalls.getDataTable as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getRule as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getDataTable as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getRule with closed client', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes getDataTable with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.GetRuleRequest()
+              new protos.google.cloud.chronicle.v1.GetDataTableRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.GetRuleRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.GetDataTableRequest', ['name']);
             request.name = defaultValue1;
             const expectedError = new Error('The client has already been closed.');
             client.close().catch(err => {throw err});
-            await assert.rejects(client.getRule(request), expectedError);
+            await assert.rejects(client.getDataTable(request), expectedError);
         });
     });
 
-    describe('updateRule', () => {
-        it('invokes updateRule without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+    describe('updateDataTable', () => {
+        it('invokes updateDataTable without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.UpdateRuleRequest()
+              new protos.google.cloud.chronicle.v1.UpdateDataTableRequest()
             );
-            request.rule ??= {};
+            request.dataTable ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateRuleRequest', ['rule', 'name']);
-            request.rule.name = defaultValue1;
-            const expectedHeaderRequestParams = `rule.name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateDataTableRequest', ['dataTable', 'name']);
+            request.dataTable.name = defaultValue1;
+            const expectedHeaderRequestParams = `data_table.name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.Rule()
+              new protos.google.cloud.chronicle.v1.DataTable()
             );
-            client.innerApiCalls.updateRule = stubSimpleCall(expectedResponse);
-            const [response] = await client.updateRule(request);
+            client.innerApiCalls.updateDataTable = stubSimpleCall(expectedResponse);
+            const [response] = await client.updateDataTable(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.updateRule as SinonStub)
+            const actualRequest = (client.innerApiCalls.updateDataTable as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.updateRule as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.updateDataTable as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes updateRule without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes updateDataTable without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.UpdateRuleRequest()
+              new protos.google.cloud.chronicle.v1.UpdateDataTableRequest()
             );
-            request.rule ??= {};
+            request.dataTable ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateRuleRequest', ['rule', 'name']);
-            request.rule.name = defaultValue1;
-            const expectedHeaderRequestParams = `rule.name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateDataTableRequest', ['dataTable', 'name']);
+            request.dataTable.name = defaultValue1;
+            const expectedHeaderRequestParams = `data_table.name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.Rule()
+              new protos.google.cloud.chronicle.v1.DataTable()
             );
-            client.innerApiCalls.updateRule = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.updateDataTable = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.updateRule(
+                 client.updateDataTable(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IRule|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IDataTable|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -551,105 +535,105 @@ describe('v1.RuleServiceClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.updateRule as SinonStub)
+            const actualRequest = (client.innerApiCalls.updateDataTable as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.updateRule as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.updateDataTable as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes updateRule with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes updateDataTable with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.UpdateRuleRequest()
+              new protos.google.cloud.chronicle.v1.UpdateDataTableRequest()
             );
-            request.rule ??= {};
+            request.dataTable ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateRuleRequest', ['rule', 'name']);
-            request.rule.name = defaultValue1;
-            const expectedHeaderRequestParams = `rule.name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateDataTableRequest', ['dataTable', 'name']);
+            request.dataTable.name = defaultValue1;
+            const expectedHeaderRequestParams = `data_table.name=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.updateRule = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.updateRule(request), expectedError);
-            const actualRequest = (client.innerApiCalls.updateRule as SinonStub)
+            client.innerApiCalls.updateDataTable = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.updateDataTable(request), expectedError);
+            const actualRequest = (client.innerApiCalls.updateDataTable as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.updateRule as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.updateDataTable as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes updateRule with closed client', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes updateDataTable with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.UpdateRuleRequest()
+              new protos.google.cloud.chronicle.v1.UpdateDataTableRequest()
             );
-            request.rule ??= {};
+            request.dataTable ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateRuleRequest', ['rule', 'name']);
-            request.rule.name = defaultValue1;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateDataTableRequest', ['dataTable', 'name']);
+            request.dataTable.name = defaultValue1;
             const expectedError = new Error('The client has already been closed.');
             client.close().catch(err => {throw err});
-            await assert.rejects(client.updateRule(request), expectedError);
+            await assert.rejects(client.updateDataTable(request), expectedError);
         });
     });
 
-    describe('deleteRule', () => {
-        it('invokes deleteRule without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+    describe('deleteDataTable', () => {
+        it('invokes deleteDataTable without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.DeleteRuleRequest()
+              new protos.google.cloud.chronicle.v1.DeleteDataTableRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.DeleteRuleRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.DeleteDataTableRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
               new protos.google.protobuf.Empty()
             );
-            client.innerApiCalls.deleteRule = stubSimpleCall(expectedResponse);
-            const [response] = await client.deleteRule(request);
+            client.innerApiCalls.deleteDataTable = stubSimpleCall(expectedResponse);
+            const [response] = await client.deleteDataTable(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.deleteRule as SinonStub)
+            const actualRequest = (client.innerApiCalls.deleteDataTable as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.deleteRule as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.deleteDataTable as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes deleteRule without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes deleteDataTable without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.DeleteRuleRequest()
+              new protos.google.cloud.chronicle.v1.DeleteDataTableRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.DeleteRuleRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.DeleteDataTableRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
               new protos.google.protobuf.Empty()
             );
-            client.innerApiCalls.deleteRule = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.deleteDataTable = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.deleteRule(
+                 client.deleteDataTable(
                     request,
                     (err?: Error|null, result?: protos.google.protobuf.IEmpty|null) => {
                         if (err) {
@@ -661,105 +645,105 @@ describe('v1.RuleServiceClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.deleteRule as SinonStub)
+            const actualRequest = (client.innerApiCalls.deleteDataTable as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.deleteRule as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.deleteDataTable as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes deleteRule with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes deleteDataTable with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.DeleteRuleRequest()
+              new protos.google.cloud.chronicle.v1.DeleteDataTableRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.DeleteRuleRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.DeleteDataTableRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.deleteRule = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.deleteRule(request), expectedError);
-            const actualRequest = (client.innerApiCalls.deleteRule as SinonStub)
+            client.innerApiCalls.deleteDataTable = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.deleteDataTable(request), expectedError);
+            const actualRequest = (client.innerApiCalls.deleteDataTable as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.deleteRule as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.deleteDataTable as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes deleteRule with closed client', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes deleteDataTable with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.DeleteRuleRequest()
+              new protos.google.cloud.chronicle.v1.DeleteDataTableRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.DeleteRuleRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.DeleteDataTableRequest', ['name']);
             request.name = defaultValue1;
             const expectedError = new Error('The client has already been closed.');
             client.close().catch(err => {throw err});
-            await assert.rejects(client.deleteRule(request), expectedError);
+            await assert.rejects(client.deleteDataTable(request), expectedError);
         });
     });
 
-    describe('getRetrohunt', () => {
-        it('invokes getRetrohunt without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+    describe('createDataTableRow', () => {
+        it('invokes createDataTableRow without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.GetRetrohuntRequest()
+              new protos.google.cloud.chronicle.v1.CreateDataTableRowRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.GetRetrohuntRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateDataTableRowRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.Retrohunt()
+              new protos.google.cloud.chronicle.v1.DataTableRow()
             );
-            client.innerApiCalls.getRetrohunt = stubSimpleCall(expectedResponse);
-            const [response] = await client.getRetrohunt(request);
+            client.innerApiCalls.createDataTableRow = stubSimpleCall(expectedResponse);
+            const [response] = await client.createDataTableRow(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getRetrohunt as SinonStub)
+            const actualRequest = (client.innerApiCalls.createDataTableRow as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getRetrohunt as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createDataTableRow as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getRetrohunt without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes createDataTableRow without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.GetRetrohuntRequest()
+              new protos.google.cloud.chronicle.v1.CreateDataTableRowRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.GetRetrohuntRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateDataTableRowRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.Retrohunt()
+              new protos.google.cloud.chronicle.v1.DataTableRow()
             );
-            client.innerApiCalls.getRetrohunt = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.createDataTableRow = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.getRetrohunt(
+                 client.createDataTableRow(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IRetrohunt|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IDataTableRow|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -769,105 +753,107 @@ describe('v1.RuleServiceClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getRetrohunt as SinonStub)
+            const actualRequest = (client.innerApiCalls.createDataTableRow as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getRetrohunt as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createDataTableRow as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getRetrohunt with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes createDataTableRow with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.GetRetrohuntRequest()
+              new protos.google.cloud.chronicle.v1.CreateDataTableRowRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.GetRetrohuntRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateDataTableRowRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.getRetrohunt = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.getRetrohunt(request), expectedError);
-            const actualRequest = (client.innerApiCalls.getRetrohunt as SinonStub)
+            client.innerApiCalls.createDataTableRow = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.createDataTableRow(request), expectedError);
+            const actualRequest = (client.innerApiCalls.createDataTableRow as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getRetrohunt as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createDataTableRow as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getRetrohunt with closed client', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes createDataTableRow with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.GetRetrohuntRequest()
+              new protos.google.cloud.chronicle.v1.CreateDataTableRowRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.GetRetrohuntRequest', ['name']);
-            request.name = defaultValue1;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateDataTableRowRequest', ['parent']);
+            request.parent = defaultValue1;
             const expectedError = new Error('The client has already been closed.');
             client.close().catch(err => {throw err});
-            await assert.rejects(client.getRetrohunt(request), expectedError);
+            await assert.rejects(client.createDataTableRow(request), expectedError);
         });
     });
 
-    describe('getRuleDeployment', () => {
-        it('invokes getRuleDeployment without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+    describe('updateDataTableRow', () => {
+        it('invokes updateDataTableRow without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.GetRuleDeploymentRequest()
+              new protos.google.cloud.chronicle.v1.UpdateDataTableRowRequest()
             );
+            request.dataTableRow ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.GetRuleDeploymentRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateDataTableRowRequest', ['dataTableRow', 'name']);
+            request.dataTableRow.name = defaultValue1;
+            const expectedHeaderRequestParams = `data_table_row.name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.RuleDeployment()
+              new protos.google.cloud.chronicle.v1.DataTableRow()
             );
-            client.innerApiCalls.getRuleDeployment = stubSimpleCall(expectedResponse);
-            const [response] = await client.getRuleDeployment(request);
+            client.innerApiCalls.updateDataTableRow = stubSimpleCall(expectedResponse);
+            const [response] = await client.updateDataTableRow(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getRuleDeployment as SinonStub)
+            const actualRequest = (client.innerApiCalls.updateDataTableRow as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getRuleDeployment as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.updateDataTableRow as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getRuleDeployment without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes updateDataTableRow without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.GetRuleDeploymentRequest()
+              new protos.google.cloud.chronicle.v1.UpdateDataTableRowRequest()
             );
+            request.dataTableRow ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.GetRuleDeploymentRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateDataTableRowRequest', ['dataTableRow', 'name']);
+            request.dataTableRow.name = defaultValue1;
+            const expectedHeaderRequestParams = `data_table_row.name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.RuleDeployment()
+              new protos.google.cloud.chronicle.v1.DataTableRow()
             );
-            client.innerApiCalls.getRuleDeployment = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.updateDataTableRow = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.getRuleDeployment(
+                 client.updateDataTableRow(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IRuleDeployment|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IDataTableRow|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -877,107 +863,107 @@ describe('v1.RuleServiceClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getRuleDeployment as SinonStub)
+            const actualRequest = (client.innerApiCalls.updateDataTableRow as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getRuleDeployment as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.updateDataTableRow as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getRuleDeployment with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes updateDataTableRow with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.GetRuleDeploymentRequest()
+              new protos.google.cloud.chronicle.v1.UpdateDataTableRowRequest()
             );
+            request.dataTableRow ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.GetRuleDeploymentRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateDataTableRowRequest', ['dataTableRow', 'name']);
+            request.dataTableRow.name = defaultValue1;
+            const expectedHeaderRequestParams = `data_table_row.name=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.getRuleDeployment = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.getRuleDeployment(request), expectedError);
-            const actualRequest = (client.innerApiCalls.getRuleDeployment as SinonStub)
+            client.innerApiCalls.updateDataTableRow = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.updateDataTableRow(request), expectedError);
+            const actualRequest = (client.innerApiCalls.updateDataTableRow as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getRuleDeployment as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.updateDataTableRow as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getRuleDeployment with closed client', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes updateDataTableRow with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.GetRuleDeploymentRequest()
+              new protos.google.cloud.chronicle.v1.UpdateDataTableRowRequest()
             );
+            request.dataTableRow ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.GetRuleDeploymentRequest', ['name']);
-            request.name = defaultValue1;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateDataTableRowRequest', ['dataTableRow', 'name']);
+            request.dataTableRow.name = defaultValue1;
             const expectedError = new Error('The client has already been closed.');
             client.close().catch(err => {throw err});
-            await assert.rejects(client.getRuleDeployment(request), expectedError);
+            await assert.rejects(client.updateDataTableRow(request), expectedError);
         });
     });
 
-    describe('updateRuleDeployment', () => {
-        it('invokes updateRuleDeployment without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+    describe('getDataTableRow', () => {
+        it('invokes getDataTableRow without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.UpdateRuleDeploymentRequest()
+              new protos.google.cloud.chronicle.v1.GetDataTableRowRequest()
             );
-            request.ruleDeployment ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateRuleDeploymentRequest', ['ruleDeployment', 'name']);
-            request.ruleDeployment.name = defaultValue1;
-            const expectedHeaderRequestParams = `rule_deployment.name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.GetDataTableRowRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.RuleDeployment()
+              new protos.google.cloud.chronicle.v1.DataTableRow()
             );
-            client.innerApiCalls.updateRuleDeployment = stubSimpleCall(expectedResponse);
-            const [response] = await client.updateRuleDeployment(request);
+            client.innerApiCalls.getDataTableRow = stubSimpleCall(expectedResponse);
+            const [response] = await client.getDataTableRow(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.updateRuleDeployment as SinonStub)
+            const actualRequest = (client.innerApiCalls.getDataTableRow as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.updateRuleDeployment as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getDataTableRow as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes updateRuleDeployment without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes getDataTableRow without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.UpdateRuleDeploymentRequest()
+              new protos.google.cloud.chronicle.v1.GetDataTableRowRequest()
             );
-            request.ruleDeployment ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateRuleDeploymentRequest', ['ruleDeployment', 'name']);
-            request.ruleDeployment.name = defaultValue1;
-            const expectedHeaderRequestParams = `rule_deployment.name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.GetDataTableRowRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.RuleDeployment()
+              new protos.google.cloud.chronicle.v1.DataTableRow()
             );
-            client.innerApiCalls.updateRuleDeployment = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.getDataTableRow = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.updateRuleDeployment(
+                 client.getDataTableRow(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IRuleDeployment|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IDataTableRow|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -987,110 +973,105 @@ describe('v1.RuleServiceClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.updateRuleDeployment as SinonStub)
+            const actualRequest = (client.innerApiCalls.getDataTableRow as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.updateRuleDeployment as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getDataTableRow as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes updateRuleDeployment with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes getDataTableRow with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.UpdateRuleDeploymentRequest()
+              new protos.google.cloud.chronicle.v1.GetDataTableRowRequest()
             );
-            request.ruleDeployment ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateRuleDeploymentRequest', ['ruleDeployment', 'name']);
-            request.ruleDeployment.name = defaultValue1;
-            const expectedHeaderRequestParams = `rule_deployment.name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.GetDataTableRowRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.updateRuleDeployment = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.updateRuleDeployment(request), expectedError);
-            const actualRequest = (client.innerApiCalls.updateRuleDeployment as SinonStub)
+            client.innerApiCalls.getDataTableRow = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.getDataTableRow(request), expectedError);
+            const actualRequest = (client.innerApiCalls.getDataTableRow as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.updateRuleDeployment as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getDataTableRow as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes updateRuleDeployment with closed client', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes getDataTableRow with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.UpdateRuleDeploymentRequest()
+              new protos.google.cloud.chronicle.v1.GetDataTableRowRequest()
             );
-            request.ruleDeployment ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.UpdateRuleDeploymentRequest', ['ruleDeployment', 'name']);
-            request.ruleDeployment.name = defaultValue1;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.GetDataTableRowRequest', ['name']);
+            request.name = defaultValue1;
             const expectedError = new Error('The client has already been closed.');
             client.close().catch(err => {throw err});
-            await assert.rejects(client.updateRuleDeployment(request), expectedError);
+            await assert.rejects(client.getDataTableRow(request), expectedError);
         });
     });
 
-    describe('createRetrohunt', () => {
-        it('invokes createRetrohunt without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+    describe('deleteDataTableRow', () => {
+        it('invokes deleteDataTableRow without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.CreateRetrohuntRequest()
+              new protos.google.cloud.chronicle.v1.DeleteDataTableRowRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateRetrohuntRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.DeleteDataTableRowRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.longrunning.Operation()
+              new protos.google.protobuf.Empty()
             );
-            client.innerApiCalls.createRetrohunt = stubLongRunningCall(expectedResponse);
-            const [operation] = await client.createRetrohunt(request);
-            const [response] = await operation.promise();
+            client.innerApiCalls.deleteDataTableRow = stubSimpleCall(expectedResponse);
+            const [response] = await client.deleteDataTableRow(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.createRetrohunt as SinonStub)
+            const actualRequest = (client.innerApiCalls.deleteDataTableRow as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createRetrohunt as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.deleteDataTableRow as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes createRetrohunt without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes deleteDataTableRow without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.CreateRetrohuntRequest()
+              new protos.google.cloud.chronicle.v1.DeleteDataTableRowRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateRetrohuntRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.DeleteDataTableRowRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.longrunning.Operation()
+              new protos.google.protobuf.Empty()
             );
-            client.innerApiCalls.createRetrohunt = stubLongRunningCallWithCallback(expectedResponse);
+            client.innerApiCalls.deleteDataTableRow = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.createRetrohunt(
+                 client.deleteDataTableRow(
                     request,
-                    (err?: Error|null,
-                     result?: LROperation<protos.google.cloud.chronicle.v1.IRetrohunt, protos.google.cloud.chronicle.v1.IRetrohuntMetadata>|null
-                    ) => {
+                    (err?: Error|null, result?: protos.google.protobuf.IEmpty|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -1098,152 +1079,649 @@ describe('v1.RuleServiceClient', () => {
                         }
                     });
             });
-            const operation = await promise as LROperation<protos.google.cloud.chronicle.v1.IRetrohunt, protos.google.cloud.chronicle.v1.IRetrohuntMetadata>;
-            const [response] = await operation.promise();
+            const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.createRetrohunt as SinonStub)
+            const actualRequest = (client.innerApiCalls.deleteDataTableRow as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createRetrohunt as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.deleteDataTableRow as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes createRetrohunt with call error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes deleteDataTableRow with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.CreateRetrohuntRequest()
+              new protos.google.cloud.chronicle.v1.DeleteDataTableRowRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateRetrohuntRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.DeleteDataTableRowRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.createRetrohunt = stubLongRunningCall(undefined, expectedError);
-            await assert.rejects(client.createRetrohunt(request), expectedError);
-            const actualRequest = (client.innerApiCalls.createRetrohunt as SinonStub)
+            client.innerApiCalls.deleteDataTableRow = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.deleteDataTableRow(request), expectedError);
+            const actualRequest = (client.innerApiCalls.deleteDataTableRow as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createRetrohunt as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.deleteDataTableRow as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes createRetrohunt with LRO error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes deleteDataTableRow with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.CreateRetrohuntRequest()
+              new protos.google.cloud.chronicle.v1.DeleteDataTableRowRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.CreateRetrohuntRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedError = new Error('expected');
-            client.innerApiCalls.createRetrohunt = stubLongRunningCall(undefined, undefined, expectedError);
-            const [operation] = await client.createRetrohunt(request);
-            await assert.rejects(operation.promise(), expectedError);
-            const actualRequest = (client.innerApiCalls.createRetrohunt as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createRetrohunt as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes checkCreateRetrohuntProgress without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const expectedResponse = generateSampleMessage(
-              new operationsProtos.google.longrunning.Operation()
-            );
-            expectedResponse.name = 'test';
-            expectedResponse.response = {type_url: 'url', value: Buffer.from('')};
-            expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')}
-
-            client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
-            const decodedOperation = await client.checkCreateRetrohuntProgress(expectedResponse.name);
-            assert.deepStrictEqual(decodedOperation.name, expectedResponse.name);
-            assert(decodedOperation.metadata);
-            assert((client.operationsClient.getOperation as SinonStub).getCall(0));
-        });
-
-        it('invokes checkCreateRetrohuntProgress with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const expectedError = new Error('expected');
-
-            client.operationsClient.getOperation = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.checkCreateRetrohuntProgress(''), expectedError);
-            assert((client.operationsClient.getOperation as SinonStub)
-                .getCall(0));
+              getTypeDefaultValue('.google.cloud.chronicle.v1.DeleteDataTableRowRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedError = new Error('The client has already been closed.');
+            client.close().catch(err => {throw err});
+            await assert.rejects(client.deleteDataTableRow(request), expectedError);
         });
     });
 
-    describe('listRules', () => {
-        it('invokes listRules without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+    describe('bulkCreateDataTableRows', () => {
+        it('invokes bulkCreateDataTableRows without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkCreateDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkCreateDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkCreateDataTableRowsResponse()
+            );
+            client.innerApiCalls.bulkCreateDataTableRows = stubSimpleCall(expectedResponse);
+            const [response] = await client.bulkCreateDataTableRows(request);
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.bulkCreateDataTableRows as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.bulkCreateDataTableRows as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes bulkCreateDataTableRows without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkCreateDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkCreateDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkCreateDataTableRowsResponse()
+            );
+            client.innerApiCalls.bulkCreateDataTableRows = stubSimpleCallWithCallback(expectedResponse);
+            const promise = new Promise((resolve, reject) => {
+                 client.bulkCreateDataTableRows(
+                    request,
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsResponse|null) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+            });
+            const response = await promise;
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.bulkCreateDataTableRows as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.bulkCreateDataTableRows as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes bulkCreateDataTableRows with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkCreateDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkCreateDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.innerApiCalls.bulkCreateDataTableRows = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.bulkCreateDataTableRows(request), expectedError);
+            const actualRequest = (client.innerApiCalls.bulkCreateDataTableRows as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.bulkCreateDataTableRows as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes bulkCreateDataTableRows with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkCreateDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkCreateDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedError = new Error('The client has already been closed.');
+            client.close().catch(err => {throw err});
+            await assert.rejects(client.bulkCreateDataTableRows(request), expectedError);
+        });
+    });
+
+    describe('bulkGetDataTableRows', () => {
+        it('invokes bulkGetDataTableRows without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkGetDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkGetDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkGetDataTableRowsResponse()
+            );
+            client.innerApiCalls.bulkGetDataTableRows = stubSimpleCall(expectedResponse);
+            const [response] = await client.bulkGetDataTableRows(request);
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.bulkGetDataTableRows as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.bulkGetDataTableRows as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes bulkGetDataTableRows without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkGetDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkGetDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkGetDataTableRowsResponse()
+            );
+            client.innerApiCalls.bulkGetDataTableRows = stubSimpleCallWithCallback(expectedResponse);
+            const promise = new Promise((resolve, reject) => {
+                 client.bulkGetDataTableRows(
+                    request,
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsResponse|null) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+            });
+            const response = await promise;
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.bulkGetDataTableRows as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.bulkGetDataTableRows as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes bulkGetDataTableRows with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkGetDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkGetDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.innerApiCalls.bulkGetDataTableRows = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.bulkGetDataTableRows(request), expectedError);
+            const actualRequest = (client.innerApiCalls.bulkGetDataTableRows as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.bulkGetDataTableRows as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes bulkGetDataTableRows with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkGetDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkGetDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedError = new Error('The client has already been closed.');
+            client.close().catch(err => {throw err});
+            await assert.rejects(client.bulkGetDataTableRows(request), expectedError);
+        });
+    });
+
+    describe('bulkReplaceDataTableRows', () => {
+        it('invokes bulkReplaceDataTableRows without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkReplaceDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkReplaceDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkReplaceDataTableRowsResponse()
+            );
+            client.innerApiCalls.bulkReplaceDataTableRows = stubSimpleCall(expectedResponse);
+            const [response] = await client.bulkReplaceDataTableRows(request);
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.bulkReplaceDataTableRows as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.bulkReplaceDataTableRows as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes bulkReplaceDataTableRows without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkReplaceDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkReplaceDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkReplaceDataTableRowsResponse()
+            );
+            client.innerApiCalls.bulkReplaceDataTableRows = stubSimpleCallWithCallback(expectedResponse);
+            const promise = new Promise((resolve, reject) => {
+                 client.bulkReplaceDataTableRows(
+                    request,
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsResponse|null) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+            });
+            const response = await promise;
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.bulkReplaceDataTableRows as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.bulkReplaceDataTableRows as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes bulkReplaceDataTableRows with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkReplaceDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkReplaceDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.innerApiCalls.bulkReplaceDataTableRows = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.bulkReplaceDataTableRows(request), expectedError);
+            const actualRequest = (client.innerApiCalls.bulkReplaceDataTableRows as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.bulkReplaceDataTableRows as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes bulkReplaceDataTableRows with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkReplaceDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkReplaceDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedError = new Error('The client has already been closed.');
+            client.close().catch(err => {throw err});
+            await assert.rejects(client.bulkReplaceDataTableRows(request), expectedError);
+        });
+    });
+
+    describe('bulkUpdateDataTableRows', () => {
+        it('invokes bulkUpdateDataTableRows without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkUpdateDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkUpdateDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkUpdateDataTableRowsResponse()
+            );
+            client.innerApiCalls.bulkUpdateDataTableRows = stubSimpleCall(expectedResponse);
+            const [response] = await client.bulkUpdateDataTableRows(request);
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.bulkUpdateDataTableRows as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.bulkUpdateDataTableRows as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes bulkUpdateDataTableRows without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkUpdateDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkUpdateDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkUpdateDataTableRowsResponse()
+            );
+            client.innerApiCalls.bulkUpdateDataTableRows = stubSimpleCallWithCallback(expectedResponse);
+            const promise = new Promise((resolve, reject) => {
+                 client.bulkUpdateDataTableRows(
+                    request,
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsResponse|null) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+            });
+            const response = await promise;
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.bulkUpdateDataTableRows as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.bulkUpdateDataTableRows as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes bulkUpdateDataTableRows with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkUpdateDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkUpdateDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.innerApiCalls.bulkUpdateDataTableRows = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.bulkUpdateDataTableRows(request), expectedError);
+            const actualRequest = (client.innerApiCalls.bulkUpdateDataTableRows as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.bulkUpdateDataTableRows as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes bulkUpdateDataTableRows with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.BulkUpdateDataTableRowsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.BulkUpdateDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedError = new Error('The client has already been closed.');
+            client.close().catch(err => {throw err});
+            await assert.rejects(client.bulkUpdateDataTableRows(request), expectedError);
+        });
+    });
+
+    describe('getDataTableOperationErrors', () => {
+        it('invokes getDataTableOperationErrors without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.GetDataTableOperationErrorsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.GetDataTableOperationErrorsRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.DataTableOperationErrors()
+            );
+            client.innerApiCalls.getDataTableOperationErrors = stubSimpleCall(expectedResponse);
+            const [response] = await client.getDataTableOperationErrors(request);
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.getDataTableOperationErrors as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.getDataTableOperationErrors as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes getDataTableOperationErrors without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.GetDataTableOperationErrorsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.GetDataTableOperationErrorsRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.DataTableOperationErrors()
+            );
+            client.innerApiCalls.getDataTableOperationErrors = stubSimpleCallWithCallback(expectedResponse);
+            const promise = new Promise((resolve, reject) => {
+                 client.getDataTableOperationErrors(
+                    request,
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IDataTableOperationErrors|null) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+            });
+            const response = await promise;
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.getDataTableOperationErrors as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.getDataTableOperationErrors as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes getDataTableOperationErrors with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.GetDataTableOperationErrorsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.GetDataTableOperationErrorsRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.innerApiCalls.getDataTableOperationErrors = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.getDataTableOperationErrors(request), expectedError);
+            const actualRequest = (client.innerApiCalls.getDataTableOperationErrors as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.getDataTableOperationErrors as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes getDataTableOperationErrors with closed client', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.chronicle.v1.GetDataTableOperationErrorsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.chronicle.v1.GetDataTableOperationErrorsRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedError = new Error('The client has already been closed.');
+            client.close().catch(err => {throw err});
+            await assert.rejects(client.getDataTableOperationErrors(request), expectedError);
+        });
+    });
+
+    describe('listDataTables', () => {
+        it('invokes listDataTables without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRulesRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTablesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRulesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTablesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTable()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTable()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTable()),
             ];
-            client.innerApiCalls.listRules = stubSimpleCall(expectedResponse);
-            const [response] = await client.listRules(request);
+            client.innerApiCalls.listDataTables = stubSimpleCall(expectedResponse);
+            const [response] = await client.listDataTables(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listRules as SinonStub)
+            const actualRequest = (client.innerApiCalls.listDataTables as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listRules as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listDataTables as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listRules without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes listDataTables without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRulesRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTablesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRulesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTablesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTable()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTable()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTable()),
             ];
-            client.innerApiCalls.listRules = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.listDataTables = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.listRules(
+                 client.listDataTables(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IRule[]|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IDataTable[]|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -1253,61 +1731,61 @@ describe('v1.RuleServiceClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listRules as SinonStub)
+            const actualRequest = (client.innerApiCalls.listDataTables as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listRules as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listDataTables as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listRules with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes listDataTables with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRulesRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTablesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRulesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTablesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.listRules = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.listRules(request), expectedError);
-            const actualRequest = (client.innerApiCalls.listRules as SinonStub)
+            client.innerApiCalls.listDataTables = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.listDataTables(request), expectedError);
+            const actualRequest = (client.innerApiCalls.listDataTables as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listRules as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listDataTables as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listRulesStream without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes listDataTablesStream without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRulesRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTablesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRulesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTablesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTable()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTable()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTable()),
             ];
-            client.descriptors.page.listRules.createStream = stubPageStreamingCall(expectedResponse);
-            const stream = client.listRulesStream(request);
+            client.descriptors.page.listDataTables.createStream = stubPageStreamingCall(expectedResponse);
+            const stream = client.listDataTablesStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.chronicle.v1.Rule[] = [];
-                stream.on('data', (response: protos.google.cloud.chronicle.v1.Rule) => {
+                const responses: protos.google.cloud.chronicle.v1.DataTable[] = [];
+                stream.on('data', (response: protos.google.cloud.chronicle.v1.DataTable) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -1319,35 +1797,35 @@ describe('v1.RuleServiceClient', () => {
             });
             const responses = await promise;
             assert.deepStrictEqual(responses, expectedResponse);
-            assert((client.descriptors.page.listRules.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listRules, request));
+            assert((client.descriptors.page.listDataTables.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listDataTables, request));
             assert(
-                (client.descriptors.page.listRules.createStream as SinonStub)
+                (client.descriptors.page.listDataTables.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('invokes listRulesStream with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes listDataTablesStream with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRulesRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTablesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRulesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTablesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listRules.createStream = stubPageStreamingCall(undefined, expectedError);
-            const stream = client.listRulesStream(request);
+            client.descriptors.page.listDataTables.createStream = stubPageStreamingCall(undefined, expectedError);
+            const stream = client.listDataTablesStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.chronicle.v1.Rule[] = [];
-                stream.on('data', (response: protos.google.cloud.chronicle.v1.Rule) => {
+                const responses: protos.google.cloud.chronicle.v1.DataTable[] = [];
+                stream.on('data', (response: protos.google.cloud.chronicle.v1.DataTable) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -1358,79 +1836,79 @@ describe('v1.RuleServiceClient', () => {
                 });
             });
             await assert.rejects(promise, expectedError);
-            assert((client.descriptors.page.listRules.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listRules, request));
+            assert((client.descriptors.page.listDataTables.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listDataTables, request));
             assert(
-                (client.descriptors.page.listRules.createStream as SinonStub)
+                (client.descriptors.page.listDataTables.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                          expectedHeaderRequestParams
                     ) 
             );
         });
 
-        it('uses async iteration with listRules without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('uses async iteration with listDataTables without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRulesRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTablesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRulesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTablesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTable()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTable()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTable()),
             ];
-            client.descriptors.page.listRules.asyncIterate = stubAsyncIterationCall(expectedResponse);
-            const responses: protos.google.cloud.chronicle.v1.IRule[] = [];
-            const iterable = client.listRulesAsync(request);
+            client.descriptors.page.listDataTables.asyncIterate = stubAsyncIterationCall(expectedResponse);
+            const responses: protos.google.cloud.chronicle.v1.IDataTable[] = [];
+            const iterable = client.listDataTablesAsync(request);
             for await (const resource of iterable) {
                 responses.push(resource!);
             }
             assert.deepStrictEqual(responses, expectedResponse);
             assert.deepStrictEqual(
-                (client.descriptors.page.listRules.asyncIterate as SinonStub)
+                (client.descriptors.page.listDataTables.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listRules.asyncIterate as SinonStub)
+                (client.descriptors.page.listDataTables.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('uses async iteration with listRules with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('uses async iteration with listDataTables with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRulesRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTablesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRulesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTablesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listRules.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
-            const iterable = client.listRulesAsync(request);
+            client.descriptors.page.listDataTables.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
+            const iterable = client.listDataTablesAsync(request);
             await assert.rejects(async () => {
-                const responses: protos.google.cloud.chronicle.v1.IRule[] = [];
+                const responses: protos.google.cloud.chronicle.v1.IDataTable[] = [];
                 for await (const resource of iterable) {
                     responses.push(resource!);
                 }
             });
             assert.deepStrictEqual(
-                (client.descriptors.page.listRules.asyncIterate as SinonStub)
+                (client.descriptors.page.listDataTables.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listRules.asyncIterate as SinonStub)
+                (client.descriptors.page.listDataTables.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
@@ -1438,57 +1916,57 @@ describe('v1.RuleServiceClient', () => {
         });
     });
 
-    describe('listRuleRevisions', () => {
-        it('invokes listRuleRevisions without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+    describe('listDataTableRows', () => {
+        it('invokes listDataTableRows without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleRevisionsRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTableRowsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleRevisionsRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTableRow()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTableRow()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTableRow()),
             ];
-            client.innerApiCalls.listRuleRevisions = stubSimpleCall(expectedResponse);
-            const [response] = await client.listRuleRevisions(request);
+            client.innerApiCalls.listDataTableRows = stubSimpleCall(expectedResponse);
+            const [response] = await client.listDataTableRows(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listRuleRevisions as SinonStub)
+            const actualRequest = (client.innerApiCalls.listDataTableRows as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listRuleRevisions as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listDataTableRows as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listRuleRevisions without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes listDataTableRows without error using callback', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleRevisionsRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTableRowsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleRevisionsRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTableRow()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTableRow()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTableRow()),
             ];
-            client.innerApiCalls.listRuleRevisions = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.listDataTableRows = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.listRuleRevisions(
+                 client.listDataTableRows(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IRule[]|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IDataTableRow[]|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -1498,61 +1976,61 @@ describe('v1.RuleServiceClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listRuleRevisions as SinonStub)
+            const actualRequest = (client.innerApiCalls.listDataTableRows as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listRuleRevisions as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listDataTableRows as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listRuleRevisions with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes listDataTableRows with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleRevisionsRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTableRowsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleRevisionsRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.listRuleRevisions = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.listRuleRevisions(request), expectedError);
-            const actualRequest = (client.innerApiCalls.listRuleRevisions as SinonStub)
+            client.innerApiCalls.listDataTableRows = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.listDataTableRows(request), expectedError);
+            const actualRequest = (client.innerApiCalls.listDataTableRows as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listRuleRevisions as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listDataTableRows as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listRuleRevisionsStream without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes listDataTableRowsStream without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleRevisionsRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTableRowsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleRevisionsRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTableRow()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTableRow()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTableRow()),
             ];
-            client.descriptors.page.listRuleRevisions.createStream = stubPageStreamingCall(expectedResponse);
-            const stream = client.listRuleRevisionsStream(request);
+            client.descriptors.page.listDataTableRows.createStream = stubPageStreamingCall(expectedResponse);
+            const stream = client.listDataTableRowsStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.chronicle.v1.Rule[] = [];
-                stream.on('data', (response: protos.google.cloud.chronicle.v1.Rule) => {
+                const responses: protos.google.cloud.chronicle.v1.DataTableRow[] = [];
+                stream.on('data', (response: protos.google.cloud.chronicle.v1.DataTableRow) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -1564,35 +2042,35 @@ describe('v1.RuleServiceClient', () => {
             });
             const responses = await promise;
             assert.deepStrictEqual(responses, expectedResponse);
-            assert((client.descriptors.page.listRuleRevisions.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listRuleRevisions, request));
+            assert((client.descriptors.page.listDataTableRows.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listDataTableRows, request));
             assert(
-                (client.descriptors.page.listRuleRevisions.createStream as SinonStub)
+                (client.descriptors.page.listDataTableRows.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('invokes listRuleRevisionsStream with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('invokes listDataTableRowsStream with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleRevisionsRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTableRowsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleRevisionsRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listRuleRevisions.createStream = stubPageStreamingCall(undefined, expectedError);
-            const stream = client.listRuleRevisionsStream(request);
+            client.descriptors.page.listDataTableRows.createStream = stubPageStreamingCall(undefined, expectedError);
+            const stream = client.listDataTableRowsStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.chronicle.v1.Rule[] = [];
-                stream.on('data', (response: protos.google.cloud.chronicle.v1.Rule) => {
+                const responses: protos.google.cloud.chronicle.v1.DataTableRow[] = [];
+                stream.on('data', (response: protos.google.cloud.chronicle.v1.DataTableRow) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -1603,828 +2081,83 @@ describe('v1.RuleServiceClient', () => {
                 });
             });
             await assert.rejects(promise, expectedError);
-            assert((client.descriptors.page.listRuleRevisions.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listRuleRevisions, request));
+            assert((client.descriptors.page.listDataTableRows.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listDataTableRows, request));
             assert(
-                (client.descriptors.page.listRuleRevisions.createStream as SinonStub)
+                (client.descriptors.page.listDataTableRows.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                          expectedHeaderRequestParams
                     ) 
             );
         });
 
-        it('uses async iteration with listRuleRevisions without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('uses async iteration with listDataTableRows without error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleRevisionsRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTableRowsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleRevisionsRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Rule()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTableRow()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTableRow()),
+              generateSampleMessage(new protos.google.cloud.chronicle.v1.DataTableRow()),
             ];
-            client.descriptors.page.listRuleRevisions.asyncIterate = stubAsyncIterationCall(expectedResponse);
-            const responses: protos.google.cloud.chronicle.v1.IRule[] = [];
-            const iterable = client.listRuleRevisionsAsync(request);
+            client.descriptors.page.listDataTableRows.asyncIterate = stubAsyncIterationCall(expectedResponse);
+            const responses: protos.google.cloud.chronicle.v1.IDataTableRow[] = [];
+            const iterable = client.listDataTableRowsAsync(request);
             for await (const resource of iterable) {
                 responses.push(resource!);
             }
             assert.deepStrictEqual(responses, expectedResponse);
             assert.deepStrictEqual(
-                (client.descriptors.page.listRuleRevisions.asyncIterate as SinonStub)
+                (client.descriptors.page.listDataTableRows.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listRuleRevisions.asyncIterate as SinonStub)
+                (client.descriptors.page.listDataTableRows.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('uses async iteration with listRuleRevisions with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+        it('uses async iteration with listDataTableRows with error', async () => {
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleRevisionsRequest()
+              new protos.google.cloud.chronicle.v1.ListDataTableRowsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleRevisionsRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.chronicle.v1.ListDataTableRowsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listRuleRevisions.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
-            const iterable = client.listRuleRevisionsAsync(request);
+            client.descriptors.page.listDataTableRows.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
+            const iterable = client.listDataTableRowsAsync(request);
             await assert.rejects(async () => {
-                const responses: protos.google.cloud.chronicle.v1.IRule[] = [];
+                const responses: protos.google.cloud.chronicle.v1.IDataTableRow[] = [];
                 for await (const resource of iterable) {
                     responses.push(resource!);
                 }
             });
             assert.deepStrictEqual(
-                (client.descriptors.page.listRuleRevisions.asyncIterate as SinonStub)
+                (client.descriptors.page.listDataTableRows.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listRuleRevisions.asyncIterate as SinonStub)
+                (client.descriptors.page.listDataTableRows.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
-        });
-    });
-
-    describe('listRetrohunts', () => {
-        it('invokes listRetrohunts without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRetrohuntsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRetrohuntsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Retrohunt()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Retrohunt()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Retrohunt()),
-            ];
-            client.innerApiCalls.listRetrohunts = stubSimpleCall(expectedResponse);
-            const [response] = await client.listRetrohunts(request);
-            assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listRetrohunts as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listRetrohunts as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes listRetrohunts without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRetrohuntsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRetrohuntsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Retrohunt()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Retrohunt()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Retrohunt()),
-            ];
-            client.innerApiCalls.listRetrohunts = stubSimpleCallWithCallback(expectedResponse);
-            const promise = new Promise((resolve, reject) => {
-                 client.listRetrohunts(
-                    request,
-                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IRetrohunt[]|null) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    });
-            });
-            const response = await promise;
-            assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listRetrohunts as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listRetrohunts as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes listRetrohunts with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRetrohuntsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRetrohuntsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedError = new Error('expected');
-            client.innerApiCalls.listRetrohunts = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.listRetrohunts(request), expectedError);
-            const actualRequest = (client.innerApiCalls.listRetrohunts as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listRetrohunts as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes listRetrohuntsStream without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRetrohuntsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRetrohuntsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Retrohunt()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Retrohunt()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Retrohunt()),
-            ];
-            client.descriptors.page.listRetrohunts.createStream = stubPageStreamingCall(expectedResponse);
-            const stream = client.listRetrohuntsStream(request);
-            const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.chronicle.v1.Retrohunt[] = [];
-                stream.on('data', (response: protos.google.cloud.chronicle.v1.Retrohunt) => {
-                    responses.push(response);
-                });
-                stream.on('end', () => {
-                    resolve(responses);
-                });
-                stream.on('error', (err: Error) => {
-                    reject(err);
-                });
-            });
-            const responses = await promise;
-            assert.deepStrictEqual(responses, expectedResponse);
-            assert((client.descriptors.page.listRetrohunts.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listRetrohunts, request));
-            assert(
-                (client.descriptors.page.listRetrohunts.createStream as SinonStub)
-                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
-                        expectedHeaderRequestParams
-                    )
-            );
-        });
-
-        it('invokes listRetrohuntsStream with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRetrohuntsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRetrohuntsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedError = new Error('expected');
-            client.descriptors.page.listRetrohunts.createStream = stubPageStreamingCall(undefined, expectedError);
-            const stream = client.listRetrohuntsStream(request);
-            const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.chronicle.v1.Retrohunt[] = [];
-                stream.on('data', (response: protos.google.cloud.chronicle.v1.Retrohunt) => {
-                    responses.push(response);
-                });
-                stream.on('end', () => {
-                    resolve(responses);
-                });
-                stream.on('error', (err: Error) => {
-                    reject(err);
-                });
-            });
-            await assert.rejects(promise, expectedError);
-            assert((client.descriptors.page.listRetrohunts.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listRetrohunts, request));
-            assert(
-                (client.descriptors.page.listRetrohunts.createStream as SinonStub)
-                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
-                         expectedHeaderRequestParams
-                    ) 
-            );
-        });
-
-        it('uses async iteration with listRetrohunts without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRetrohuntsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRetrohuntsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Retrohunt()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Retrohunt()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.Retrohunt()),
-            ];
-            client.descriptors.page.listRetrohunts.asyncIterate = stubAsyncIterationCall(expectedResponse);
-            const responses: protos.google.cloud.chronicle.v1.IRetrohunt[] = [];
-            const iterable = client.listRetrohuntsAsync(request);
-            for await (const resource of iterable) {
-                responses.push(resource!);
-            }
-            assert.deepStrictEqual(responses, expectedResponse);
-            assert.deepStrictEqual(
-                (client.descriptors.page.listRetrohunts.asyncIterate as SinonStub)
-                    .getCall(0).args[1], request);
-            assert(
-                (client.descriptors.page.listRetrohunts.asyncIterate as SinonStub)
-                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
-                        expectedHeaderRequestParams
-                    )
-            );
-        });
-
-        it('uses async iteration with listRetrohunts with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRetrohuntsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRetrohuntsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedError = new Error('expected');
-            client.descriptors.page.listRetrohunts.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
-            const iterable = client.listRetrohuntsAsync(request);
-            await assert.rejects(async () => {
-                const responses: protos.google.cloud.chronicle.v1.IRetrohunt[] = [];
-                for await (const resource of iterable) {
-                    responses.push(resource!);
-                }
-            });
-            assert.deepStrictEqual(
-                (client.descriptors.page.listRetrohunts.asyncIterate as SinonStub)
-                    .getCall(0).args[1], request);
-            assert(
-                (client.descriptors.page.listRetrohunts.asyncIterate as SinonStub)
-                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
-                        expectedHeaderRequestParams
-                    )
-            );
-        });
-    });
-
-    describe('listRuleDeployments', () => {
-        it('invokes listRuleDeployments without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleDeploymentsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleDeploymentsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.RuleDeployment()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.RuleDeployment()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.RuleDeployment()),
-            ];
-            client.innerApiCalls.listRuleDeployments = stubSimpleCall(expectedResponse);
-            const [response] = await client.listRuleDeployments(request);
-            assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listRuleDeployments as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listRuleDeployments as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes listRuleDeployments without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleDeploymentsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleDeploymentsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.RuleDeployment()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.RuleDeployment()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.RuleDeployment()),
-            ];
-            client.innerApiCalls.listRuleDeployments = stubSimpleCallWithCallback(expectedResponse);
-            const promise = new Promise((resolve, reject) => {
-                 client.listRuleDeployments(
-                    request,
-                    (err?: Error|null, result?: protos.google.cloud.chronicle.v1.IRuleDeployment[]|null) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    });
-            });
-            const response = await promise;
-            assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listRuleDeployments as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listRuleDeployments as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes listRuleDeployments with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleDeploymentsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleDeploymentsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedError = new Error('expected');
-            client.innerApiCalls.listRuleDeployments = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.listRuleDeployments(request), expectedError);
-            const actualRequest = (client.innerApiCalls.listRuleDeployments as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listRuleDeployments as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes listRuleDeploymentsStream without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleDeploymentsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleDeploymentsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.RuleDeployment()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.RuleDeployment()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.RuleDeployment()),
-            ];
-            client.descriptors.page.listRuleDeployments.createStream = stubPageStreamingCall(expectedResponse);
-            const stream = client.listRuleDeploymentsStream(request);
-            const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.chronicle.v1.RuleDeployment[] = [];
-                stream.on('data', (response: protos.google.cloud.chronicle.v1.RuleDeployment) => {
-                    responses.push(response);
-                });
-                stream.on('end', () => {
-                    resolve(responses);
-                });
-                stream.on('error', (err: Error) => {
-                    reject(err);
-                });
-            });
-            const responses = await promise;
-            assert.deepStrictEqual(responses, expectedResponse);
-            assert((client.descriptors.page.listRuleDeployments.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listRuleDeployments, request));
-            assert(
-                (client.descriptors.page.listRuleDeployments.createStream as SinonStub)
-                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
-                        expectedHeaderRequestParams
-                    )
-            );
-        });
-
-        it('invokes listRuleDeploymentsStream with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleDeploymentsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleDeploymentsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedError = new Error('expected');
-            client.descriptors.page.listRuleDeployments.createStream = stubPageStreamingCall(undefined, expectedError);
-            const stream = client.listRuleDeploymentsStream(request);
-            const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.chronicle.v1.RuleDeployment[] = [];
-                stream.on('data', (response: protos.google.cloud.chronicle.v1.RuleDeployment) => {
-                    responses.push(response);
-                });
-                stream.on('end', () => {
-                    resolve(responses);
-                });
-                stream.on('error', (err: Error) => {
-                    reject(err);
-                });
-            });
-            await assert.rejects(promise, expectedError);
-            assert((client.descriptors.page.listRuleDeployments.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listRuleDeployments, request));
-            assert(
-                (client.descriptors.page.listRuleDeployments.createStream as SinonStub)
-                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
-                         expectedHeaderRequestParams
-                    ) 
-            );
-        });
-
-        it('uses async iteration with listRuleDeployments without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleDeploymentsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleDeploymentsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.RuleDeployment()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.RuleDeployment()),
-              generateSampleMessage(new protos.google.cloud.chronicle.v1.RuleDeployment()),
-            ];
-            client.descriptors.page.listRuleDeployments.asyncIterate = stubAsyncIterationCall(expectedResponse);
-            const responses: protos.google.cloud.chronicle.v1.IRuleDeployment[] = [];
-            const iterable = client.listRuleDeploymentsAsync(request);
-            for await (const resource of iterable) {
-                responses.push(resource!);
-            }
-            assert.deepStrictEqual(responses, expectedResponse);
-            assert.deepStrictEqual(
-                (client.descriptors.page.listRuleDeployments.asyncIterate as SinonStub)
-                    .getCall(0).args[1], request);
-            assert(
-                (client.descriptors.page.listRuleDeployments.asyncIterate as SinonStub)
-                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
-                        expectedHeaderRequestParams
-                    )
-            );
-        });
-
-        it('uses async iteration with listRuleDeployments with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.chronicle.v1.ListRuleDeploymentsRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.chronicle.v1.ListRuleDeploymentsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedError = new Error('expected');
-            client.descriptors.page.listRuleDeployments.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
-            const iterable = client.listRuleDeploymentsAsync(request);
-            await assert.rejects(async () => {
-                const responses: protos.google.cloud.chronicle.v1.IRuleDeployment[] = [];
-                for await (const resource of iterable) {
-                    responses.push(resource!);
-                }
-            });
-            assert.deepStrictEqual(
-                (client.descriptors.page.listRuleDeployments.asyncIterate as SinonStub)
-                    .getCall(0).args[1], request);
-            assert(
-                (client.descriptors.page.listRuleDeployments.asyncIterate as SinonStub)
-                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
-                        expectedHeaderRequestParams
-                    )
-            );
-        });
-    });
-    describe('getOperation', () => {
-        it('invokes getOperation without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.GetOperationRequest()
-            );
-            const expectedResponse = generateSampleMessage(
-                new operationsProtos.google.longrunning.Operation()
-            );
-            client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
-            const response = await client.getOperation(request);
-            assert.deepStrictEqual(response, [expectedResponse]);
-            assert((client.operationsClient.getOperation as SinonStub)
-                .getCall(0).calledWith(request)
-            );
-        });
-        it('invokes getOperation without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.GetOperationRequest()
-            );
-            const expectedResponse = generateSampleMessage(
-                new operationsProtos.google.longrunning.Operation()
-            );
-            client.operationsClient.getOperation = sinon.stub().callsArgWith(2, null, expectedResponse);
-            const promise = new Promise((resolve, reject) => {
-                 client.operationsClient.getOperation(
-                    request,
-                    undefined,
-                    (
-                        err?: Error | null,
-                        result?: operationsProtos.google.longrunning.Operation | null
-                    ) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    }).catch(err => {throw err});
-            });
-            const response = await promise;
-            assert.deepStrictEqual(response, expectedResponse);
-            assert((client.operationsClient.getOperation as SinonStub)
-                .getCall(0));
-        });
-        it('invokes getOperation with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.GetOperationRequest()
-            );
-            const expectedError = new Error('expected');
-            client.operationsClient.getOperation = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(async () => {await client.getOperation(request)}, expectedError);
-            assert((client.operationsClient.getOperation as SinonStub)
-                .getCall(0).calledWith(request));
-        });
-    });
-    describe('cancelOperation', () => {
-        it('invokes cancelOperation without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.CancelOperationRequest()
-            );
-            const expectedResponse = generateSampleMessage(
-                new protos.google.protobuf.Empty()
-            );
-            client.operationsClient.cancelOperation = stubSimpleCall(expectedResponse);
-            const response = await client.cancelOperation(request);
-            assert.deepStrictEqual(response, [expectedResponse]);
-            assert((client.operationsClient.cancelOperation as SinonStub)
-                .getCall(0).calledWith(request)
-            );
-        });
-        it('invokes cancelOperation without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.CancelOperationRequest()
-            );
-            const expectedResponse = generateSampleMessage(
-                new protos.google.protobuf.Empty()
-            );
-            client.operationsClient.cancelOperation = sinon.stub().callsArgWith(2, null, expectedResponse);
-            const promise = new Promise((resolve, reject) => {
-                 client.operationsClient.cancelOperation(
-                    request,
-                    undefined,
-                    (
-                        err?: Error | null,
-                        result?: protos.google.protobuf.Empty | null
-                    ) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    }).catch(err => {throw err});
-            });
-            const response = await promise;
-            assert.deepStrictEqual(response, expectedResponse);
-            assert((client.operationsClient.cancelOperation as SinonStub)
-                .getCall(0));
-        });
-        it('invokes cancelOperation with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.CancelOperationRequest()
-            );
-            const expectedError = new Error('expected');
-            client.operationsClient.cancelOperation = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(async () => {await client.cancelOperation(request)}, expectedError);
-            assert((client.operationsClient.cancelOperation as SinonStub)
-                .getCall(0).calledWith(request));
-        });
-    });
-    describe('deleteOperation', () => {
-        it('invokes deleteOperation without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.DeleteOperationRequest()
-            );
-            const expectedResponse = generateSampleMessage(
-                new protos.google.protobuf.Empty()
-            );
-            client.operationsClient.deleteOperation = stubSimpleCall(expectedResponse);
-            const response = await client.deleteOperation(request);
-            assert.deepStrictEqual(response, [expectedResponse]);
-            assert((client.operationsClient.deleteOperation as SinonStub)
-                .getCall(0).calledWith(request)
-            );
-        });
-        it('invokes deleteOperation without error using callback', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.DeleteOperationRequest()
-            );
-            const expectedResponse = generateSampleMessage(
-                new protos.google.protobuf.Empty()
-            );
-            client.operationsClient.deleteOperation = sinon.stub().callsArgWith(2, null, expectedResponse);
-            const promise = new Promise((resolve, reject) => {
-                 client.operationsClient.deleteOperation(
-                    request,
-                    undefined,
-                    (
-                        err?: Error | null,
-                        result?: protos.google.protobuf.Empty | null
-                    ) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    }).catch(err => {throw err});
-            });
-            const response = await promise;
-            assert.deepStrictEqual(response, expectedResponse);
-            assert((client.operationsClient.deleteOperation as SinonStub)
-                .getCall(0));
-        });
-        it('invokes deleteOperation with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.DeleteOperationRequest()
-            );
-            const expectedError = new Error('expected');
-            client.operationsClient.deleteOperation = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(async () => {await client.deleteOperation(request)}, expectedError);
-            assert((client.operationsClient.deleteOperation as SinonStub)
-                .getCall(0).calledWith(request));
-        });
-    });
-    describe('listOperationsAsync', () => {
-        it('uses async iteration with listOperations without error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.ListOperationsRequest()
-            );
-            const expectedResponse = [
-                generateSampleMessage(
-                    new operationsProtos.google.longrunning.ListOperationsResponse()
-                ),
-                generateSampleMessage(
-                    new operationsProtos.google.longrunning.ListOperationsResponse()
-                ),
-                generateSampleMessage(
-                    new operationsProtos.google.longrunning.ListOperationsResponse()
-                ),
-            ];
-            client.operationsClient.descriptor.listOperations.asyncIterate = stubAsyncIterationCall(expectedResponse);
-            const responses: operationsProtos.google.longrunning.IOperation[] = [];
-            const iterable = client.operationsClient.listOperationsAsync(request);
-            for await (const resource of iterable) {
-                responses.push(resource!);
-            }
-            assert.deepStrictEqual(responses, expectedResponse);
-            assert.deepStrictEqual(
-                (client.operationsClient.descriptor.listOperations.asyncIterate as SinonStub)
-                    .getCall(0).args[1], request);
-        });
-        it('uses async iteration with listOperations with error', async () => {
-            const client = new ruleserviceModule.v1.RuleServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.ListOperationsRequest()
-            );
-            const expectedError = new Error('expected');
-            client.operationsClient.descriptor.listOperations.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
-            const iterable = client.operationsClient.listOperationsAsync(request);
-            await assert.rejects(async () => {
-                const responses: operationsProtos.google.longrunning.IOperation[] = [];
-                for await (const resource of iterable) {
-                    responses.push(resource!);
-                }
-            });
-            assert.deepStrictEqual(
-                (client.operationsClient.descriptor.listOperations.asyncIterate as SinonStub)
-                    .getCall(0).args[1], request);
         });
     });
 
@@ -2438,7 +2171,7 @@ describe('v1.RuleServiceClient', () => {
                 instance: "instanceValue",
                 data_access_label: "dataAccessLabelValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2492,7 +2225,7 @@ describe('v1.RuleServiceClient', () => {
                 instance: "instanceValue",
                 data_access_scope: "dataAccessScopeValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2546,7 +2279,7 @@ describe('v1.RuleServiceClient', () => {
                 instance: "instanceValue",
                 data_table: "dataTableValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2600,7 +2333,7 @@ describe('v1.RuleServiceClient', () => {
                 instance: "instanceValue",
                 data_table_operation_errors: "dataTableOperationErrorsValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2655,7 +2388,7 @@ describe('v1.RuleServiceClient', () => {
                 data_table: "dataTableValue",
                 data_table_row: "dataTableRowValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2715,7 +2448,7 @@ describe('v1.RuleServiceClient', () => {
                 location: "locationValue",
                 instance: "instanceValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2760,7 +2493,7 @@ describe('v1.RuleServiceClient', () => {
                 project: "projectValue",
                 location: "locationValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2797,7 +2530,7 @@ describe('v1.RuleServiceClient', () => {
             const expectedParameters = {
                 project: "projectValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2830,7 +2563,7 @@ describe('v1.RuleServiceClient', () => {
                 instance: "instanceValue",
                 reference_list: "referenceListValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2885,7 +2618,7 @@ describe('v1.RuleServiceClient', () => {
                 rule: "ruleValue",
                 retrohunt: "retrohuntValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2946,7 +2679,7 @@ describe('v1.RuleServiceClient', () => {
                 instance: "instanceValue",
                 rule: "ruleValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -3000,7 +2733,7 @@ describe('v1.RuleServiceClient', () => {
                 instance: "instanceValue",
                 rule: "ruleValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -3054,7 +2787,7 @@ describe('v1.RuleServiceClient', () => {
                 instance: "instanceValue",
                 watchlist: "watchlistValue",
             };
-            const client = new ruleserviceModule.v1.RuleServiceClient({
+            const client = new datatableserviceModule.v1.DataTableServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });

@@ -26,19 +26,18 @@ import {loggingUtils as logging, decodeAnyProtosInArray} from 'google-gax';
 
 /**
  * Client JSON configuration object, loaded from
- * `src/v1/data_access_control_service_client_config.json`.
+ * `src/v1/data_table_service_client_config.json`.
  * This file defines retry strategy and timeouts for all API methods in this library.
  */
-import * as gapicConfig from './data_access_control_service_client_config.json';
+import * as gapicConfig from './data_table_service_client_config.json';
 const version = require('../../../package.json').version;
 
 /**
- *  DataAccessControlService exposes resources and endpoints related to data
- *  access control.
+ *  DataTableManager provides an interface for managing data tables.
  * @class
  * @memberof v1
  */
-export class DataAccessControlServiceClient {
+export class DataTableServiceClient {
   private _terminated = false;
   private _opts: ClientOptions;
   private _providedCustomServicePath: boolean;
@@ -60,10 +59,10 @@ export class DataAccessControlServiceClient {
   warn: (code: string, message: string, warnType?: string) => void;
   innerApiCalls: {[name: string]: Function};
   pathTemplates: {[name: string]: gax.PathTemplate};
-  dataAccessControlServiceStub?: Promise<{[name: string]: Function}>;
+  dataTableServiceStub?: Promise<{[name: string]: Function}>;
 
   /**
-   * Construct an instance of DataAccessControlServiceClient.
+   * Construct an instance of DataTableServiceClient.
    *
    * @param {object} [options] - The configuration object.
    * The options accepted by the constructor are described in detail
@@ -98,12 +97,12 @@ export class DataAccessControlServiceClient {
    *     HTTP implementation. Load only fallback version and pass it to the constructor:
    *     ```
    *     const gax = require('google-gax/build/src/fallback'); // avoids loading google-gax with gRPC
-   *     const client = new DataAccessControlServiceClient({fallback: true}, gax);
+   *     const client = new DataTableServiceClient({fallback: true}, gax);
    *     ```
    */
   constructor(opts?: ClientOptions, gaxInstance?: typeof gax | typeof gax.fallback) {
     // Ensure that options include all the required fields.
-    const staticMembers = this.constructor as typeof DataAccessControlServiceClient;
+    const staticMembers = this.constructor as typeof DataTableServiceClient;
     if (opts?.universe_domain && opts?.universeDomain && opts?.universe_domain !== opts?.universeDomain) {
       throw new Error('Please set either universe_domain or universeDomain, but not both.');
     }
@@ -223,15 +222,15 @@ export class DataAccessControlServiceClient {
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this.descriptors.page = {
-      listDataAccessLabels:
-          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'dataAccessLabels'),
-      listDataAccessScopes:
-          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'dataAccessScopes')
+      listDataTables:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'dataTables'),
+      listDataTableRows:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'dataTableRows')
     };
 
     // Put together the default options sent with requests.
     this._defaults = this._gaxGrpc.constructSettings(
-        'google.cloud.chronicle.v1.DataAccessControlService', gapicConfig as gax.ClientConfig,
+        'google.cloud.chronicle.v1.DataTableService', gapicConfig as gax.ClientConfig,
         opts.clientConfig || {}, {'x-goog-api-client': clientHeader.join(' ')});
 
     // Set up a dictionary of "inner API calls"; the core implementation
@@ -256,25 +255,25 @@ export class DataAccessControlServiceClient {
    */
   initialize() {
     // If the client stub promise is already initialized, return immediately.
-    if (this.dataAccessControlServiceStub) {
-      return this.dataAccessControlServiceStub;
+    if (this.dataTableServiceStub) {
+      return this.dataTableServiceStub;
     }
 
     // Put together the "service stub" for
-    // google.cloud.chronicle.v1.DataAccessControlService.
-    this.dataAccessControlServiceStub = this._gaxGrpc.createStub(
+    // google.cloud.chronicle.v1.DataTableService.
+    this.dataTableServiceStub = this._gaxGrpc.createStub(
         this._opts.fallback ?
-          (this._protos as protobuf.Root).lookupService('google.cloud.chronicle.v1.DataAccessControlService') :
+          (this._protos as protobuf.Root).lookupService('google.cloud.chronicle.v1.DataTableService') :
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (this._protos as any).google.cloud.chronicle.v1.DataAccessControlService,
+          (this._protos as any).google.cloud.chronicle.v1.DataTableService,
         this._opts, this._providedCustomServicePath) as Promise<{[method: string]: Function}>;
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
-    const dataAccessControlServiceStubMethods =
-        ['createDataAccessLabel', 'getDataAccessLabel', 'listDataAccessLabels', 'updateDataAccessLabel', 'deleteDataAccessLabel', 'createDataAccessScope', 'getDataAccessScope', 'listDataAccessScopes', 'updateDataAccessScope', 'deleteDataAccessScope'];
-    for (const methodName of dataAccessControlServiceStubMethods) {
-      const callPromise = this.dataAccessControlServiceStub.then(
+    const dataTableServiceStubMethods =
+        ['createDataTable', 'listDataTables', 'getDataTable', 'updateDataTable', 'deleteDataTable', 'createDataTableRow', 'updateDataTableRow', 'listDataTableRows', 'getDataTableRow', 'deleteDataTableRow', 'bulkCreateDataTableRows', 'bulkGetDataTableRows', 'bulkReplaceDataTableRows', 'bulkUpdateDataTableRows', 'getDataTableOperationErrors'];
+    for (const methodName of dataTableServiceStubMethods) {
+      const callPromise = this.dataTableServiceStub.then(
         stub => (...args: Array<{}>) => {
           if (this._terminated) {
             return Promise.reject('The client has already been closed.');
@@ -299,7 +298,7 @@ export class DataAccessControlServiceClient {
       this.innerApiCalls[methodName] = apiCall;
     }
 
-    return this.dataAccessControlServiceStub;
+    return this.dataTableServiceStub;
   }
 
   /**
@@ -353,6 +352,8 @@ export class DataAccessControlServiceClient {
    */
   static get scopes() {
     return [
+      'https://www.googleapis.com/auth/chronicle',
+      'https://www.googleapis.com/auth/chronicle.readonly',
       'https://www.googleapis.com/auth/cloud-platform'
     ];
   }
@@ -376,67 +377,63 @@ export class DataAccessControlServiceClient {
   // -- Service calls --
   // -------------------
 /**
- * Creates a data access label.
- * Data access labels are applied to incoming event data and selected in data
- * access scopes (another resource), and only users with scopes containing the
- * label can see data with that label. Currently, the data access label
- * resource only includes custom labels, which are labels that correspond
- * to UDM queries over event data.
+ * Create a new data table.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource where this Data Access Label will be created.
- *   Format: `projects/{project}/locations/{location}/instances/{instance}`
- * @param {google.cloud.chronicle.v1.DataAccessLabel} request.dataAccessLabel
- *   Required. Data access label to create.
- * @param {string} request.dataAccessLabelId
- *   Required. The ID to use for the data access label, which will become the
- *   label's display name and the final component of the label's resource name.
- *   The maximum number of characters should be 63. Regex pattern is as per AIP:
- *   https://google.aip.dev/122#resource-id-segments
+ *   Required. The parent resource where this data table will be created.
+ *   Format: projects/{project}/locations/{location}/instances/{instance}
+ * @param {google.cloud.chronicle.v1.DataTable} request.dataTable
+ *   Required. The data table being created.
+ * @param {string} request.dataTableId
+ *   Required. The ID to use for the data table. This is also the display name
+ *   for the data table. It must satisfy the following requirements:
+ *   - Starts with letter.
+ *   - Contains only letters, numbers and underscore.
+ *   - Must be unique and has length < 256.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataAccessLabel|DataAccessLabel}.
+ *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataTable|DataTable}.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/data_access_control_service.create_data_access_label.js</caption>
- * region_tag:chronicle_v1_generated_DataAccessControlService_CreateDataAccessLabel_async
+ * @example <caption>include:samples/generated/v1/data_table_service.create_data_table.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_CreateDataTable_async
  */
-  createDataAccessLabel(
-      request?: protos.google.cloud.chronicle.v1.ICreateDataAccessLabelRequest,
+  createDataTable(
+      request?: protos.google.cloud.chronicle.v1.ICreateDataTableRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessLabel,
-        protos.google.cloud.chronicle.v1.ICreateDataAccessLabelRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDataTable,
+        protos.google.cloud.chronicle.v1.ICreateDataTableRequest|undefined, {}|undefined
       ]>;
-  createDataAccessLabel(
-      request: protos.google.cloud.chronicle.v1.ICreateDataAccessLabelRequest,
+  createDataTable(
+      request: protos.google.cloud.chronicle.v1.ICreateDataTableRequest,
       options: CallOptions,
       callback: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessLabel,
-          protos.google.cloud.chronicle.v1.ICreateDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable,
+          protos.google.cloud.chronicle.v1.ICreateDataTableRequest|null|undefined,
           {}|null|undefined>): void;
-  createDataAccessLabel(
-      request: protos.google.cloud.chronicle.v1.ICreateDataAccessLabelRequest,
+  createDataTable(
+      request: protos.google.cloud.chronicle.v1.ICreateDataTableRequest,
       callback: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessLabel,
-          protos.google.cloud.chronicle.v1.ICreateDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable,
+          protos.google.cloud.chronicle.v1.ICreateDataTableRequest|null|undefined,
           {}|null|undefined>): void;
-  createDataAccessLabel(
-      request?: protos.google.cloud.chronicle.v1.ICreateDataAccessLabelRequest,
+  createDataTable(
+      request?: protos.google.cloud.chronicle.v1.ICreateDataTableRequest,
       optionsOrCallback?: CallOptions|Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessLabel,
-          protos.google.cloud.chronicle.v1.ICreateDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable,
+          protos.google.cloud.chronicle.v1.ICreateDataTableRequest|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessLabel,
-          protos.google.cloud.chronicle.v1.ICreateDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable,
+          protos.google.cloud.chronicle.v1.ICreateDataTableRequest|null|undefined,
           {}|null|undefined>):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessLabel,
-        protos.google.cloud.chronicle.v1.ICreateDataAccessLabelRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDataTable,
+        protos.google.cloud.chronicle.v1.ICreateDataTableRequest|undefined, {}|undefined
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -456,23 +453,23 @@ export class DataAccessControlServiceClient {
       'parent': request.parent ?? '',
     });
     this.initialize().catch(err => {throw err});
-    this._log.info('createDataAccessLabel request %j', request);
+    this._log.info('createDataTable request %j', request);
     const wrappedCallback: Callback<
-        protos.google.cloud.chronicle.v1.IDataAccessLabel,
-        protos.google.cloud.chronicle.v1.ICreateDataAccessLabelRequest|null|undefined,
+        protos.google.cloud.chronicle.v1.IDataTable,
+        protos.google.cloud.chronicle.v1.ICreateDataTableRequest|null|undefined,
         {}|null|undefined>|undefined = callback
       ? (error, response, options, rawResponse) => {
-          this._log.info('createDataAccessLabel response %j', response);
+          this._log.info('createDataTable response %j', response);
           callback!(error, response, options, rawResponse); // We verified callback above.
         }
       : undefined;
-    return this.innerApiCalls.createDataAccessLabel(request, options, wrappedCallback)
+    return this.innerApiCalls.createDataTable(request, options, wrappedCallback)
       ?.then(([response, options, rawResponse]: [
-        protos.google.cloud.chronicle.v1.IDataAccessLabel,
-        protos.google.cloud.chronicle.v1.ICreateDataAccessLabelRequest|undefined,
+        protos.google.cloud.chronicle.v1.IDataTable,
+        protos.google.cloud.chronicle.v1.ICreateDataTableRequest|undefined,
         {}|undefined
       ]) => {
-        this._log.info('createDataAccessLabel response %j', response);
+        this._log.info('createDataTable response %j', response);
         return [response, options, rawResponse];
       }).catch((error: any) => {
         if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
@@ -483,56 +480,56 @@ export class DataAccessControlServiceClient {
       });
   }
 /**
- * Gets a data access label.
+ * Get data table info.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.name
- *   Required. The ID of the data access label to retrieve.
+ *   Required. The resource name of the data table to retrieve.
  *   Format:
- *   `projects/{project}/locations/{location}/instances/{instance}/dataAccessLabels/{data_access_label}`
+ *   projects/{project}/locations/{location}/instances/{instances}/dataTables/{data_table}
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataAccessLabel|DataAccessLabel}.
+ *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataTable|DataTable}.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/data_access_control_service.get_data_access_label.js</caption>
- * region_tag:chronicle_v1_generated_DataAccessControlService_GetDataAccessLabel_async
+ * @example <caption>include:samples/generated/v1/data_table_service.get_data_table.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_GetDataTable_async
  */
-  getDataAccessLabel(
-      request?: protos.google.cloud.chronicle.v1.IGetDataAccessLabelRequest,
+  getDataTable(
+      request?: protos.google.cloud.chronicle.v1.IGetDataTableRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessLabel,
-        protos.google.cloud.chronicle.v1.IGetDataAccessLabelRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDataTable,
+        protos.google.cloud.chronicle.v1.IGetDataTableRequest|undefined, {}|undefined
       ]>;
-  getDataAccessLabel(
-      request: protos.google.cloud.chronicle.v1.IGetDataAccessLabelRequest,
+  getDataTable(
+      request: protos.google.cloud.chronicle.v1.IGetDataTableRequest,
       options: CallOptions,
       callback: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessLabel,
-          protos.google.cloud.chronicle.v1.IGetDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable,
+          protos.google.cloud.chronicle.v1.IGetDataTableRequest|null|undefined,
           {}|null|undefined>): void;
-  getDataAccessLabel(
-      request: protos.google.cloud.chronicle.v1.IGetDataAccessLabelRequest,
+  getDataTable(
+      request: protos.google.cloud.chronicle.v1.IGetDataTableRequest,
       callback: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessLabel,
-          protos.google.cloud.chronicle.v1.IGetDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable,
+          protos.google.cloud.chronicle.v1.IGetDataTableRequest|null|undefined,
           {}|null|undefined>): void;
-  getDataAccessLabel(
-      request?: protos.google.cloud.chronicle.v1.IGetDataAccessLabelRequest,
+  getDataTable(
+      request?: protos.google.cloud.chronicle.v1.IGetDataTableRequest,
       optionsOrCallback?: CallOptions|Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessLabel,
-          protos.google.cloud.chronicle.v1.IGetDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable,
+          protos.google.cloud.chronicle.v1.IGetDataTableRequest|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessLabel,
-          protos.google.cloud.chronicle.v1.IGetDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable,
+          protos.google.cloud.chronicle.v1.IGetDataTableRequest|null|undefined,
           {}|null|undefined>):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessLabel,
-        protos.google.cloud.chronicle.v1.IGetDataAccessLabelRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDataTable,
+        protos.google.cloud.chronicle.v1.IGetDataTableRequest|undefined, {}|undefined
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -552,23 +549,23 @@ export class DataAccessControlServiceClient {
       'name': request.name ?? '',
     });
     this.initialize().catch(err => {throw err});
-    this._log.info('getDataAccessLabel request %j', request);
+    this._log.info('getDataTable request %j', request);
     const wrappedCallback: Callback<
-        protos.google.cloud.chronicle.v1.IDataAccessLabel,
-        protos.google.cloud.chronicle.v1.IGetDataAccessLabelRequest|null|undefined,
+        protos.google.cloud.chronicle.v1.IDataTable,
+        protos.google.cloud.chronicle.v1.IGetDataTableRequest|null|undefined,
         {}|null|undefined>|undefined = callback
       ? (error, response, options, rawResponse) => {
-          this._log.info('getDataAccessLabel response %j', response);
+          this._log.info('getDataTable response %j', response);
           callback!(error, response, options, rawResponse); // We verified callback above.
         }
       : undefined;
-    return this.innerApiCalls.getDataAccessLabel(request, options, wrappedCallback)
+    return this.innerApiCalls.getDataTable(request, options, wrappedCallback)
       ?.then(([response, options, rawResponse]: [
-        protos.google.cloud.chronicle.v1.IDataAccessLabel,
-        protos.google.cloud.chronicle.v1.IGetDataAccessLabelRequest|undefined,
+        protos.google.cloud.chronicle.v1.IDataTable,
+        protos.google.cloud.chronicle.v1.IGetDataTableRequest|undefined,
         {}|undefined
       ]) => {
-        this._log.info('getDataAccessLabel response %j', response);
+        this._log.info('getDataTable response %j', response);
         return [response, options, rawResponse];
       }).catch((error: any) => {
         if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
@@ -579,63 +576,61 @@ export class DataAccessControlServiceClient {
       });
   }
 /**
- * Updates a data access label.
+ * Update data table.
  *
  * @param {Object} request
  *   The request object that will be sent.
- * @param {google.cloud.chronicle.v1.DataAccessLabel} request.dataAccessLabel
- *   Required. The data access label to update.
- *
- *   The label's `name` field is used to identify the label to update.
+ * @param {google.cloud.chronicle.v1.DataTable} request.dataTable
+ *   Required. This field is used to identify the datatable to update.
  *   Format:
- *   `projects/{project}/locations/{location}/instances/{instance}/dataAccessLabels/{data_access_label}`
- * @param {google.protobuf.FieldMask} request.updateMask
- *   The list of fields to update. If not included, all fields with a non-empty
- *   value will be overwritten. Currently, only the description and definition
- *   fields are supported for update; an update call that attempts to update any
- *   other fields will return INVALID_ARGUMENT.
+ *   projects/{project}/locations/{locations}/instances/{instance}/dataTables/{data_table}
+ * @param {google.protobuf.FieldMask} [request.updateMask]
+ *   Optional. The list of metadata fields to update. Currently data tables only
+ *   support updating the `description`, `row_time_to_live` and `scope_info`
+ *   fields. When no field mask is supplied, all non-empty fields will be
+ *   updated. A field mask of "*" will update all fields, whether empty or not.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataAccessLabel|DataAccessLabel}.
+ *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataTable|DataTable}.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/data_access_control_service.update_data_access_label.js</caption>
- * region_tag:chronicle_v1_generated_DataAccessControlService_UpdateDataAccessLabel_async
+ * @example <caption>include:samples/generated/v1/data_table_service.update_data_table.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_UpdateDataTable_async
  */
-  updateDataAccessLabel(
-      request?: protos.google.cloud.chronicle.v1.IUpdateDataAccessLabelRequest,
+  updateDataTable(
+      request?: protos.google.cloud.chronicle.v1.IUpdateDataTableRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessLabel,
-        protos.google.cloud.chronicle.v1.IUpdateDataAccessLabelRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDataTable,
+        protos.google.cloud.chronicle.v1.IUpdateDataTableRequest|undefined, {}|undefined
       ]>;
-  updateDataAccessLabel(
-      request: protos.google.cloud.chronicle.v1.IUpdateDataAccessLabelRequest,
+  updateDataTable(
+      request: protos.google.cloud.chronicle.v1.IUpdateDataTableRequest,
       options: CallOptions,
       callback: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessLabel,
-          protos.google.cloud.chronicle.v1.IUpdateDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable,
+          protos.google.cloud.chronicle.v1.IUpdateDataTableRequest|null|undefined,
           {}|null|undefined>): void;
-  updateDataAccessLabel(
-      request: protos.google.cloud.chronicle.v1.IUpdateDataAccessLabelRequest,
+  updateDataTable(
+      request: protos.google.cloud.chronicle.v1.IUpdateDataTableRequest,
       callback: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessLabel,
-          protos.google.cloud.chronicle.v1.IUpdateDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable,
+          protos.google.cloud.chronicle.v1.IUpdateDataTableRequest|null|undefined,
           {}|null|undefined>): void;
-  updateDataAccessLabel(
-      request?: protos.google.cloud.chronicle.v1.IUpdateDataAccessLabelRequest,
+  updateDataTable(
+      request?: protos.google.cloud.chronicle.v1.IUpdateDataTableRequest,
       optionsOrCallback?: CallOptions|Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessLabel,
-          protos.google.cloud.chronicle.v1.IUpdateDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable,
+          protos.google.cloud.chronicle.v1.IUpdateDataTableRequest|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessLabel,
-          protos.google.cloud.chronicle.v1.IUpdateDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable,
+          protos.google.cloud.chronicle.v1.IUpdateDataTableRequest|null|undefined,
           {}|null|undefined>):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessLabel,
-        protos.google.cloud.chronicle.v1.IUpdateDataAccessLabelRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDataTable,
+        protos.google.cloud.chronicle.v1.IUpdateDataTableRequest|undefined, {}|undefined
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -652,26 +647,26 @@ export class DataAccessControlServiceClient {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = this._gaxModule.routingHeader.fromParams({
-      'data_access_label.name': request.dataAccessLabel!.name ?? '',
+      'data_table.name': request.dataTable!.name ?? '',
     });
     this.initialize().catch(err => {throw err});
-    this._log.info('updateDataAccessLabel request %j', request);
+    this._log.info('updateDataTable request %j', request);
     const wrappedCallback: Callback<
-        protos.google.cloud.chronicle.v1.IDataAccessLabel,
-        protos.google.cloud.chronicle.v1.IUpdateDataAccessLabelRequest|null|undefined,
+        protos.google.cloud.chronicle.v1.IDataTable,
+        protos.google.cloud.chronicle.v1.IUpdateDataTableRequest|null|undefined,
         {}|null|undefined>|undefined = callback
       ? (error, response, options, rawResponse) => {
-          this._log.info('updateDataAccessLabel response %j', response);
+          this._log.info('updateDataTable response %j', response);
           callback!(error, response, options, rawResponse); // We verified callback above.
         }
       : undefined;
-    return this.innerApiCalls.updateDataAccessLabel(request, options, wrappedCallback)
+    return this.innerApiCalls.updateDataTable(request, options, wrappedCallback)
       ?.then(([response, options, rawResponse]: [
-        protos.google.cloud.chronicle.v1.IDataAccessLabel,
-        protos.google.cloud.chronicle.v1.IUpdateDataAccessLabelRequest|undefined,
+        protos.google.cloud.chronicle.v1.IDataTable,
+        protos.google.cloud.chronicle.v1.IUpdateDataTableRequest|undefined,
         {}|undefined
       ]) => {
-        this._log.info('updateDataAccessLabel response %j', response);
+        this._log.info('updateDataTable response %j', response);
         return [response, options, rawResponse];
       }).catch((error: any) => {
         if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
@@ -682,58 +677,60 @@ export class DataAccessControlServiceClient {
       });
   }
 /**
- * Deletes a data access label. When a label is deleted, new
- * data that enters in the system will not receive the label, but the label
- * will not be removed from old data that still refers to it.
+ * Delete data table.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.name
- *   Required. The ID of the data access label to delete.
- *   Format:
- *   `projects/{project}/locations/{location}/instances/{instance}/dataAccessLabels/{data_access_label}`
+ *   Required. The resource name of the data table to delete.
+ *   Format
+ *   projects/{project}/locations/{location}/instances/{instances}/dataTables/{data_table}
+ * @param {boolean} [request.force]
+ *   Optional. If set to true, any rows under this data table will also be
+ *   deleted. (Otherwise, the request will only work if the data table has no
+ *   rows.)
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
  *   The first element of the array is an object representing {@link protos.google.protobuf.Empty|Empty}.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/data_access_control_service.delete_data_access_label.js</caption>
- * region_tag:chronicle_v1_generated_DataAccessControlService_DeleteDataAccessLabel_async
+ * @example <caption>include:samples/generated/v1/data_table_service.delete_data_table.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_DeleteDataTable_async
  */
-  deleteDataAccessLabel(
-      request?: protos.google.cloud.chronicle.v1.IDeleteDataAccessLabelRequest,
+  deleteDataTable(
+      request?: protos.google.cloud.chronicle.v1.IDeleteDataTableRequest,
       options?: CallOptions):
       Promise<[
         protos.google.protobuf.IEmpty,
-        protos.google.cloud.chronicle.v1.IDeleteDataAccessLabelRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDeleteDataTableRequest|undefined, {}|undefined
       ]>;
-  deleteDataAccessLabel(
-      request: protos.google.cloud.chronicle.v1.IDeleteDataAccessLabelRequest,
+  deleteDataTable(
+      request: protos.google.cloud.chronicle.v1.IDeleteDataTableRequest,
       options: CallOptions,
       callback: Callback<
           protos.google.protobuf.IEmpty,
-          protos.google.cloud.chronicle.v1.IDeleteDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDeleteDataTableRequest|null|undefined,
           {}|null|undefined>): void;
-  deleteDataAccessLabel(
-      request: protos.google.cloud.chronicle.v1.IDeleteDataAccessLabelRequest,
+  deleteDataTable(
+      request: protos.google.cloud.chronicle.v1.IDeleteDataTableRequest,
       callback: Callback<
           protos.google.protobuf.IEmpty,
-          protos.google.cloud.chronicle.v1.IDeleteDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDeleteDataTableRequest|null|undefined,
           {}|null|undefined>): void;
-  deleteDataAccessLabel(
-      request?: protos.google.cloud.chronicle.v1.IDeleteDataAccessLabelRequest,
+  deleteDataTable(
+      request?: protos.google.cloud.chronicle.v1.IDeleteDataTableRequest,
       optionsOrCallback?: CallOptions|Callback<
           protos.google.protobuf.IEmpty,
-          protos.google.cloud.chronicle.v1.IDeleteDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDeleteDataTableRequest|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
           protos.google.protobuf.IEmpty,
-          protos.google.cloud.chronicle.v1.IDeleteDataAccessLabelRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDeleteDataTableRequest|null|undefined,
           {}|null|undefined>):
       Promise<[
         protos.google.protobuf.IEmpty,
-        protos.google.cloud.chronicle.v1.IDeleteDataAccessLabelRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDeleteDataTableRequest|undefined, {}|undefined
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -753,23 +750,23 @@ export class DataAccessControlServiceClient {
       'name': request.name ?? '',
     });
     this.initialize().catch(err => {throw err});
-    this._log.info('deleteDataAccessLabel request %j', request);
+    this._log.info('deleteDataTable request %j', request);
     const wrappedCallback: Callback<
         protos.google.protobuf.IEmpty,
-        protos.google.cloud.chronicle.v1.IDeleteDataAccessLabelRequest|null|undefined,
+        protos.google.cloud.chronicle.v1.IDeleteDataTableRequest|null|undefined,
         {}|null|undefined>|undefined = callback
       ? (error, response, options, rawResponse) => {
-          this._log.info('deleteDataAccessLabel response %j', response);
+          this._log.info('deleteDataTable response %j', response);
           callback!(error, response, options, rawResponse); // We verified callback above.
         }
       : undefined;
-    return this.innerApiCalls.deleteDataAccessLabel(request, options, wrappedCallback)
+    return this.innerApiCalls.deleteDataTable(request, options, wrappedCallback)
       ?.then(([response, options, rawResponse]: [
         protos.google.protobuf.IEmpty,
-        protos.google.cloud.chronicle.v1.IDeleteDataAccessLabelRequest|undefined,
+        protos.google.cloud.chronicle.v1.IDeleteDataTableRequest|undefined,
         {}|undefined
       ]) => {
-        this._log.info('deleteDataAccessLabel response %j', response);
+        this._log.info('deleteDataTable response %j', response);
         return [response, options, rawResponse];
       }).catch((error: any) => {
         if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
@@ -780,66 +777,58 @@ export class DataAccessControlServiceClient {
       });
   }
 /**
- * Creates a data access scope.
- * Data access scope is a combination of allowed and denied labels attached
- * to a permission group. If a scope has allowed labels A and B and denied
- * labels C and D, then the group of people attached to the scope
- * will have permissions to see all events labeled with A or B (or both) and
- * not labeled with either C or D.
+ * Create a new data table row.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource where this Data Access Scope will be created.
- *   Format: `projects/{project}/locations/{location}/instances/{instance}`
- * @param {google.cloud.chronicle.v1.DataAccessScope} request.dataAccessScope
- *   Required. Data access scope to create.
- * @param {string} request.dataAccessScopeId
- *   Required. The user provided scope id which will become the last part of the
- *   name of the scope resource. Needs to be compliant with
- *   https://google.aip.dev/122
+ *   Required. The resource id of the data table.
+ *   Format:
+ *   /projects/{project}/locations/{location}/instances/{instance}/dataTables/{data_table}
+ * @param {google.cloud.chronicle.v1.DataTableRow} request.dataTableRow
+ *   Required. The data table row to create.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataAccessScope|DataAccessScope}.
+ *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataTableRow|DataTableRow}.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/data_access_control_service.create_data_access_scope.js</caption>
- * region_tag:chronicle_v1_generated_DataAccessControlService_CreateDataAccessScope_async
+ * @example <caption>include:samples/generated/v1/data_table_service.create_data_table_row.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_CreateDataTableRow_async
  */
-  createDataAccessScope(
-      request?: protos.google.cloud.chronicle.v1.ICreateDataAccessScopeRequest,
+  createDataTableRow(
+      request?: protos.google.cloud.chronicle.v1.ICreateDataTableRowRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessScope,
-        protos.google.cloud.chronicle.v1.ICreateDataAccessScopeRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDataTableRow,
+        protos.google.cloud.chronicle.v1.ICreateDataTableRowRequest|undefined, {}|undefined
       ]>;
-  createDataAccessScope(
-      request: protos.google.cloud.chronicle.v1.ICreateDataAccessScopeRequest,
+  createDataTableRow(
+      request: protos.google.cloud.chronicle.v1.ICreateDataTableRowRequest,
       options: CallOptions,
       callback: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessScope,
-          protos.google.cloud.chronicle.v1.ICreateDataAccessScopeRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTableRow,
+          protos.google.cloud.chronicle.v1.ICreateDataTableRowRequest|null|undefined,
           {}|null|undefined>): void;
-  createDataAccessScope(
-      request: protos.google.cloud.chronicle.v1.ICreateDataAccessScopeRequest,
+  createDataTableRow(
+      request: protos.google.cloud.chronicle.v1.ICreateDataTableRowRequest,
       callback: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessScope,
-          protos.google.cloud.chronicle.v1.ICreateDataAccessScopeRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTableRow,
+          protos.google.cloud.chronicle.v1.ICreateDataTableRowRequest|null|undefined,
           {}|null|undefined>): void;
-  createDataAccessScope(
-      request?: protos.google.cloud.chronicle.v1.ICreateDataAccessScopeRequest,
+  createDataTableRow(
+      request?: protos.google.cloud.chronicle.v1.ICreateDataTableRowRequest,
       optionsOrCallback?: CallOptions|Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessScope,
-          protos.google.cloud.chronicle.v1.ICreateDataAccessScopeRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTableRow,
+          protos.google.cloud.chronicle.v1.ICreateDataTableRowRequest|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessScope,
-          protos.google.cloud.chronicle.v1.ICreateDataAccessScopeRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTableRow,
+          protos.google.cloud.chronicle.v1.ICreateDataTableRowRequest|null|undefined,
           {}|null|undefined>):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessScope,
-        protos.google.cloud.chronicle.v1.ICreateDataAccessScopeRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDataTableRow,
+        protos.google.cloud.chronicle.v1.ICreateDataTableRowRequest|undefined, {}|undefined
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -859,23 +848,23 @@ export class DataAccessControlServiceClient {
       'parent': request.parent ?? '',
     });
     this.initialize().catch(err => {throw err});
-    this._log.info('createDataAccessScope request %j', request);
+    this._log.info('createDataTableRow request %j', request);
     const wrappedCallback: Callback<
-        protos.google.cloud.chronicle.v1.IDataAccessScope,
-        protos.google.cloud.chronicle.v1.ICreateDataAccessScopeRequest|null|undefined,
+        protos.google.cloud.chronicle.v1.IDataTableRow,
+        protos.google.cloud.chronicle.v1.ICreateDataTableRowRequest|null|undefined,
         {}|null|undefined>|undefined = callback
       ? (error, response, options, rawResponse) => {
-          this._log.info('createDataAccessScope response %j', response);
+          this._log.info('createDataTableRow response %j', response);
           callback!(error, response, options, rawResponse); // We verified callback above.
         }
       : undefined;
-    return this.innerApiCalls.createDataAccessScope(request, options, wrappedCallback)
+    return this.innerApiCalls.createDataTableRow(request, options, wrappedCallback)
       ?.then(([response, options, rawResponse]: [
-        protos.google.cloud.chronicle.v1.IDataAccessScope,
-        protos.google.cloud.chronicle.v1.ICreateDataAccessScopeRequest|undefined,
+        protos.google.cloud.chronicle.v1.IDataTableRow,
+        protos.google.cloud.chronicle.v1.ICreateDataTableRowRequest|undefined,
         {}|undefined
       ]) => {
-        this._log.info('createDataAccessScope response %j', response);
+        this._log.info('createDataTableRow response %j', response);
         return [response, options, rawResponse];
       }).catch((error: any) => {
         if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
@@ -886,56 +875,156 @@ export class DataAccessControlServiceClient {
       });
   }
 /**
- * Retrieves an existing data access scope.
+ * Update data table row
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {google.cloud.chronicle.v1.DataTableRow} request.dataTableRow
+ *   Required. Format:
+ *   projects/{project}/locations/{location}/instances/{instance}/dataTables/{data_table}/dataTableRows/{data_table_row}
+ * @param {google.protobuf.FieldMask} [request.updateMask]
+ *   Optional. The list of fields to update. Currently data table rows only
+ *   support updating the `values` field. When no field mask is supplied, all
+ *   non-empty fields will be updated. A field mask of "*" will update all
+ *   fields, whether empty or not.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataTableRow|DataTableRow}.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+ *   for more details and examples.
+ * @example <caption>include:samples/generated/v1/data_table_service.update_data_table_row.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_UpdateDataTableRow_async
+ */
+  updateDataTableRow(
+      request?: protos.google.cloud.chronicle.v1.IUpdateDataTableRowRequest,
+      options?: CallOptions):
+      Promise<[
+        protos.google.cloud.chronicle.v1.IDataTableRow,
+        protos.google.cloud.chronicle.v1.IUpdateDataTableRowRequest|undefined, {}|undefined
+      ]>;
+  updateDataTableRow(
+      request: protos.google.cloud.chronicle.v1.IUpdateDataTableRowRequest,
+      options: CallOptions,
+      callback: Callback<
+          protos.google.cloud.chronicle.v1.IDataTableRow,
+          protos.google.cloud.chronicle.v1.IUpdateDataTableRowRequest|null|undefined,
+          {}|null|undefined>): void;
+  updateDataTableRow(
+      request: protos.google.cloud.chronicle.v1.IUpdateDataTableRowRequest,
+      callback: Callback<
+          protos.google.cloud.chronicle.v1.IDataTableRow,
+          protos.google.cloud.chronicle.v1.IUpdateDataTableRowRequest|null|undefined,
+          {}|null|undefined>): void;
+  updateDataTableRow(
+      request?: protos.google.cloud.chronicle.v1.IUpdateDataTableRowRequest,
+      optionsOrCallback?: CallOptions|Callback<
+          protos.google.cloud.chronicle.v1.IDataTableRow,
+          protos.google.cloud.chronicle.v1.IUpdateDataTableRowRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.cloud.chronicle.v1.IDataTableRow,
+          protos.google.cloud.chronicle.v1.IUpdateDataTableRowRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.cloud.chronicle.v1.IDataTableRow,
+        protos.google.cloud.chronicle.v1.IUpdateDataTableRowRequest|undefined, {}|undefined
+      ]>|void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    }
+    else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'data_table_row.name': request.dataTableRow!.name ?? '',
+    });
+    this.initialize().catch(err => {throw err});
+    this._log.info('updateDataTableRow request %j', request);
+    const wrappedCallback: Callback<
+        protos.google.cloud.chronicle.v1.IDataTableRow,
+        protos.google.cloud.chronicle.v1.IUpdateDataTableRowRequest|null|undefined,
+        {}|null|undefined>|undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info('updateDataTableRow response %j', response);
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls.updateDataTableRow(request, options, wrappedCallback)
+      ?.then(([response, options, rawResponse]: [
+        protos.google.cloud.chronicle.v1.IDataTableRow,
+        protos.google.cloud.chronicle.v1.IUpdateDataTableRowRequest|undefined,
+        {}|undefined
+      ]) => {
+        this._log.info('updateDataTableRow response %j', response);
+        return [response, options, rawResponse];
+      }).catch((error: any) => {
+        if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(jsonProtos) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(error.statusDetails, protos);
+        }
+        throw error;
+      });
+  }
+/**
+ * Get data table row
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.name
- *   Required. The ID of the data access scope to retrieve.
+ *   Required. The resource name of the data table row i,e row_id.
  *   Format:
- *   `projects/{project}/locations/{location}/instances/{instance}/dataAccessScopes/{data_access_scope}`
+ *   projects/{project}/locations/{location}/instances/{instance}/dataTables/{data_table}/dataTableRows/{data_table_row}
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataAccessScope|DataAccessScope}.
+ *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataTableRow|DataTableRow}.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/data_access_control_service.get_data_access_scope.js</caption>
- * region_tag:chronicle_v1_generated_DataAccessControlService_GetDataAccessScope_async
+ * @example <caption>include:samples/generated/v1/data_table_service.get_data_table_row.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_GetDataTableRow_async
  */
-  getDataAccessScope(
-      request?: protos.google.cloud.chronicle.v1.IGetDataAccessScopeRequest,
+  getDataTableRow(
+      request?: protos.google.cloud.chronicle.v1.IGetDataTableRowRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessScope,
-        protos.google.cloud.chronicle.v1.IGetDataAccessScopeRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDataTableRow,
+        protos.google.cloud.chronicle.v1.IGetDataTableRowRequest|undefined, {}|undefined
       ]>;
-  getDataAccessScope(
-      request: protos.google.cloud.chronicle.v1.IGetDataAccessScopeRequest,
+  getDataTableRow(
+      request: protos.google.cloud.chronicle.v1.IGetDataTableRowRequest,
       options: CallOptions,
       callback: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessScope,
-          protos.google.cloud.chronicle.v1.IGetDataAccessScopeRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTableRow,
+          protos.google.cloud.chronicle.v1.IGetDataTableRowRequest|null|undefined,
           {}|null|undefined>): void;
-  getDataAccessScope(
-      request: protos.google.cloud.chronicle.v1.IGetDataAccessScopeRequest,
+  getDataTableRow(
+      request: protos.google.cloud.chronicle.v1.IGetDataTableRowRequest,
       callback: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessScope,
-          protos.google.cloud.chronicle.v1.IGetDataAccessScopeRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTableRow,
+          protos.google.cloud.chronicle.v1.IGetDataTableRowRequest|null|undefined,
           {}|null|undefined>): void;
-  getDataAccessScope(
-      request?: protos.google.cloud.chronicle.v1.IGetDataAccessScopeRequest,
+  getDataTableRow(
+      request?: protos.google.cloud.chronicle.v1.IGetDataTableRowRequest,
       optionsOrCallback?: CallOptions|Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessScope,
-          protos.google.cloud.chronicle.v1.IGetDataAccessScopeRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTableRow,
+          protos.google.cloud.chronicle.v1.IGetDataTableRowRequest|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessScope,
-          protos.google.cloud.chronicle.v1.IGetDataAccessScopeRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTableRow,
+          protos.google.cloud.chronicle.v1.IGetDataTableRowRequest|null|undefined,
           {}|null|undefined>):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessScope,
-        protos.google.cloud.chronicle.v1.IGetDataAccessScopeRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDataTableRow,
+        protos.google.cloud.chronicle.v1.IGetDataTableRowRequest|undefined, {}|undefined
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -955,23 +1044,23 @@ export class DataAccessControlServiceClient {
       'name': request.name ?? '',
     });
     this.initialize().catch(err => {throw err});
-    this._log.info('getDataAccessScope request %j', request);
+    this._log.info('getDataTableRow request %j', request);
     const wrappedCallback: Callback<
-        protos.google.cloud.chronicle.v1.IDataAccessScope,
-        protos.google.cloud.chronicle.v1.IGetDataAccessScopeRequest|null|undefined,
+        protos.google.cloud.chronicle.v1.IDataTableRow,
+        protos.google.cloud.chronicle.v1.IGetDataTableRowRequest|null|undefined,
         {}|null|undefined>|undefined = callback
       ? (error, response, options, rawResponse) => {
-          this._log.info('getDataAccessScope response %j', response);
+          this._log.info('getDataTableRow response %j', response);
           callback!(error, response, options, rawResponse); // We verified callback above.
         }
       : undefined;
-    return this.innerApiCalls.getDataAccessScope(request, options, wrappedCallback)
+    return this.innerApiCalls.getDataTableRow(request, options, wrappedCallback)
       ?.then(([response, options, rawResponse]: [
-        protos.google.cloud.chronicle.v1.IDataAccessScope,
-        protos.google.cloud.chronicle.v1.IGetDataAccessScopeRequest|undefined,
+        protos.google.cloud.chronicle.v1.IDataTableRow,
+        protos.google.cloud.chronicle.v1.IGetDataTableRowRequest|undefined,
         {}|undefined
       ]) => {
-        this._log.info('getDataAccessScope response %j', response);
+        this._log.info('getDataTableRow response %j', response);
         return [response, options, rawResponse];
       }).catch((error: any) => {
         if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
@@ -982,160 +1071,56 @@ export class DataAccessControlServiceClient {
       });
   }
 /**
- * Updates a data access scope.
- *
- * @param {Object} request
- *   The request object that will be sent.
- * @param {google.cloud.chronicle.v1.DataAccessScope} request.dataAccessScope
- *   Required. The data access scope to update.
- *
- *   The scope's `name` field is used to identify the scope to update.
- *   Format:
- *   `projects/{project}/locations/{location}/instances/{instance}/dataAccessScopes/{data_access_scope}`
- * @param {google.protobuf.FieldMask} request.updateMask
- *   The list of fields to update. If not included, all fields with a non-empty
- *   value will be overwritten. Currently, only the description, the allowed
- *   and denied labels list fields are supported for update;
- *   an update call that attempts to update any
- *   other fields will return INVALID_ARGUMENT.
- * @param {object} [options]
- *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
- * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataAccessScope|DataAccessScope}.
- *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
- *   for more details and examples.
- * @example <caption>include:samples/generated/v1/data_access_control_service.update_data_access_scope.js</caption>
- * region_tag:chronicle_v1_generated_DataAccessControlService_UpdateDataAccessScope_async
- */
-  updateDataAccessScope(
-      request?: protos.google.cloud.chronicle.v1.IUpdateDataAccessScopeRequest,
-      options?: CallOptions):
-      Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessScope,
-        protos.google.cloud.chronicle.v1.IUpdateDataAccessScopeRequest|undefined, {}|undefined
-      ]>;
-  updateDataAccessScope(
-      request: protos.google.cloud.chronicle.v1.IUpdateDataAccessScopeRequest,
-      options: CallOptions,
-      callback: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessScope,
-          protos.google.cloud.chronicle.v1.IUpdateDataAccessScopeRequest|null|undefined,
-          {}|null|undefined>): void;
-  updateDataAccessScope(
-      request: protos.google.cloud.chronicle.v1.IUpdateDataAccessScopeRequest,
-      callback: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessScope,
-          protos.google.cloud.chronicle.v1.IUpdateDataAccessScopeRequest|null|undefined,
-          {}|null|undefined>): void;
-  updateDataAccessScope(
-      request?: protos.google.cloud.chronicle.v1.IUpdateDataAccessScopeRequest,
-      optionsOrCallback?: CallOptions|Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessScope,
-          protos.google.cloud.chronicle.v1.IUpdateDataAccessScopeRequest|null|undefined,
-          {}|null|undefined>,
-      callback?: Callback<
-          protos.google.cloud.chronicle.v1.IDataAccessScope,
-          protos.google.cloud.chronicle.v1.IUpdateDataAccessScopeRequest|null|undefined,
-          {}|null|undefined>):
-      Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessScope,
-        protos.google.cloud.chronicle.v1.IUpdateDataAccessScopeRequest|undefined, {}|undefined
-      ]>|void {
-    request = request || {};
-    let options: CallOptions;
-    if (typeof optionsOrCallback === 'function' && callback === undefined) {
-      callback = optionsOrCallback;
-      options = {};
-    }
-    else {
-      options = optionsOrCallback as CallOptions;
-    }
-    options = options || {};
-    options.otherArgs = options.otherArgs || {};
-    options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = this._gaxModule.routingHeader.fromParams({
-      'data_access_scope.name': request.dataAccessScope!.name ?? '',
-    });
-    this.initialize().catch(err => {throw err});
-    this._log.info('updateDataAccessScope request %j', request);
-    const wrappedCallback: Callback<
-        protos.google.cloud.chronicle.v1.IDataAccessScope,
-        protos.google.cloud.chronicle.v1.IUpdateDataAccessScopeRequest|null|undefined,
-        {}|null|undefined>|undefined = callback
-      ? (error, response, options, rawResponse) => {
-          this._log.info('updateDataAccessScope response %j', response);
-          callback!(error, response, options, rawResponse); // We verified callback above.
-        }
-      : undefined;
-    return this.innerApiCalls.updateDataAccessScope(request, options, wrappedCallback)
-      ?.then(([response, options, rawResponse]: [
-        protos.google.cloud.chronicle.v1.IDataAccessScope,
-        protos.google.cloud.chronicle.v1.IUpdateDataAccessScopeRequest|undefined,
-        {}|undefined
-      ]) => {
-        this._log.info('updateDataAccessScope response %j', response);
-        return [response, options, rawResponse];
-      }).catch((error: any) => {
-        if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
-          const protos = this._gaxModule.protobuf.Root.fromJSON(jsonProtos) as unknown as gax.protobuf.Type;
-          error.statusDetails = decodeAnyProtosInArray(error.statusDetails, protos);
-        }
-        throw error;
-      });
-  }
-/**
- * Deletes a data access scope.
+ * Delete data table row.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.name
- *   Required. The ID of the data access scope to delete.
+ *   Required. The resource name of the data table row i,e row_id.
  *   Format:
- *   `projects/{project}/locations/{location}/instances/{instance}/dataAccessScopes/{data_access_scope}`
+ *   projects/{project}/locations/{location}/instances/{instance}/dataTables/{data_table}/dataTableRows/{data_table_row}
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
  *   The first element of the array is an object representing {@link protos.google.protobuf.Empty|Empty}.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/data_access_control_service.delete_data_access_scope.js</caption>
- * region_tag:chronicle_v1_generated_DataAccessControlService_DeleteDataAccessScope_async
+ * @example <caption>include:samples/generated/v1/data_table_service.delete_data_table_row.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_DeleteDataTableRow_async
  */
-  deleteDataAccessScope(
-      request?: protos.google.cloud.chronicle.v1.IDeleteDataAccessScopeRequest,
+  deleteDataTableRow(
+      request?: protos.google.cloud.chronicle.v1.IDeleteDataTableRowRequest,
       options?: CallOptions):
       Promise<[
         protos.google.protobuf.IEmpty,
-        protos.google.cloud.chronicle.v1.IDeleteDataAccessScopeRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDeleteDataTableRowRequest|undefined, {}|undefined
       ]>;
-  deleteDataAccessScope(
-      request: protos.google.cloud.chronicle.v1.IDeleteDataAccessScopeRequest,
+  deleteDataTableRow(
+      request: protos.google.cloud.chronicle.v1.IDeleteDataTableRowRequest,
       options: CallOptions,
       callback: Callback<
           protos.google.protobuf.IEmpty,
-          protos.google.cloud.chronicle.v1.IDeleteDataAccessScopeRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDeleteDataTableRowRequest|null|undefined,
           {}|null|undefined>): void;
-  deleteDataAccessScope(
-      request: protos.google.cloud.chronicle.v1.IDeleteDataAccessScopeRequest,
+  deleteDataTableRow(
+      request: protos.google.cloud.chronicle.v1.IDeleteDataTableRowRequest,
       callback: Callback<
           protos.google.protobuf.IEmpty,
-          protos.google.cloud.chronicle.v1.IDeleteDataAccessScopeRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDeleteDataTableRowRequest|null|undefined,
           {}|null|undefined>): void;
-  deleteDataAccessScope(
-      request?: protos.google.cloud.chronicle.v1.IDeleteDataAccessScopeRequest,
+  deleteDataTableRow(
+      request?: protos.google.cloud.chronicle.v1.IDeleteDataTableRowRequest,
       optionsOrCallback?: CallOptions|Callback<
           protos.google.protobuf.IEmpty,
-          protos.google.cloud.chronicle.v1.IDeleteDataAccessScopeRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDeleteDataTableRowRequest|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
           protos.google.protobuf.IEmpty,
-          protos.google.cloud.chronicle.v1.IDeleteDataAccessScopeRequest|null|undefined,
+          protos.google.cloud.chronicle.v1.IDeleteDataTableRowRequest|null|undefined,
           {}|null|undefined>):
       Promise<[
         protos.google.protobuf.IEmpty,
-        protos.google.cloud.chronicle.v1.IDeleteDataAccessScopeRequest|undefined, {}|undefined
+        protos.google.cloud.chronicle.v1.IDeleteDataTableRowRequest|undefined, {}|undefined
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -1155,23 +1140,518 @@ export class DataAccessControlServiceClient {
       'name': request.name ?? '',
     });
     this.initialize().catch(err => {throw err});
-    this._log.info('deleteDataAccessScope request %j', request);
+    this._log.info('deleteDataTableRow request %j', request);
     const wrappedCallback: Callback<
         protos.google.protobuf.IEmpty,
-        protos.google.cloud.chronicle.v1.IDeleteDataAccessScopeRequest|null|undefined,
+        protos.google.cloud.chronicle.v1.IDeleteDataTableRowRequest|null|undefined,
         {}|null|undefined>|undefined = callback
       ? (error, response, options, rawResponse) => {
-          this._log.info('deleteDataAccessScope response %j', response);
+          this._log.info('deleteDataTableRow response %j', response);
           callback!(error, response, options, rawResponse); // We verified callback above.
         }
       : undefined;
-    return this.innerApiCalls.deleteDataAccessScope(request, options, wrappedCallback)
+    return this.innerApiCalls.deleteDataTableRow(request, options, wrappedCallback)
       ?.then(([response, options, rawResponse]: [
         protos.google.protobuf.IEmpty,
-        protos.google.cloud.chronicle.v1.IDeleteDataAccessScopeRequest|undefined,
+        protos.google.cloud.chronicle.v1.IDeleteDataTableRowRequest|undefined,
         {}|undefined
       ]) => {
-        this._log.info('deleteDataAccessScope response %j', response);
+        this._log.info('deleteDataTableRow response %j', response);
+        return [response, options, rawResponse];
+      }).catch((error: any) => {
+        if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(jsonProtos) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(error.statusDetails, protos);
+        }
+        throw error;
+      });
+  }
+/**
+ * Create data table rows in bulk.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The resource id of the data table.
+ *   Format:
+ *   /projects/{project}/locations/{location}/instances/{instance}/dataTables/{data_table}
+ * @param {number[]} request.requests
+ *   Required. Data table rows to create. A maximum of 1000 rows (for sync
+ *   requests) or 2000 rows (for async requests) can be created in a single
+ *   request. Total size of the rows should be less than 4MB.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.BulkCreateDataTableRowsResponse|BulkCreateDataTableRowsResponse}.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+ *   for more details and examples.
+ * @example <caption>include:samples/generated/v1/data_table_service.bulk_create_data_table_rows.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_BulkCreateDataTableRows_async
+ */
+  bulkCreateDataTableRows(
+      request?: protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsRequest,
+      options?: CallOptions):
+      Promise<[
+        protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsRequest|undefined, {}|undefined
+      ]>;
+  bulkCreateDataTableRows(
+      request: protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsRequest,
+      options: CallOptions,
+      callback: Callback<
+          protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsRequest|null|undefined,
+          {}|null|undefined>): void;
+  bulkCreateDataTableRows(
+      request: protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsRequest,
+      callback: Callback<
+          protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsRequest|null|undefined,
+          {}|null|undefined>): void;
+  bulkCreateDataTableRows(
+      request?: protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsRequest,
+      optionsOrCallback?: CallOptions|Callback<
+          protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsRequest|undefined, {}|undefined
+      ]>|void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    }
+    else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    this.initialize().catch(err => {throw err});
+    this._log.info('bulkCreateDataTableRows request %j', request);
+    const wrappedCallback: Callback<
+        protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsRequest|null|undefined,
+        {}|null|undefined>|undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info('bulkCreateDataTableRows response %j', response);
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls.bulkCreateDataTableRows(request, options, wrappedCallback)
+      ?.then(([response, options, rawResponse]: [
+        protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkCreateDataTableRowsRequest|undefined,
+        {}|undefined
+      ]) => {
+        this._log.info('bulkCreateDataTableRows response %j', response);
+        return [response, options, rawResponse];
+      }).catch((error: any) => {
+        if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(jsonProtos) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(error.statusDetails, protos);
+        }
+        throw error;
+      });
+  }
+/**
+ * Get data table rows in bulk.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The resource id of the data table.
+ *   Format:
+ *   /projects/{project}/locations/{location}/instances/{instance}/dataTables/{data_table}
+ * @param {number[]} request.requests
+ *   Required. Data table rows to get. At max 1,000 rows can be there in a
+ *   request.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.BulkGetDataTableRowsResponse|BulkGetDataTableRowsResponse}.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+ *   for more details and examples.
+ * @example <caption>include:samples/generated/v1/data_table_service.bulk_get_data_table_rows.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_BulkGetDataTableRows_async
+ */
+  bulkGetDataTableRows(
+      request?: protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsRequest,
+      options?: CallOptions):
+      Promise<[
+        protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsRequest|undefined, {}|undefined
+      ]>;
+  bulkGetDataTableRows(
+      request: protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsRequest,
+      options: CallOptions,
+      callback: Callback<
+          protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsRequest|null|undefined,
+          {}|null|undefined>): void;
+  bulkGetDataTableRows(
+      request: protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsRequest,
+      callback: Callback<
+          protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsRequest|null|undefined,
+          {}|null|undefined>): void;
+  bulkGetDataTableRows(
+      request?: protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsRequest,
+      optionsOrCallback?: CallOptions|Callback<
+          protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsRequest|undefined, {}|undefined
+      ]>|void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    }
+    else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    this.initialize().catch(err => {throw err});
+    this._log.info('bulkGetDataTableRows request %j', request);
+    const wrappedCallback: Callback<
+        protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsRequest|null|undefined,
+        {}|null|undefined>|undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info('bulkGetDataTableRows response %j', response);
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls.bulkGetDataTableRows(request, options, wrappedCallback)
+      ?.then(([response, options, rawResponse]: [
+        protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkGetDataTableRowsRequest|undefined,
+        {}|undefined
+      ]) => {
+        this._log.info('bulkGetDataTableRows response %j', response);
+        return [response, options, rawResponse];
+      }).catch((error: any) => {
+        if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(jsonProtos) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(error.statusDetails, protos);
+        }
+        throw error;
+      });
+  }
+/**
+ * Replace all existing data table rows with new data table rows.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The resource id of the data table.
+ *   Format:
+ *   /projects/{project}/locations/{location}/instances/{instance}/dataTables/{data_table}
+ * @param {number[]} request.requests
+ *   Required. Data table rows to replace the existing data table rows. A
+ *   maximum of 1000 rows (for sync requests) or 2000 rows (for async requests)
+ *   can be replaced in a single request. Total size of the rows should be less
+ *   than 4MB.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.BulkReplaceDataTableRowsResponse|BulkReplaceDataTableRowsResponse}.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+ *   for more details and examples.
+ * @example <caption>include:samples/generated/v1/data_table_service.bulk_replace_data_table_rows.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_BulkReplaceDataTableRows_async
+ */
+  bulkReplaceDataTableRows(
+      request?: protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsRequest,
+      options?: CallOptions):
+      Promise<[
+        protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsRequest|undefined, {}|undefined
+      ]>;
+  bulkReplaceDataTableRows(
+      request: protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsRequest,
+      options: CallOptions,
+      callback: Callback<
+          protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsRequest|null|undefined,
+          {}|null|undefined>): void;
+  bulkReplaceDataTableRows(
+      request: protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsRequest,
+      callback: Callback<
+          protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsRequest|null|undefined,
+          {}|null|undefined>): void;
+  bulkReplaceDataTableRows(
+      request?: protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsRequest,
+      optionsOrCallback?: CallOptions|Callback<
+          protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsRequest|undefined, {}|undefined
+      ]>|void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    }
+    else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    this.initialize().catch(err => {throw err});
+    this._log.info('bulkReplaceDataTableRows request %j', request);
+    const wrappedCallback: Callback<
+        protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsRequest|null|undefined,
+        {}|null|undefined>|undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info('bulkReplaceDataTableRows response %j', response);
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls.bulkReplaceDataTableRows(request, options, wrappedCallback)
+      ?.then(([response, options, rawResponse]: [
+        protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkReplaceDataTableRowsRequest|undefined,
+        {}|undefined
+      ]) => {
+        this._log.info('bulkReplaceDataTableRows response %j', response);
+        return [response, options, rawResponse];
+      }).catch((error: any) => {
+        if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(jsonProtos) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(error.statusDetails, protos);
+        }
+        throw error;
+      });
+  }
+/**
+ * Update data table rows in bulk.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The resource id of the data table.
+ *   Format:
+ *   /projects/{project}/locations/{location}/instances/{instance}/dataTables/{data_table}
+ * @param {number[]} request.requests
+ *   Required. Data table rows to update. At max 1,000 rows (or rows with size
+ *   less than 2MB) can be there in a request.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.BulkUpdateDataTableRowsResponse|BulkUpdateDataTableRowsResponse}.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+ *   for more details and examples.
+ * @example <caption>include:samples/generated/v1/data_table_service.bulk_update_data_table_rows.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_BulkUpdateDataTableRows_async
+ */
+  bulkUpdateDataTableRows(
+      request?: protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsRequest,
+      options?: CallOptions):
+      Promise<[
+        protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsRequest|undefined, {}|undefined
+      ]>;
+  bulkUpdateDataTableRows(
+      request: protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsRequest,
+      options: CallOptions,
+      callback: Callback<
+          protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsRequest|null|undefined,
+          {}|null|undefined>): void;
+  bulkUpdateDataTableRows(
+      request: protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsRequest,
+      callback: Callback<
+          protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsRequest|null|undefined,
+          {}|null|undefined>): void;
+  bulkUpdateDataTableRows(
+      request?: protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsRequest,
+      optionsOrCallback?: CallOptions|Callback<
+          protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsResponse,
+          protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsRequest|undefined, {}|undefined
+      ]>|void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    }
+    else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    this.initialize().catch(err => {throw err});
+    this._log.info('bulkUpdateDataTableRows request %j', request);
+    const wrappedCallback: Callback<
+        protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsRequest|null|undefined,
+        {}|null|undefined>|undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info('bulkUpdateDataTableRows response %j', response);
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls.bulkUpdateDataTableRows(request, options, wrappedCallback)
+      ?.then(([response, options, rawResponse]: [
+        protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsResponse,
+        protos.google.cloud.chronicle.v1.IBulkUpdateDataTableRowsRequest|undefined,
+        {}|undefined
+      ]) => {
+        this._log.info('bulkUpdateDataTableRows response %j', response);
+        return [response, options, rawResponse];
+      }).catch((error: any) => {
+        if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(jsonProtos) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(error.statusDetails, protos);
+        }
+        throw error;
+      });
+  }
+/**
+ * Get the error for a data table operation.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.name
+ *   Required. Resource name for the data table operation errors.
+ *   Format:
+ *   projects/{project}/locations/{location}/instances/{instance}/dataTableOperationErrors/{data_table_operation_errors}
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing {@link protos.google.cloud.chronicle.v1.DataTableOperationErrors|DataTableOperationErrors}.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+ *   for more details and examples.
+ * @example <caption>include:samples/generated/v1/data_table_service.get_data_table_operation_errors.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_GetDataTableOperationErrors_async
+ */
+  getDataTableOperationErrors(
+      request?: protos.google.cloud.chronicle.v1.IGetDataTableOperationErrorsRequest,
+      options?: CallOptions):
+      Promise<[
+        protos.google.cloud.chronicle.v1.IDataTableOperationErrors,
+        protos.google.cloud.chronicle.v1.IGetDataTableOperationErrorsRequest|undefined, {}|undefined
+      ]>;
+  getDataTableOperationErrors(
+      request: protos.google.cloud.chronicle.v1.IGetDataTableOperationErrorsRequest,
+      options: CallOptions,
+      callback: Callback<
+          protos.google.cloud.chronicle.v1.IDataTableOperationErrors,
+          protos.google.cloud.chronicle.v1.IGetDataTableOperationErrorsRequest|null|undefined,
+          {}|null|undefined>): void;
+  getDataTableOperationErrors(
+      request: protos.google.cloud.chronicle.v1.IGetDataTableOperationErrorsRequest,
+      callback: Callback<
+          protos.google.cloud.chronicle.v1.IDataTableOperationErrors,
+          protos.google.cloud.chronicle.v1.IGetDataTableOperationErrorsRequest|null|undefined,
+          {}|null|undefined>): void;
+  getDataTableOperationErrors(
+      request?: protos.google.cloud.chronicle.v1.IGetDataTableOperationErrorsRequest,
+      optionsOrCallback?: CallOptions|Callback<
+          protos.google.cloud.chronicle.v1.IDataTableOperationErrors,
+          protos.google.cloud.chronicle.v1.IGetDataTableOperationErrorsRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.cloud.chronicle.v1.IDataTableOperationErrors,
+          protos.google.cloud.chronicle.v1.IGetDataTableOperationErrorsRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.cloud.chronicle.v1.IDataTableOperationErrors,
+        protos.google.cloud.chronicle.v1.IGetDataTableOperationErrorsRequest|undefined, {}|undefined
+      ]>|void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    }
+    else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'name': request.name ?? '',
+    });
+    this.initialize().catch(err => {throw err});
+    this._log.info('getDataTableOperationErrors request %j', request);
+    const wrappedCallback: Callback<
+        protos.google.cloud.chronicle.v1.IDataTableOperationErrors,
+        protos.google.cloud.chronicle.v1.IGetDataTableOperationErrorsRequest|null|undefined,
+        {}|null|undefined>|undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info('getDataTableOperationErrors response %j', response);
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls.getDataTableOperationErrors(request, options, wrappedCallback)
+      ?.then(([response, options, rawResponse]: [
+        protos.google.cloud.chronicle.v1.IDataTableOperationErrors,
+        protos.google.cloud.chronicle.v1.IGetDataTableOperationErrorsRequest|undefined,
+        {}|undefined
+      ]) => {
+        this._log.info('getDataTableOperationErrors response %j', response);
         return [response, options, rawResponse];
       }).catch((error: any) => {
         if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
@@ -1183,74 +1663,74 @@ export class DataAccessControlServiceClient {
   }
 
  /**
- * Lists all data access labels for the customer.
+ * List data tables.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource where this data access label will be created.
- *   Format: `projects/{project}/locations/{location}/instances/{instance}`
- * @param {number} request.pageSize
- *   The maximum number of data access labels to return. The service may return
- *   fewer than this value. If unspecified, at most 100 data access labels will
+ *   Required. The parent resource where this data table will be created.
+ *   Format: projects/{project}/locations/{location}/instances/{instance}
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of data tables to return. The service may
+ *   return fewer than this value. If unspecified, at most 100 data tables will
  *   be returned. The maximum value is 1000; values above 1000 will be coerced
  *   to 1000.
- * @param {string} request.pageToken
- *   A page token, received from a previous `ListDataAccessLabelsRequest` call.
+ * @param {string} [request.pageToken]
+ *   Optional. A page token, received from a previous `ListDataTables` call.
  *   Provide this to retrieve the subsequent page.
- * @param {string} [request.filter]
- *   Optional. A filter which should follow the guidelines of AIP-160.
- *   Supports filtering on all fieds of DataAccessLabel and all operations as
- *   mentioned in https://google.aip.dev/160.
- *   example filter: "create_time greater than \"2023-04-21T11:30:00-04:00\" OR
- *   display_name:\"-21-1\"".
+ *   When paginating, all other parameters provided to
+ *   `ListDataTables` must match the call that provided the page
+ *   token.
+ * @param {string} [request.orderBy]
+ *   Optional. Configures ordering of DataTables in the response.
+ *   Note: Our implementation currently supports order by "create_time asc" only
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is Array of {@link protos.google.cloud.chronicle.v1.DataAccessLabel|DataAccessLabel}.
+ *   The first element of the array is Array of {@link protos.google.cloud.chronicle.v1.DataTable|DataTable}.
  *   The client library will perform auto-pagination by default: it will call the API as many
  *   times as needed and will merge results from all the pages into this array.
  *   Note that it can affect your quota.
- *   We recommend using `listDataAccessLabelsAsync()`
+ *   We recommend using `listDataTablesAsync()`
  *   method described below for async iteration which you can stop as needed.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
  */
-  listDataAccessLabels(
-      request?: protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest,
+  listDataTables(
+      request?: protos.google.cloud.chronicle.v1.IListDataTablesRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessLabel[],
-        protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest|null,
-        protos.google.cloud.chronicle.v1.IListDataAccessLabelsResponse
+        protos.google.cloud.chronicle.v1.IDataTable[],
+        protos.google.cloud.chronicle.v1.IListDataTablesRequest|null,
+        protos.google.cloud.chronicle.v1.IListDataTablesResponse
       ]>;
-  listDataAccessLabels(
-      request: protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest,
+  listDataTables(
+      request: protos.google.cloud.chronicle.v1.IListDataTablesRequest,
       options: CallOptions,
       callback: PaginationCallback<
-          protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest,
-          protos.google.cloud.chronicle.v1.IListDataAccessLabelsResponse|null|undefined,
-          protos.google.cloud.chronicle.v1.IDataAccessLabel>): void;
-  listDataAccessLabels(
-      request: protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest,
+          protos.google.cloud.chronicle.v1.IListDataTablesRequest,
+          protos.google.cloud.chronicle.v1.IListDataTablesResponse|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable>): void;
+  listDataTables(
+      request: protos.google.cloud.chronicle.v1.IListDataTablesRequest,
       callback: PaginationCallback<
-          protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest,
-          protos.google.cloud.chronicle.v1.IListDataAccessLabelsResponse|null|undefined,
-          protos.google.cloud.chronicle.v1.IDataAccessLabel>): void;
-  listDataAccessLabels(
-      request?: protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest,
+          protos.google.cloud.chronicle.v1.IListDataTablesRequest,
+          protos.google.cloud.chronicle.v1.IListDataTablesResponse|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable>): void;
+  listDataTables(
+      request?: protos.google.cloud.chronicle.v1.IListDataTablesRequest,
       optionsOrCallback?: CallOptions|PaginationCallback<
-          protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest,
-          protos.google.cloud.chronicle.v1.IListDataAccessLabelsResponse|null|undefined,
-          protos.google.cloud.chronicle.v1.IDataAccessLabel>,
+          protos.google.cloud.chronicle.v1.IListDataTablesRequest,
+          protos.google.cloud.chronicle.v1.IListDataTablesResponse|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable>,
       callback?: PaginationCallback<
-          protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest,
-          protos.google.cloud.chronicle.v1.IListDataAccessLabelsResponse|null|undefined,
-          protos.google.cloud.chronicle.v1.IDataAccessLabel>):
+          protos.google.cloud.chronicle.v1.IListDataTablesRequest,
+          protos.google.cloud.chronicle.v1.IListDataTablesResponse|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTable>):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessLabel[],
-        protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest|null,
-        protos.google.cloud.chronicle.v1.IListDataAccessLabelsResponse
+        protos.google.cloud.chronicle.v1.IDataTable[],
+        protos.google.cloud.chronicle.v1.IListDataTablesRequest|null,
+        protos.google.cloud.chronicle.v1.IListDataTablesResponse
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -1271,61 +1751,61 @@ export class DataAccessControlServiceClient {
     });
     this.initialize().catch(err => {throw err});
     const wrappedCallback: PaginationCallback<
-      protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest,
-      protos.google.cloud.chronicle.v1.IListDataAccessLabelsResponse|null|undefined,
-      protos.google.cloud.chronicle.v1.IDataAccessLabel>|undefined = callback
+      protos.google.cloud.chronicle.v1.IListDataTablesRequest,
+      protos.google.cloud.chronicle.v1.IListDataTablesResponse|null|undefined,
+      protos.google.cloud.chronicle.v1.IDataTable>|undefined = callback
       ? (error, values, nextPageRequest, rawResponse) => {
-          this._log.info('listDataAccessLabels values %j', values);
+          this._log.info('listDataTables values %j', values);
           callback!(error, values, nextPageRequest, rawResponse); // We verified callback above.
         }
       : undefined;
-    this._log.info('listDataAccessLabels request %j', request);
+    this._log.info('listDataTables request %j', request);
     return this.innerApiCalls
-      .listDataAccessLabels(request, options, wrappedCallback)
+      .listDataTables(request, options, wrappedCallback)
       ?.then(([response, input, output]: [
-        protos.google.cloud.chronicle.v1.IDataAccessLabel[],
-        protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest|null,
-        protos.google.cloud.chronicle.v1.IListDataAccessLabelsResponse
+        protos.google.cloud.chronicle.v1.IDataTable[],
+        protos.google.cloud.chronicle.v1.IListDataTablesRequest|null,
+        protos.google.cloud.chronicle.v1.IListDataTablesResponse
       ]) => {
-        this._log.info('listDataAccessLabels values %j', response);
+        this._log.info('listDataTables values %j', response);
         return [response, input, output];
       });
   }
 
 /**
- * Equivalent to `listDataAccessLabels`, but returns a NodeJS Stream object.
+ * Equivalent to `listDataTables`, but returns a NodeJS Stream object.
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource where this data access label will be created.
- *   Format: `projects/{project}/locations/{location}/instances/{instance}`
- * @param {number} request.pageSize
- *   The maximum number of data access labels to return. The service may return
- *   fewer than this value. If unspecified, at most 100 data access labels will
+ *   Required. The parent resource where this data table will be created.
+ *   Format: projects/{project}/locations/{location}/instances/{instance}
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of data tables to return. The service may
+ *   return fewer than this value. If unspecified, at most 100 data tables will
  *   be returned. The maximum value is 1000; values above 1000 will be coerced
  *   to 1000.
- * @param {string} request.pageToken
- *   A page token, received from a previous `ListDataAccessLabelsRequest` call.
+ * @param {string} [request.pageToken]
+ *   Optional. A page token, received from a previous `ListDataTables` call.
  *   Provide this to retrieve the subsequent page.
- * @param {string} [request.filter]
- *   Optional. A filter which should follow the guidelines of AIP-160.
- *   Supports filtering on all fieds of DataAccessLabel and all operations as
- *   mentioned in https://google.aip.dev/160.
- *   example filter: "create_time greater than \"2023-04-21T11:30:00-04:00\" OR
- *   display_name:\"-21-1\"".
+ *   When paginating, all other parameters provided to
+ *   `ListDataTables` must match the call that provided the page
+ *   token.
+ * @param {string} [request.orderBy]
+ *   Optional. Configures ordering of DataTables in the response.
+ *   Note: Our implementation currently supports order by "create_time asc" only
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Stream}
- *   An object stream which emits an object representing {@link protos.google.cloud.chronicle.v1.DataAccessLabel|DataAccessLabel} on 'data' event.
+ *   An object stream which emits an object representing {@link protos.google.cloud.chronicle.v1.DataTable|DataTable} on 'data' event.
  *   The client library will perform auto-pagination by default: it will call the API as many
  *   times as needed. Note that it can affect your quota.
- *   We recommend using `listDataAccessLabelsAsync()`
+ *   We recommend using `listDataTablesAsync()`
  *   method described below for async iteration which you can stop as needed.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
  */
-  listDataAccessLabelsStream(
-      request?: protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest,
+  listDataTablesStream(
+      request?: protos.google.cloud.chronicle.v1.IListDataTablesRequest,
       options?: CallOptions):
     Transform{
     request = request || {};
@@ -1337,56 +1817,56 @@ export class DataAccessControlServiceClient {
     ] = this._gaxModule.routingHeader.fromParams({
       'parent': request.parent ?? '',
     });
-    const defaultCallSettings = this._defaults['listDataAccessLabels'];
+    const defaultCallSettings = this._defaults['listDataTables'];
     const callSettings = defaultCallSettings.merge(options);
     this.initialize().catch(err => {throw err});
-    this._log.info('listDataAccessLabels stream %j', request);
-    return this.descriptors.page.listDataAccessLabels.createStream(
-      this.innerApiCalls.listDataAccessLabels as GaxCall,
+    this._log.info('listDataTables stream %j', request);
+    return this.descriptors.page.listDataTables.createStream(
+      this.innerApiCalls.listDataTables as GaxCall,
       request,
       callSettings
     );
   }
 
 /**
- * Equivalent to `listDataAccessLabels`, but returns an iterable object.
+ * Equivalent to `listDataTables`, but returns an iterable object.
  *
  * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource where this data access label will be created.
- *   Format: `projects/{project}/locations/{location}/instances/{instance}`
- * @param {number} request.pageSize
- *   The maximum number of data access labels to return. The service may return
- *   fewer than this value. If unspecified, at most 100 data access labels will
+ *   Required. The parent resource where this data table will be created.
+ *   Format: projects/{project}/locations/{location}/instances/{instance}
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of data tables to return. The service may
+ *   return fewer than this value. If unspecified, at most 100 data tables will
  *   be returned. The maximum value is 1000; values above 1000 will be coerced
  *   to 1000.
- * @param {string} request.pageToken
- *   A page token, received from a previous `ListDataAccessLabelsRequest` call.
+ * @param {string} [request.pageToken]
+ *   Optional. A page token, received from a previous `ListDataTables` call.
  *   Provide this to retrieve the subsequent page.
- * @param {string} [request.filter]
- *   Optional. A filter which should follow the guidelines of AIP-160.
- *   Supports filtering on all fieds of DataAccessLabel and all operations as
- *   mentioned in https://google.aip.dev/160.
- *   example filter: "create_time greater than \"2023-04-21T11:30:00-04:00\" OR
- *   display_name:\"-21-1\"".
+ *   When paginating, all other parameters provided to
+ *   `ListDataTables` must match the call that provided the page
+ *   token.
+ * @param {string} [request.orderBy]
+ *   Optional. Configures ordering of DataTables in the response.
+ *   Note: Our implementation currently supports order by "create_time asc" only
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Object}
  *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
  *   When you iterate the returned iterable, each element will be an object representing
- *   {@link protos.google.cloud.chronicle.v1.DataAccessLabel|DataAccessLabel}. The API will be called under the hood as needed, once per the page,
+ *   {@link protos.google.cloud.chronicle.v1.DataTable|DataTable}. The API will be called under the hood as needed, once per the page,
  *   so you can stop the iteration when you don't need more results.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/data_access_control_service.list_data_access_labels.js</caption>
- * region_tag:chronicle_v1_generated_DataAccessControlService_ListDataAccessLabels_async
+ * @example <caption>include:samples/generated/v1/data_table_service.list_data_tables.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_ListDataTables_async
  */
-  listDataAccessLabelsAsync(
-      request?: protos.google.cloud.chronicle.v1.IListDataAccessLabelsRequest,
+  listDataTablesAsync(
+      request?: protos.google.cloud.chronicle.v1.IListDataTablesRequest,
       options?: CallOptions):
-    AsyncIterable<protos.google.cloud.chronicle.v1.IDataAccessLabel>{
+    AsyncIterable<protos.google.cloud.chronicle.v1.IDataTable>{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1396,85 +1876,85 @@ export class DataAccessControlServiceClient {
     ] = this._gaxModule.routingHeader.fromParams({
       'parent': request.parent ?? '',
     });
-    const defaultCallSettings = this._defaults['listDataAccessLabels'];
+    const defaultCallSettings = this._defaults['listDataTables'];
     const callSettings = defaultCallSettings.merge(options);
     this.initialize().catch(err => {throw err});
-    this._log.info('listDataAccessLabels iterate %j', request);
-    return this.descriptors.page.listDataAccessLabels.asyncIterate(
-      this.innerApiCalls['listDataAccessLabels'] as GaxCall,
+    this._log.info('listDataTables iterate %j', request);
+    return this.descriptors.page.listDataTables.asyncIterate(
+      this.innerApiCalls['listDataTables'] as GaxCall,
       request as {},
       callSettings
-    ) as AsyncIterable<protos.google.cloud.chronicle.v1.IDataAccessLabel>;
+    ) as AsyncIterable<protos.google.cloud.chronicle.v1.IDataTable>;
   }
  /**
- * Lists all existing data access scopes for the customer.
+ * List data table rows.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource where this data access scope will be created.
- *   Format: `projects/{project}/locations/{location}/instances/{instance}`
- * @param {number} request.pageSize
- *   The maximum number of data access scopes to return. The service may return
- *   fewer than this value. If unspecified, at most 100 data access scopes will
- *   be returned. The maximum value is 1000; values above 1000 will be coerced
- *   to 1000.
- * @param {string} request.pageToken
- *   A page token, received from a previous `ListDataAccessScopesRequest` call.
- *   Provide this to retrieve the subsequent page.
+ *   Required. The resource id of the data table.
+ *   Format:
+ *   projects/{project}/locations/{locations}/instances/{instance}/dataTables/{data_table}
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of data table rows to return. The service may
+ *   return fewer than this value. If unspecified, at most 100 data table rows
+ *   will be returned. The maximum value is 1000; values above 1000 will be
+ *   coerced to 1000.
+ * @param {string} [request.pageToken]
+ *   Optional. A page token, received from a previous `ListDataTableRows` call.
+ * @param {string} [request.orderBy]
+ *   Optional. Configures ordering of DataTables in the response.
+ *   Note: Our implementation currently supports order by "create_time asc" only
  * @param {string} [request.filter]
- *   Optional. A filter which should follow the guidelines of AIP-160.
- *   Supports filtering on all fieds of DataAccessScope and all operations as
- *   mentioned in https://google.aip.dev/160.
- *   example filter: "create_time greater than \"2023-04-21T11:30:00-04:00\" OR
- *   display_name:\"-21-1\"".
+ *   Optional. Filter facilitating search over data table rows. This filter
+ *   performs a case-insensitive substring match on the row values.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is Array of {@link protos.google.cloud.chronicle.v1.DataAccessScope|DataAccessScope}.
+ *   The first element of the array is Array of {@link protos.google.cloud.chronicle.v1.DataTableRow|DataTableRow}.
  *   The client library will perform auto-pagination by default: it will call the API as many
  *   times as needed and will merge results from all the pages into this array.
  *   Note that it can affect your quota.
- *   We recommend using `listDataAccessScopesAsync()`
+ *   We recommend using `listDataTableRowsAsync()`
  *   method described below for async iteration which you can stop as needed.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
  */
-  listDataAccessScopes(
-      request?: protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest,
+  listDataTableRows(
+      request?: protos.google.cloud.chronicle.v1.IListDataTableRowsRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessScope[],
-        protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest|null,
-        protos.google.cloud.chronicle.v1.IListDataAccessScopesResponse
+        protos.google.cloud.chronicle.v1.IDataTableRow[],
+        protos.google.cloud.chronicle.v1.IListDataTableRowsRequest|null,
+        protos.google.cloud.chronicle.v1.IListDataTableRowsResponse
       ]>;
-  listDataAccessScopes(
-      request: protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest,
+  listDataTableRows(
+      request: protos.google.cloud.chronicle.v1.IListDataTableRowsRequest,
       options: CallOptions,
       callback: PaginationCallback<
-          protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest,
-          protos.google.cloud.chronicle.v1.IListDataAccessScopesResponse|null|undefined,
-          protos.google.cloud.chronicle.v1.IDataAccessScope>): void;
-  listDataAccessScopes(
-      request: protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest,
+          protos.google.cloud.chronicle.v1.IListDataTableRowsRequest,
+          protos.google.cloud.chronicle.v1.IListDataTableRowsResponse|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTableRow>): void;
+  listDataTableRows(
+      request: protos.google.cloud.chronicle.v1.IListDataTableRowsRequest,
       callback: PaginationCallback<
-          protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest,
-          protos.google.cloud.chronicle.v1.IListDataAccessScopesResponse|null|undefined,
-          protos.google.cloud.chronicle.v1.IDataAccessScope>): void;
-  listDataAccessScopes(
-      request?: protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest,
+          protos.google.cloud.chronicle.v1.IListDataTableRowsRequest,
+          protos.google.cloud.chronicle.v1.IListDataTableRowsResponse|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTableRow>): void;
+  listDataTableRows(
+      request?: protos.google.cloud.chronicle.v1.IListDataTableRowsRequest,
       optionsOrCallback?: CallOptions|PaginationCallback<
-          protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest,
-          protos.google.cloud.chronicle.v1.IListDataAccessScopesResponse|null|undefined,
-          protos.google.cloud.chronicle.v1.IDataAccessScope>,
+          protos.google.cloud.chronicle.v1.IListDataTableRowsRequest,
+          protos.google.cloud.chronicle.v1.IListDataTableRowsResponse|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTableRow>,
       callback?: PaginationCallback<
-          protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest,
-          protos.google.cloud.chronicle.v1.IListDataAccessScopesResponse|null|undefined,
-          protos.google.cloud.chronicle.v1.IDataAccessScope>):
+          protos.google.cloud.chronicle.v1.IListDataTableRowsRequest,
+          protos.google.cloud.chronicle.v1.IListDataTableRowsResponse|null|undefined,
+          protos.google.cloud.chronicle.v1.IDataTableRow>):
       Promise<[
-        protos.google.cloud.chronicle.v1.IDataAccessScope[],
-        protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest|null,
-        protos.google.cloud.chronicle.v1.IListDataAccessScopesResponse
+        protos.google.cloud.chronicle.v1.IDataTableRow[],
+        protos.google.cloud.chronicle.v1.IListDataTableRowsRequest|null,
+        protos.google.cloud.chronicle.v1.IListDataTableRowsResponse
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -1495,61 +1975,61 @@ export class DataAccessControlServiceClient {
     });
     this.initialize().catch(err => {throw err});
     const wrappedCallback: PaginationCallback<
-      protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest,
-      protos.google.cloud.chronicle.v1.IListDataAccessScopesResponse|null|undefined,
-      protos.google.cloud.chronicle.v1.IDataAccessScope>|undefined = callback
+      protos.google.cloud.chronicle.v1.IListDataTableRowsRequest,
+      protos.google.cloud.chronicle.v1.IListDataTableRowsResponse|null|undefined,
+      protos.google.cloud.chronicle.v1.IDataTableRow>|undefined = callback
       ? (error, values, nextPageRequest, rawResponse) => {
-          this._log.info('listDataAccessScopes values %j', values);
+          this._log.info('listDataTableRows values %j', values);
           callback!(error, values, nextPageRequest, rawResponse); // We verified callback above.
         }
       : undefined;
-    this._log.info('listDataAccessScopes request %j', request);
+    this._log.info('listDataTableRows request %j', request);
     return this.innerApiCalls
-      .listDataAccessScopes(request, options, wrappedCallback)
+      .listDataTableRows(request, options, wrappedCallback)
       ?.then(([response, input, output]: [
-        protos.google.cloud.chronicle.v1.IDataAccessScope[],
-        protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest|null,
-        protos.google.cloud.chronicle.v1.IListDataAccessScopesResponse
+        protos.google.cloud.chronicle.v1.IDataTableRow[],
+        protos.google.cloud.chronicle.v1.IListDataTableRowsRequest|null,
+        protos.google.cloud.chronicle.v1.IListDataTableRowsResponse
       ]) => {
-        this._log.info('listDataAccessScopes values %j', response);
+        this._log.info('listDataTableRows values %j', response);
         return [response, input, output];
       });
   }
 
 /**
- * Equivalent to `listDataAccessScopes`, but returns a NodeJS Stream object.
+ * Equivalent to `listDataTableRows`, but returns a NodeJS Stream object.
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource where this data access scope will be created.
- *   Format: `projects/{project}/locations/{location}/instances/{instance}`
- * @param {number} request.pageSize
- *   The maximum number of data access scopes to return. The service may return
- *   fewer than this value. If unspecified, at most 100 data access scopes will
- *   be returned. The maximum value is 1000; values above 1000 will be coerced
- *   to 1000.
- * @param {string} request.pageToken
- *   A page token, received from a previous `ListDataAccessScopesRequest` call.
- *   Provide this to retrieve the subsequent page.
+ *   Required. The resource id of the data table.
+ *   Format:
+ *   projects/{project}/locations/{locations}/instances/{instance}/dataTables/{data_table}
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of data table rows to return. The service may
+ *   return fewer than this value. If unspecified, at most 100 data table rows
+ *   will be returned. The maximum value is 1000; values above 1000 will be
+ *   coerced to 1000.
+ * @param {string} [request.pageToken]
+ *   Optional. A page token, received from a previous `ListDataTableRows` call.
+ * @param {string} [request.orderBy]
+ *   Optional. Configures ordering of DataTables in the response.
+ *   Note: Our implementation currently supports order by "create_time asc" only
  * @param {string} [request.filter]
- *   Optional. A filter which should follow the guidelines of AIP-160.
- *   Supports filtering on all fieds of DataAccessScope and all operations as
- *   mentioned in https://google.aip.dev/160.
- *   example filter: "create_time greater than \"2023-04-21T11:30:00-04:00\" OR
- *   display_name:\"-21-1\"".
+ *   Optional. Filter facilitating search over data table rows. This filter
+ *   performs a case-insensitive substring match on the row values.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Stream}
- *   An object stream which emits an object representing {@link protos.google.cloud.chronicle.v1.DataAccessScope|DataAccessScope} on 'data' event.
+ *   An object stream which emits an object representing {@link protos.google.cloud.chronicle.v1.DataTableRow|DataTableRow} on 'data' event.
  *   The client library will perform auto-pagination by default: it will call the API as many
  *   times as needed. Note that it can affect your quota.
- *   We recommend using `listDataAccessScopesAsync()`
+ *   We recommend using `listDataTableRowsAsync()`
  *   method described below for async iteration which you can stop as needed.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
  */
-  listDataAccessScopesStream(
-      request?: protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest,
+  listDataTableRowsStream(
+      request?: protos.google.cloud.chronicle.v1.IListDataTableRowsRequest,
       options?: CallOptions):
     Transform{
     request = request || {};
@@ -1561,56 +2041,56 @@ export class DataAccessControlServiceClient {
     ] = this._gaxModule.routingHeader.fromParams({
       'parent': request.parent ?? '',
     });
-    const defaultCallSettings = this._defaults['listDataAccessScopes'];
+    const defaultCallSettings = this._defaults['listDataTableRows'];
     const callSettings = defaultCallSettings.merge(options);
     this.initialize().catch(err => {throw err});
-    this._log.info('listDataAccessScopes stream %j', request);
-    return this.descriptors.page.listDataAccessScopes.createStream(
-      this.innerApiCalls.listDataAccessScopes as GaxCall,
+    this._log.info('listDataTableRows stream %j', request);
+    return this.descriptors.page.listDataTableRows.createStream(
+      this.innerApiCalls.listDataTableRows as GaxCall,
       request,
       callSettings
     );
   }
 
 /**
- * Equivalent to `listDataAccessScopes`, but returns an iterable object.
+ * Equivalent to `listDataTableRows`, but returns an iterable object.
  *
  * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource where this data access scope will be created.
- *   Format: `projects/{project}/locations/{location}/instances/{instance}`
- * @param {number} request.pageSize
- *   The maximum number of data access scopes to return. The service may return
- *   fewer than this value. If unspecified, at most 100 data access scopes will
- *   be returned. The maximum value is 1000; values above 1000 will be coerced
- *   to 1000.
- * @param {string} request.pageToken
- *   A page token, received from a previous `ListDataAccessScopesRequest` call.
- *   Provide this to retrieve the subsequent page.
+ *   Required. The resource id of the data table.
+ *   Format:
+ *   projects/{project}/locations/{locations}/instances/{instance}/dataTables/{data_table}
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of data table rows to return. The service may
+ *   return fewer than this value. If unspecified, at most 100 data table rows
+ *   will be returned. The maximum value is 1000; values above 1000 will be
+ *   coerced to 1000.
+ * @param {string} [request.pageToken]
+ *   Optional. A page token, received from a previous `ListDataTableRows` call.
+ * @param {string} [request.orderBy]
+ *   Optional. Configures ordering of DataTables in the response.
+ *   Note: Our implementation currently supports order by "create_time asc" only
  * @param {string} [request.filter]
- *   Optional. A filter which should follow the guidelines of AIP-160.
- *   Supports filtering on all fieds of DataAccessScope and all operations as
- *   mentioned in https://google.aip.dev/160.
- *   example filter: "create_time greater than \"2023-04-21T11:30:00-04:00\" OR
- *   display_name:\"-21-1\"".
+ *   Optional. Filter facilitating search over data table rows. This filter
+ *   performs a case-insensitive substring match on the row values.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Object}
  *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
  *   When you iterate the returned iterable, each element will be an object representing
- *   {@link protos.google.cloud.chronicle.v1.DataAccessScope|DataAccessScope}. The API will be called under the hood as needed, once per the page,
+ *   {@link protos.google.cloud.chronicle.v1.DataTableRow|DataTableRow}. The API will be called under the hood as needed, once per the page,
  *   so you can stop the iteration when you don't need more results.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/data_access_control_service.list_data_access_scopes.js</caption>
- * region_tag:chronicle_v1_generated_DataAccessControlService_ListDataAccessScopes_async
+ * @example <caption>include:samples/generated/v1/data_table_service.list_data_table_rows.js</caption>
+ * region_tag:chronicle_v1_generated_DataTableService_ListDataTableRows_async
  */
-  listDataAccessScopesAsync(
-      request?: protos.google.cloud.chronicle.v1.IListDataAccessScopesRequest,
+  listDataTableRowsAsync(
+      request?: protos.google.cloud.chronicle.v1.IListDataTableRowsRequest,
       options?: CallOptions):
-    AsyncIterable<protos.google.cloud.chronicle.v1.IDataAccessScope>{
+    AsyncIterable<protos.google.cloud.chronicle.v1.IDataTableRow>{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -1620,15 +2100,15 @@ export class DataAccessControlServiceClient {
     ] = this._gaxModule.routingHeader.fromParams({
       'parent': request.parent ?? '',
     });
-    const defaultCallSettings = this._defaults['listDataAccessScopes'];
+    const defaultCallSettings = this._defaults['listDataTableRows'];
     const callSettings = defaultCallSettings.merge(options);
     this.initialize().catch(err => {throw err});
-    this._log.info('listDataAccessScopes iterate %j', request);
-    return this.descriptors.page.listDataAccessScopes.asyncIterate(
-      this.innerApiCalls['listDataAccessScopes'] as GaxCall,
+    this._log.info('listDataTableRows iterate %j', request);
+    return this.descriptors.page.listDataTableRows.asyncIterate(
+      this.innerApiCalls['listDataTableRows'] as GaxCall,
       request as {},
       callSettings
-    ) as AsyncIterable<protos.google.cloud.chronicle.v1.IDataAccessScope>;
+    ) as AsyncIterable<protos.google.cloud.chronicle.v1.IDataTableRow>;
   }
   // --------------------
   // -- Path templates --
@@ -2395,8 +2875,8 @@ export class DataAccessControlServiceClient {
    * @returns {Promise} A promise that resolves when the client is closed.
    */
   close(): Promise<void> {
-    if (this.dataAccessControlServiceStub && !this._terminated) {
-      return this.dataAccessControlServiceStub.then(stub => {
+    if (this.dataTableServiceStub && !this._terminated) {
+      return this.dataTableServiceStub.then(stub => {
         this._log.info('ending gRPC channel');
         this._terminated = true;
         stub.close();
