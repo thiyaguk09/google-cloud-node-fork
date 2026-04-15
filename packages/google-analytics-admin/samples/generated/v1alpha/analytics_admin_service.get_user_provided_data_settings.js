@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(parent) {
-  // [START analyticsadmin_v1alpha_generated_AnalyticsAdminService_ListFirebaseLinks_async]
+function main(name) {
+  // [START analyticsadmin_v1alpha_generated_AnalyticsAdminService_GetUserProvidedDataSettings_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,24 +29,10 @@ function main(parent) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. Format: properties/{property_id}
-   *  Example: `properties/1234`
+   *  Required. The name of the user provided data settings to retrieve.
+   *  Format: properties/{property}/userProvidedDataSettings
    */
-  // const parent = 'abc123'
-  /**
-   *  Optional. The maximum number of resources to return. The service may return
-   *  fewer than this value, even if there are additional pages.
-   *  If unspecified, at most 50 resources will be returned.
-   *  The maximum value is 200; (higher values will be coerced to the maximum)
-   */
-  // const pageSize = 1234
-  /**
-   *  Optional. A page token, received from a previous `ListFirebaseLinks` call.
-   *  Provide this to retrieve the subsequent page.
-   *  When paginating, all other parameters provided to `ListFirebaseLinks` must
-   *  match the call that provided the page token.
-   */
-  // const pageToken = 'abc123'
+  // const name = 'abc123'
 
   // Imports the Admin library
   const {AnalyticsAdminServiceClient} = require('@google-analytics/admin').v1alpha;
@@ -54,21 +40,19 @@ function main(parent) {
   // Instantiates a client
   const adminClient = new AnalyticsAdminServiceClient();
 
-  async function callListFirebaseLinks() {
+  async function callGetUserProvidedDataSettings() {
     // Construct request
     const request = {
-      parent,
+      name,
     };
 
     // Run request
-    const iterable = adminClient.listFirebaseLinksAsync(request);
-    for await (const response of iterable) {
-        console.log(response);
-    }
+    const response = await adminClient.getUserProvidedDataSettings(request);
+    console.log(response);
   }
 
-  callListFirebaseLinks();
-  // [END analyticsadmin_v1alpha_generated_AnalyticsAdminService_ListFirebaseLinks_async]
+  callGetUserProvidedDataSettings();
+  // [END analyticsadmin_v1alpha_generated_AnalyticsAdminService_GetUserProvidedDataSettings_async]
 }
 
 process.on('unhandledRejection', err => {
