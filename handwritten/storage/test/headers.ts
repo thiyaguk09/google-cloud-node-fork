@@ -78,7 +78,8 @@ describe('headers', () => {
     authClient.request = opts => {
       assert.ok(
         /^gl-node\/(?<nodeVersion>[^W]+) gccl\/(?<gccl>[^W]+) gccl-invocation-id\/(?<gcclInvocationId>[^W]+)$/.test(
-          (opts.headers as Headers).get('x-goog-api-client')!,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (opts.headers as any)['x-goog-api-client']!,
         ),
       );
       return Promise.resolve(gaxiosResponse);
@@ -96,7 +97,8 @@ describe('headers', () => {
     authClient.request = opts => {
       assert.ok(
         /^gl-deno\/0.00.0 gccl\/(?<gccl>[^W]+) gccl-invocation-id\/(?<gcclInvocationId>[^W]+)$/.test(
-          (opts.headers as Headers).get('x-goog-api-client')!,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (opts.headers as any)['x-goog-api-client']!,
         ),
       );
       return Promise.resolve(gaxiosResponse);
