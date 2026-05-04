@@ -3256,7 +3256,7 @@ export abstract class Expression
   //  * Evaluates to an HTML-formatted text snippet that renders terms matching
   //  * the search query in `<b>bold</b>`.
   //  *
-  //  * @remarks This Expression can only be used within a `Search` stage.
+  //  * @remarks This Expression can only be used within a `search` stage.
   //  *
   //  * @param rquery Define the search query using the search domain-specific language (DSL).
   //  * @returns An `Expression` representing the snippet function.
@@ -3267,7 +3267,7 @@ export abstract class Expression
   //  * Evaluates to an HTML-formatted text snippet that renders terms matching
   //  * the search query in `<b>bold</b>`.
   //  *
-  //  * @remarks This Expression can only be used within a `Search` stage.
+  //  * @remarks This Expression can only be used within a `search` stage.
   //  *
   //  * @param options Define how snippeting behaves.
   //  * @returns An `Expression` representing the snippet function.
@@ -3543,7 +3543,7 @@ export class Field
   // /**
   //  * Perform a full-text search on this field.
   //  *
-  //  * @remarks This Expression can only be used within a `Search` stage.
+  //  * @remarks This Expression can only be used within a `search` stage.
   //  *
   //  * @param rquery Define the search query using the search domain-specific language (DSL).
   //  * @returns A `BooleanExpression` representing the matches function.
@@ -3561,7 +3561,7 @@ export class Field
    * Evaluates to the distance in meters between the location specified
    * by this field and the query location.
    *
-   * @remarks This Expression can only be used within a `Search` stage.
+   * @remarks This Expression can only be used within a `search` stage.
    *
    * @example
    * ```typescript
@@ -10678,7 +10678,7 @@ export function isType(
 //  * @beta
 //  * Perform a full-text search on the specified field.
 //  *
-//  * @remarks This Expression can only be used within a `Search` stage.
+//  * @remarks This Expression can only be used within a `search` stage.
 //  *
 //  * @param searchField Search the specified field.
 //  * @param rquery Define the search query using the search domain-specific language (DSL).
@@ -10696,7 +10696,7 @@ export function isType(
  *
  * Perform a full-text search on the document.
  *
- * @remarks This Expression can only be used within a `Search` stage.
+ * @remarks This Expression can only be used within a `search` stage.
  *
  * @param rquery Define the search query using the search domain-specific language (DSL).
  * @returns A `BooleanExpression` representing the documentMatches function.
@@ -10717,7 +10717,7 @@ export function documentMatches(
  * in the search `query` provided to the `search` stage. If the `query` provided to the search stage
  * is not set or does not contain any text predicates, then this score will always be `0`.
  *
- * @remarks This Expression can only be used within a `Search` stage.
+ * @remarks This Expression can only be used within a `search` stage.
  *
  * @returns An `Expression` representing the score function.
  */
@@ -10729,7 +10729,7 @@ export function score(): Expression {
 //  * Evaluates to an HTML-formatted text snippet that highlights terms matching
 //  * the search query in `<b>bold</b>`.
 //  *
-//  * @remarks This Expression can only be used within a `Search` stage.
+//  * @remarks This Expression can only be used within a `search` stage.
 //  *
 //  * @param searchField Search the specified field for matching terms.
 //  * @param rquery Define the search query using the search domain-specific language (DSL).
@@ -10744,7 +10744,7 @@ export function score(): Expression {
 //  * Evaluates to an HTML-formatted text snippet that highlights terms matching
 //  * the search query in `<b>bold</b>`.
 //  *
-//  * @remarks This Expression can only be used within a `Search` stage.
+//  * @remarks This Expression can only be used within a `search` stage.
 //  *
 //  * @param searchField Search the specified field for matching terms.
 //  * @param options Define the search query using the search domain-specific language (DSL).
@@ -10769,7 +10769,7 @@ export function score(): Expression {
  * Evaluates to the distance in meters between the location in the specified
  * field and the query location.
  *
- * @remarks This Expression can only be used within a `Search` stage.
+ * @remarks This Expression can only be used within a `search` stage.
  *
  * @param fieldName - Specifies the field in the document which contains
  * the first GeoPoint for distance computation.
