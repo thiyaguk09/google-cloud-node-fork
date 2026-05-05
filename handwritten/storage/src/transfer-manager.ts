@@ -312,13 +312,11 @@ class XMLMultiPartUploadHelper implements MultiPartUploadHelper {
 
     if (validation === 'md5') {
       const hash = createHash('md5').update(chunk).digest('base64');
-      headers = {
-        'Content-MD5': hash,
-      };
+      headers.set('Content-MD5', hash);
     } else if (validation === 'crc32c') {
       const crc = new CRC32C();
       crc.update(chunk);
-      headers['x-goog-hash'] = `crc32c=${crc.toString()}`;
+      headers.set('x-goog-hash', `crc32c=${crc.toString()}`);
     }
 
     return AsyncRetry(async bail => {
@@ -443,7 +441,7 @@ export class TransferManager {
    * @typedef {object} UploadManyFilesOptions
    * @property {number} [concurrencyLimit] The number of concurrently executing promises
    * to use when uploading the files.
-   * @property {Function} [customDestinationBuilder] A fuction that will take the current path of a local file
+   * @property {Function} [customDestinationBuilder] A function that will take the current path of a local file
    * and return a string representing a custom path to be used to upload the file to GCS.
    * @property {boolean} [skipIfExists] Do not upload the file if it already exists in
    * the bucket. This will set the precondition ifGenerationMatch = 0.
@@ -863,7 +861,7 @@ export class TransferManager {
    * @property {number} [concurrencyLimit] The number of concurrently executing promises
    * to use when uploading the file.
    * @property {number} [chunkSizeBytes] The size in bytes of each chunk to be uploaded.
-   * @property {string} [uploadName] Name of the file when saving to GCS. If ommitted the name is taken from the file path.
+   * @property {string} [uploadName] Name of the file when saving to GCS. If omitted the name is taken from the file path.
    * @property {number} [maxQueueSize] The number of chunks to be uploaded to hold in memory concurrently. If not specified
    * defaults to the specified concurrency limit.
    * @property {string} [uploadId] If specified attempts to resume a previous upload.
@@ -876,14 +874,14 @@ export class TransferManager {
    *
    */
   /**
-   * Upload a large file in chunks utilizing parallel upload opertions. If the upload fails, an uploadId and
+   * Upload a large file in chunks utilizing parallel upload operations. If the upload fails, an uploadId and
    * map containing all the successfully uploaded parts will be returned to the caller. These arguments can be used to
    * resume the upload.
    *
    * @param {string} [filePath] The path of the file to be uploaded
    * @param {UploadFileInChunksOptions} [options] Configuration options.
    * @param {MultiPartHelperGenerator} [generator] A function that will return a type that implements the MPU interface. Most users will not need to use this.
-   * @returns {Promise<void>} If successful a promise resolving to void, otherwise a error containing the message, uploadid, and parts map.
+   * @returns {Promise<void>} If successful a promise resolving to void, otherwise a error containing the message, uploadId, and parts map.
    *
    * @example
    * ```
