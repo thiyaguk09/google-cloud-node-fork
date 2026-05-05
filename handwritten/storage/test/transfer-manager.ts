@@ -344,8 +344,10 @@ describe('Transfer Manager', () => {
         passthroughOptions: {destination: prefix},
       });
       assert.strictEqual(
-        mkdirSpy.calledWith(expectedDir, {recursive: true}),
-        true
+        mkdirSpy.calledWith(expectedDir, {
+          recursive: true,
+        }),
+        true,
       );
     });
 
