@@ -22,7 +22,7 @@ import {
   MetadataCallback,
   ServiceObject,
   SetMetadataResponse,
-  util,
+  util,  
 } from './nodejs-common/index.js';
 import {RequestResponse} from './nodejs-common/service-object.js';
 import {paginator} from '@google-cloud/paginator';
