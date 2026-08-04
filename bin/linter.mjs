@@ -39,11 +39,35 @@ async function run() {
       return;
     }
 
-    // Run ESLint and Type checks in parallel to optimize CPU utilization
-    const [eslintPassed, typeSafetyPassed] = await Promise.all([
-      checkEslint(changedTsFiles),
-      checkTypeSafety(changedTsFiles),
-    ]);
+    const packagesToCheck = new Set();
+    for (const file of changedTsFiles) {
+      const tsconfigDir = findTsconfigDir(file);
+      if (tsconfigDir) {
+        packagesToCheck.add(tsconfigDir);
+      }
+    }
+
+    if (packagesToCheck.size > 0) {
+      console.log(`Installing dependencies for ${packagesToCheck.size} package(s)...`);
+      await Promise.all(
+        Array.from(packagesToCheck).map(async pkg => {
+          try {
+            console.log(`  Installing dependencies in ${pkg}...`);
+            await execFileAsync('pnpm', ['install'], { cwd: pkg });
+          } catch (err) {
+            if (err.code === 'ENOENT') {
+              await execFileAsync('npm', ['install'], { cwd: pkg });
+            } else {
+              throw err;
+            }
+          }
+        })
+      );
+    }
+
+    // Run ESLint and Type checks sequentially to avoid race conditions when changing CWD
+    const eslintPassed = await checkEslint(changedTsFiles);
+    const typeSafetyPassed = await checkTypeSafety(changedTsFiles);
 
     if (!eslintPassed || !typeSafetyPassed) {
       throw new Error('Linter checks failed. Please fix. To rerun the linter, run: npm run lint');
@@ -173,24 +197,53 @@ async function checkEslint(filesToCheck) {
   }
 
   try {
-    const eslint = new ESLint();
-    const results = await eslint.lintFiles(filesToCheck);
-    const formatter = await eslint.loadFormatter('stylish');
-    const resultText = formatter.format(results);
-
-    if (resultText) {
-      console.log(resultText);
+    const filesByPackage = new Map();
+    for (const file of filesToCheck) {
+      const tsconfigDir = findTsconfigDir(file) || '.';
+      if (!filesByPackage.has(tsconfigDir)) {
+        filesByPackage.set(tsconfigDir, []);
+      }
+      filesByPackage.get(tsconfigDir).push(file);
     }
 
     let hasBlockingErrors = false;
+    const allResults = [];
 
-    for (const fileResult of results) {
-      for (const message of fileResult.messages) {
-        // message.severity === 2 indicates an error-level rule configuration.
-        if (message.severity === 2) {
-          hasBlockingErrors = true;
+    for (const [pkgDir, files] of filesByPackage.entries()) {
+      console.log(`  Linting files in ${pkgDir}...`);
+      const originalCwd = process.cwd();
+      try {
+        process.chdir(path.resolve(pkgDir));
+        const eslint = new ESLint();
+        const relativeFiles = files.map(f => path.relative(pkgDir, f));
+        const results = await eslint.lintFiles(relativeFiles);
+        
+        // Map paths in results back to absolute or relative to repo root to keep output readable
+        const mappedResults = results.map(res => ({
+          ...res,
+          filePath: path.resolve(res.filePath),
+        }));
+        allResults.push(...mappedResults);
+
+        for (const fileResult of results) {
+          for (const message of fileResult.messages) {
+            // message.severity === 2 indicates an error-level rule configuration.
+            if (message.severity === 2) {
+              hasBlockingErrors = true;
+            }
+          }
         }
+      } finally {
+        process.chdir(originalCwd);
       }
+    }
+
+    const eslint = new ESLint(); // For loading formatter
+    const formatter = await eslint.loadFormatter('stylish');
+    const resultText = formatter.format(allResults);
+
+    if (resultText) {
+      console.log(resultText);
     }
 
     if (hasBlockingErrors) {
@@ -250,12 +303,13 @@ async function checkTypeSafety(filesToCheck) {
   const checks = Array.from(packagesToCheck).map(async pkg => {
     try {
       console.log(`  Type checking ${pkg}...`);
+      const tscPath = path.resolve('node_modules/typescript/bin/tsc');
       await execFileAsync('node', [
-        'node_modules/typescript/bin/tsc',
+        tscPath,
         '--noEmit',
         '--project',
-        path.join(pkg, 'tsconfig.json'),
-      ]);
+        'tsconfig.json',
+      ], { cwd: path.resolve(pkg) });
       return { pkg, passed: true };
     } catch (err) {
       console.error(`\n[ERROR] TypeScript type check failed in ${pkg}`);
