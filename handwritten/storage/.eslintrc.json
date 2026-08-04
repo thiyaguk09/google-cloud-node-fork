@@ -1,7 +1,9 @@
 {
+  "root": true,
   "extends": "./node_modules/gts",
   "parserOptions": {
     "project": ["./tsconfig.json", "./tsconfig.cjs.json"]
   }
 }
+
 
