@@ -245,7 +245,8 @@ export class PassThroughShim extends PassThrough {
   }
 
   _write(
-    chunk: never,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    chunk: any,
     encoding: BufferEncoding,
     callback: (error?: Error | null | undefined) => void,
   ): void {
@@ -258,7 +259,8 @@ export class PassThroughShim extends PassThrough {
   }
 
   _writev(
-    chunks: Array<{chunk: never; encoding: BufferEncoding}>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    chunks: Array<{chunk: any; encoding: BufferEncoding}>,
     callback: (error?: Error | null | undefined) => void,
   ): void {
     if (this.shouldEmitWriting) {
