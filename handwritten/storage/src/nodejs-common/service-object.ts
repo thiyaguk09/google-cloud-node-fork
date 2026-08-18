@@ -358,7 +358,9 @@ class ServiceObject<T, K extends BaseMetadata> extends EventEmitter {
 
     this.get(options, err => {
       if (err) {
-        if (err.status === 404) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const status = (err as any).status || (err as any).code || (err as any).response?.status;
+        if (status === 404) {
           callback!(null, false);
         } else {
           callback!(err);
