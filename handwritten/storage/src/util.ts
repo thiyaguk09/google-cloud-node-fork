@@ -238,8 +238,8 @@ export class PassThroughShim extends PassThrough {
 
   _read(size: number): void {
     if (this.shouldEmitReading) {
-      this.emit('reading');
       this.shouldEmitReading = false;
+      this.emit('reading');
     }
     super._read(size);
   }
@@ -250,27 +250,54 @@ export class PassThroughShim extends PassThrough {
     callback: (error?: Error | null | undefined) => void,
   ): void {
     if (this.shouldEmitWriting) {
-      this.emit('writing');
       this.shouldEmitWriting = false;
+      this.emit('writing');
     }
-    // Per the nodejs documentation, callback must be invoked on the next tick
-    process.nextTick(() => {
-      super._write(chunk, encoding, callback);
-    });
+    // Call super._write synchronously — PassThrough handles this in memory without nextTick delay
+    super._write(chunk, encoding, callback);
+  }
+
+  _writev(
+    chunks: Array<{chunk: never; encoding: BufferEncoding}>,
+    callback: (error?: Error | null | undefined) => void,
+  ): void {
+    if (this.shouldEmitWriting) {
+      this.shouldEmitWriting = false;
+      this.emit('writing');
+    }
+    if (typeof PassThrough.prototype._writev === 'function') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      PassThrough.prototype._writev.call(this, chunks as any, callback);
+    } else {
+      let index = 0;
+      const writeNext = (err?: Error | null) => {
+        if (err || index >= chunks.length) {
+          callback(err);
+          return;
+        }
+        const {chunk, encoding} = chunks[index++];
+        super._write(chunk, encoding, writeNext);
+      };
+      writeNext();
+    }
   }
 
   _final(callback: (error?: Error | null | undefined) => void): void {
     // If the stream is empty (i.e. empty file) final will be invoked before _read / _write
     // and we should still emit the proper events.
     if (this.shouldEmitReading) {
-      this.emit('reading');
       this.shouldEmitReading = false;
+      this.emit('reading');
     }
     if (this.shouldEmitWriting) {
-      this.emit('writing');
       this.shouldEmitWriting = false;
+      this.emit('writing');
     }
-    callback(null);
+    if (typeof PassThrough.prototype._final === 'function') {
+      PassThrough.prototype._final.call(this, callback);
+    } else {
+      callback(null);
+    }
   }
 }
 
