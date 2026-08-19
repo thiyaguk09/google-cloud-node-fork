@@ -1015,6 +1015,7 @@ describe('File', () => {
               'Cache-Control': 'no-store',
             },
             decompress: true,
+            compress: false,
             responseType: 'stream',
             queryParameters: {
               alt: 'media',
