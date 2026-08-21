@@ -191,7 +191,7 @@ async function checkEslint(filesToCheck) {
     try {
       const absPkgDir = path.resolve(pkgDir);
       const eslint = new ESLint({
-        cwd: absPkgDir,
+        cwd: process.cwd(),
         resolvePluginsRelativeTo: process.cwd(),
         overrideConfig: {
           parserOptions: {
@@ -200,7 +200,7 @@ async function checkEslint(filesToCheck) {
         },
       });
 
-      const relativeFiles = files.map(f => path.relative(absPkgDir, path.resolve(f)));
+      const relativeFiles = files.map(f => path.relative(process.cwd(), path.resolve(f)));
       const results = await eslint.lintFiles(relativeFiles);
       const formatter = await eslint.loadFormatter('stylish');
       const resultText = formatter.format(results);
