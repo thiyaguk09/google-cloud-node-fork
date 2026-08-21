@@ -370,7 +370,7 @@ class XMLMultiPartUploadHelper implements MultiPartUploadHelper {
         if (res.data && res.data.error) {
           throw res.data.error;
         }
-        return res;
+        return res as unknown as GaxiosResponse;
       } catch (e) {
         this.#handleErrorResponse(e as Error, bail);
         return;

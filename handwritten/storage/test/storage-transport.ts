@@ -16,12 +16,12 @@ import {describe} from 'mocha';
 import {
   StorageRequestOptions,
   StorageTransport,
-} from '../src/storage-transport';
+} from '../src/storage-transport.js';
 import {GoogleAuth} from 'google-auth-library';
 import * as sinon from 'sinon';
 import assert from 'assert';
-import {GCCL_GCS_CMD_KEY} from '../src/nodejs-common/util';
-import {RETRYABLE_ERR_FN_DEFAULT} from '../src/storage';
+import {GCCL_GCS_CMD_KEY} from '../src/nodejs-common/util.js';
+import {RETRYABLE_ERR_FN_DEFAULT} from '../src/storage.js';
 import {Gaxios, GaxiosResponse} from 'gaxios';
 
 describe('Storage Transport', () => {

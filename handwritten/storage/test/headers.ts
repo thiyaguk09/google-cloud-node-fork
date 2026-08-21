@@ -76,7 +76,8 @@ describe('headers', () => {
 
   it('populates x-goog-api-client header (node)', async () => {
     const bucket = storage.bucket('foo-bucket');
-    authClient.request = opts => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    authClient.request = ((opts: any) => {
       let apiClientHeader: string | null = '';
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,7 +93,8 @@ describe('headers', () => {
         ),
       );
       return Promise.resolve(gaxiosResponse);
-    };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as any;
 
     try {
       await bucket.create();
@@ -103,7 +105,8 @@ describe('headers', () => {
 
   it('populates x-goog-api-client header (deno)', async () => {
     const bucket = storage.bucket('foo-bucket');
-    authClient.request = opts => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    authClient.request = ((opts: any) => {
       let apiClientHeader: string | null = '';
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -119,7 +122,8 @@ describe('headers', () => {
         ),
       );
       return Promise.resolve(gaxiosResponse);
-    };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as any;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     globalThis.Deno = {

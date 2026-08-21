@@ -185,7 +185,11 @@ export class StorageTransport {
     );
 
     try {
-      const requestPromise = this.authClient.request<T>({
+      const requestPromise = (
+        this.authClient.request as unknown as (
+          opts: GaxiosOptions,
+        ) => Promise<GaxiosResponse<T>>
+      )({
         adapter: async (opts: GaxiosOptions) => {
           const innerOpts = {
             ...opts,

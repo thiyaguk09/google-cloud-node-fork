@@ -16,7 +16,7 @@
 
 import assert from 'assert';
 import {describe, it} from 'mocha';
-import {util} from '../../src/nodejs-common/util';
+import {util} from '../../src/nodejs-common/util.js';
 import {GaxiosError, GaxiosOptionsPrepared} from 'gaxios';
 
 describe('common/util', () => {

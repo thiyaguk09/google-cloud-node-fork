@@ -107,9 +107,8 @@ export interface UploadConfig extends Pick<WritableOptions, 'highWaterMark'> {
    * emulator context is detected.
    */
   authClient?: {
-    request: <T>(
-      opts: GaxiosOptions,
-    ) => Promise<GaxiosResponse<T>> | GaxiosPromise<T>;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    request: <T = any>(opts: any) => Promise<any>;
   };
 
   /**
@@ -304,9 +303,8 @@ export class Upload extends Writable {
    * emulator context is detected.
    */
   authClient: {
-    request: <T>(
-      opts: GaxiosOptions,
-    ) => Promise<GaxiosResponse<T>> | GaxiosPromise<T>;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    request: <T = any>(opts: any) => Promise<any>;
   };
   cacheKey: string;
   chunkSize?: number;
@@ -381,7 +379,8 @@ export class Upload extends Writable {
     cfg.authConfig.scopes = [
       'https://www.googleapis.com/auth/devstorage.full_control',
     ];
-    this.authClient = cfg.authClient || new GoogleAuth(cfg.authConfig);
+    this.authClient = (cfg.authClient ||
+      new GoogleAuth(cfg.authConfig)) as unknown as typeof this.authClient;
 
     const universe = cfg.universeDomain || DEFAULT_UNIVERSE;
 
@@ -411,7 +410,7 @@ export class Upload extends Writable {
       ) {
         // a custom, non-universe domain,
         // use gaxios
-        this.authClient = gaxios;
+        this.authClient = gaxios as unknown as typeof this.authClient;
       }
     }
 

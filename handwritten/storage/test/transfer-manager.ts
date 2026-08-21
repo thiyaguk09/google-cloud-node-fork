@@ -33,7 +33,7 @@ import {
 import assert from 'assert';
 import {describe, it, beforeEach, before, afterEach, after} from 'mocha';
 import * as path from 'path';
-import {GaxiosError, GaxiosOptions, GaxiosResponse} from 'gaxios';
+import {GaxiosError, GaxiosResponse} from 'gaxios';
 import {GCCL_GCS_CMD_KEY} from '../src/nodejs-common/util.js';
 import {AuthClient, GoogleAuth} from 'google-auth-library';
 import {tmpdir} from 'os';
@@ -887,7 +887,8 @@ describe('Transfer Manager', () => {
           return new Headers({});
         }
 
-        async request(opts: GaxiosOptions) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async request(opts: any): Promise<any> {
           called = true;
           const headers = Object.fromEntries(
             (opts.headers as Headers).entries(),
@@ -912,7 +913,7 @@ describe('Transfer Manager', () => {
 
       transferManager.bucket.storage.storageTransport.authClient =
         new GoogleAuth({
-          authClient: new TestAuthClient(),
+          authClient: new TestAuthClient() as unknown as AuthClient,
         });
 
       await transferManager.uploadFileInChunks(filePath);
@@ -931,7 +932,8 @@ describe('Transfer Manager', () => {
           return new Headers({});
         }
 
-        async request(opts: GaxiosOptions) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async request(opts: any): Promise<any> {
           called = true;
           const headers = Object.fromEntries(
             (opts.headers as Headers).entries(),
@@ -953,7 +955,7 @@ describe('Transfer Manager', () => {
 
       transferManager.bucket.storage.storageTransport.authClient =
         new GoogleAuth({
-          authClient: new TestAuthClient(),
+          authClient: new TestAuthClient() as unknown as AuthClient,
         });
 
       await transferManager.uploadFileInChunks(filePath);

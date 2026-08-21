@@ -13,14 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as testFile from '../test-data/retryStrategyTestData.json';
-import {executeScenario, RetryTestCase} from '../conformanceCommon';
+import * as fs from 'fs';
+import * as path from 'path';
+import {getDirName} from '../../src/util.js';
+import {executeScenario, RetryTestCase} from '../conformanceCommon.js';
 import assert from 'assert';
 
-const SCENARIO_NUMBER_TO_TEST = 2;
-const retryTestCase: RetryTestCase | undefined = testFile.retryTests.find(
-  test => test.id === SCENARIO_NUMBER_TO_TEST,
+const testFile = JSON.parse(
+  fs.readFileSync(
+    path.join(
+      getDirName(),
+      '../../../conformance-test/test-data/retryStrategyTestData.json',
+    ),
+    'utf-8',
+  ),
 );
+
+const SCENARIO_NUMBER_TO_TEST = 2;
+const retryTestCase: RetryTestCase | undefined = (
+  testFile.retryTests as RetryTestCase[]
+).find(test => test.id === SCENARIO_NUMBER_TO_TEST);
 
 describe(`Scenario ${SCENARIO_NUMBER_TO_TEST}`, () => {
   assert(retryTestCase);

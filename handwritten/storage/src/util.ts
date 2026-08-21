@@ -19,7 +19,7 @@ import * as url from 'url';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import {getPackageJSON} from './package-json-helper.cjs';
-import {FileMetadata} from './file';
+import {FileMetadata, ContextValue} from './file.js';
 
 // Done to avoid a problem with mangling of identifiers when using esModuleInterop
 const fileURLToPath = url.fileURLToPath;
@@ -291,7 +291,8 @@ export function validateContexts(contexts?: FileMetadata['contexts']): void {
         `Invalid context key "${key}": Forbidden character (") detected.`,
       );
     }
-    if (context?.value && context.value.includes('"')) {
+    const val = (context as ContextValue | null)?.value;
+    if (val && val.includes('"')) {
       throw new Error(
         `Invalid context value for key "${key}": Forbidden character (") detected.`,
       );

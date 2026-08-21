@@ -4,8 +4,8 @@
     "rootDir": ".",
     "outDir": "build/cjs",
     "resolveJsonModule": true,
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "sourceMap": false,
     "esModuleInterop": true
   },
