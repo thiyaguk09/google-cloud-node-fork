@@ -1,15 +1,13 @@
 {
-    "extends": "gts/tsconfig-google.json",
+    "extends": "./node_modules/gts/tsconfig-google.json",
     "compilerOptions": {
         "rootDir": ".",
         "outDir": "build/esm",
         "resolveJsonModule": true,
-        "module": "nodenext",
-        "moduleResolution": "nodenext",
-        "target": "esnext",
+        "module": "es2020",
+        "moduleResolution": "node",
         "lib": [
-            "esnext",
-            "DOM"
+            "ES2020"
         ],
         "sourceMap": false,
         "esModuleInterop": true
@@ -17,10 +15,12 @@
     "include": [
         "src/*.ts",
         "src/*.cjs",
+        "src/nodejs-common/*.ts",
         "test/**/*.ts",
         "system-test/*.ts",
         "conformance-test/*.ts",
         "conformance-test/scenarios/*.ts",
+        "conformance-test/test-data/*.json",
         "internal-tooling/*.ts"
     ]
 }

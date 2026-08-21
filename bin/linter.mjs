@@ -69,6 +69,10 @@ function runGit(args, options = {}) {
 
 function getChangedFilesStrict() {
   let gitDiffArg = process.env.GIT_DIFF_ARG;
+  const flagIndex = process.argv.indexOf('--git-diff-arg');
+  if (!gitDiffArg && flagIndex !== -1 && process.argv[flagIndex + 1]) {
+    gitDiffArg = process.argv[flagIndex + 1];
+  }
 
   if (!gitDiffArg) {
     throw new Error(

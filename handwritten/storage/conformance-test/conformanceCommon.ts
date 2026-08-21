@@ -15,10 +15,10 @@
  */
 import * as jsonToNodeApiMapping from './test-data/retryInvocationMap.json';
 import * as libraryMethods from './libraryMethods';
-import { Bucket, File, HmacKey, Notification, Storage } from '../src/';
+import {Bucket, File, HmacKey, Notification, Storage} from '../src/';
 import * as crypto from 'crypto';
 import * as assert from 'assert';
-import { DecorateRequestOptions } from '../src/nodejs-common';
+import {DecorateRequestOptions} from '../src/nodejs-common';
 import fetch from 'node-fetch';
 
 interface RetryCase {
@@ -79,7 +79,7 @@ export function executeScenario(testCase: RetryTestCase) {
         let bucket: Bucket;
         let file: File;
         let notification: Notification;
-        let creationResult: { id: string };
+        let creationResult: {id: string};
         let storage: Storage;
         let hmacKey: HmacKey;
 
@@ -94,36 +94,36 @@ export function executeScenario(testCase: RetryTestCase) {
             });
             creationResult = await createTestBenchRetryTest(
               instructionSet.instructions,
-              jsonMethod?.name.toString(),
+              jsonMethod?.name.toString()
             );
             if (storageMethodString.includes('InstancePrecondition')) {
               bucket = await createBucketForTest(
                 storage,
                 testCase.preconditionProvided,
-                storageMethodString,
+                storageMethodString
               );
               file = await createFileForTest(
                 testCase.preconditionProvided,
                 storageMethodString,
-                bucket,
+                bucket
               );
             } else {
               bucket = await createBucketForTest(
                 storage,
                 false,
-                storageMethodString,
+                storageMethodString
               );
               file = await createFileForTest(
                 false,
                 storageMethodString,
-                bucket,
+                bucket
               );
             }
             notification = bucket.notification(`${TESTS_PREFIX}`);
             await notification.create();
 
             [hmacKey] = await storage.createHmacKey(
-              `${TESTS_PREFIX}@email.com`,
+              `${TESTS_PREFIX}@email.com`
             );
 
             storage.interceptors.push({
@@ -154,7 +154,7 @@ export function executeScenario(testCase: RetryTestCase) {
               await assert.rejects(storageMethodObject(methodParameters));
             }
             const testBenchResult = await getTestBenchRetryTest(
-              creationResult.id,
+              creationResult.id
             );
             assert.strictEqual(testBenchResult.completed, true);
           }).timeout(TIMEOUT_FOR_INDIVIDUAL_TEST);
@@ -167,7 +167,7 @@ export function executeScenario(testCase: RetryTestCase) {
 async function createBucketForTest(
   storage: Storage,
   preconditionShouldBeOnInstance: boolean,
-  storageMethodString: String,
+  storageMethodString: String
 ) {
   const name = generateName(storageMethodString, 'bucket');
   const bucket = storage.bucket(name);
@@ -187,7 +187,7 @@ async function createBucketForTest(
 async function createFileForTest(
   preconditionShouldBeOnInstance: boolean,
   storageMethodString: String,
-  bucket: Bucket,
+  bucket: Bucket
 ) {
   const name = generateName(storageMethodString, 'file');
   const file = bucket.file(name);
@@ -209,19 +209,19 @@ function generateName(storageMethodString: String, bucketOrFile: string) {
 
 async function createTestBenchRetryTest(
   instructions: String[],
-  methodName: string,
+  methodName: string
 ): Promise<ConformanceTestCreationResult> {
-  const requestBody = { instructions: { [methodName]: instructions } };
+  const requestBody = {instructions: {[methodName]: instructions}};
   const response = await fetch(`${TESTBENCH_HOST}retry_test`, {
     method: 'POST',
     body: JSON.stringify(requestBody),
-    headers: { 'Content-Type': 'application/json' },
+    headers: {'Content-Type': 'application/json'},
   });
   return response.json() as Promise<ConformanceTestCreationResult>;
 }
 
 async function getTestBenchRetryTest(
-  testId: string,
+  testId: string
 ): Promise<ConformanceTestResult> {
   const response = await fetch(`${TESTBENCH_HOST}retry_test/${testId}`, {
     method: 'GET',
