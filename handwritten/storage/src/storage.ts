@@ -350,7 +350,10 @@ export function isTransientError(err: GaxiosError): boolean {
     'ENETUNREACH',
     'EAI_AGAIN',
   ];
-  if (connectionErrors.includes(errCode) || message.includes('socket hang up')) {
+  if (
+    connectionErrors.includes(errCode) ||
+    message.includes('socket hang up')
+  ) {
     return true;
   }
 

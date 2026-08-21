@@ -1469,7 +1469,11 @@ function buildRetryError(
         errParts.push(String(gaxiosErrLike.message));
       }
       const status = gaxiosErrLike.status ?? gaxiosErrLike.response?.status;
-      if (typeof status === 'number' && !isNaN(status) && status !== resp.status) {
+      if (
+        typeof status === 'number' &&
+        !isNaN(status) &&
+        status !== resp.status
+      ) {
         errParts.push(`status: ${status}`);
       }
       const statusText = gaxiosErrLike.response?.statusText;
@@ -1477,7 +1481,11 @@ function buildRetryError(
         errParts.push(`statusText: ${statusText}`);
       }
       const responseData = gaxiosErrLike.response?.data;
-      if (responseData !== undefined && responseData !== null && responseData !== '') {
+      if (
+        responseData !== undefined &&
+        responseData !== null &&
+        responseData !== ''
+      ) {
         errParts.push(
           `response: ${
             typeof responseData === 'object'

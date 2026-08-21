@@ -2508,7 +2508,7 @@ describe('resumable-upload', () => {
       up.numRetries = 3;
       up.retryLimit = 3;
       const nativeError = new Error('native connection issue');
-      
+
       up.on('error', (err: Error) => {
         assert.strictEqual(
           err.message,
@@ -2559,14 +2559,17 @@ describe('resumable-upload', () => {
           data: '',
           config: {},
           headers: {},
-        } as any
+        } as any,
       );
 
       up.on('error', (err: Error) => {
         // Assert that the formatted error message includes key HTTP details from the GaxiosError.
         assert(err.message.includes('Retry limit exceeded'));
         assert(err.message.includes('Request failed with status code 429'));
-        assert(err.message.includes('status: 429') || err.message.includes('code: 429'));
+        assert(
+          err.message.includes('status: 429') ||
+            err.message.includes('code: 429'),
+        );
         assert(err.message.includes('statusText: Too Many Requests'));
         done();
       });
@@ -2599,14 +2602,17 @@ describe('resumable-upload', () => {
           },
           config: {},
           headers: {},
-        } as any
+        } as any,
       );
 
       up.on('error', (err: Error) => {
         // Assert that the formatted error message includes key HTTP details and the inner API error message.
         assert(err.message.includes('Retry limit exceeded'));
         assert(err.message.includes('Request failed with status code 400'));
-        assert(err.message.includes('status: 400') || err.message.includes('code: 400'));
+        assert(
+          err.message.includes('status: 400') ||
+            err.message.includes('code: 400'),
+        );
         assert(err.message.includes('Invalid query parameter value'));
         done();
       });

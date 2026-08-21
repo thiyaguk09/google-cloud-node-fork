@@ -88,8 +88,10 @@ export interface PackageJson {
   version: string;
 }
 
-export interface MakeAuthenticatedRequestFactoryConfig
-  extends Omit<GoogleAuthOptions, 'authClient'> {
+export interface MakeAuthenticatedRequestFactoryConfig extends Omit<
+  GoogleAuthOptions,
+  'authClient'
+> {
   /**
    * Automatically retry requests if the response is related to rate limits or
    * certain intermittent server errors. We will exponentially backoff

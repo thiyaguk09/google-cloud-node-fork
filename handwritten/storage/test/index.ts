@@ -414,7 +414,7 @@ describe('Storage', () => {
   describe('bucket', () => {
     it('should throw if no name was provided', () => {
       assert.throws(() => {
-        storage.bucket(''), StorageExceptionMessages.BUCKET_NAME_REQUIRED;
+        (storage.bucket(''), StorageExceptionMessages.BUCKET_NAME_REQUIRED);
       });
     });
 
@@ -461,7 +461,7 @@ describe('Storage', () => {
 
     it('should throw if accessId is not provided', () => {
       assert.throws(() => {
-        storage.hmacKey(''), StorageExceptionMessages.HMAC_ACCESS_ID;
+        (storage.hmacKey(''), StorageExceptionMessages.HMAC_ACCESS_ID);
       });
     });
 

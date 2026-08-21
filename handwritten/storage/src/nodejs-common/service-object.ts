@@ -16,7 +16,7 @@
 import {promisifyAll} from '@google-cloud/promisify';
 import {EventEmitter} from 'events';
 import {util} from './util.js';
-import {StorageRequestOptions, StorageTransport } from '../storage-transport.js';
+import {StorageRequestOptions, StorageTransport} from '../storage-transport.js';
 import {
   GaxiosError,
   GaxiosInterceptor,
@@ -221,8 +221,8 @@ class ServiceObject<T, K extends BaseMetadata> extends EventEmitter {
             // The ServiceObject didn't redefine the method.
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (this as any)[methodName] ===
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (ServiceObject.prototype as any)[methodName] &&
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (ServiceObject.prototype as any)[methodName] &&
             // This method isn't wanted.
             !config.methods![methodName]
           );
@@ -475,7 +475,7 @@ class ServiceObject<T, K extends BaseMetadata> extends EventEmitter {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const query = { ...options } as any;
+    const query = {...options} as any;
     delete query.headers;
 
     this.storageTransport

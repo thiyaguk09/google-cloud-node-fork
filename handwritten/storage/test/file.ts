@@ -615,7 +615,7 @@ describe('File', () => {
             'x-goog-encryption-key-sha256': 'hash-dest',
           });
           callback?.(null, {done: true}, {});
-          return { data: {done: true} } as any;
+          return {data: {done: true}} as any;
         } catch (e) {
           done(e);
           throw e;
@@ -2871,13 +2871,13 @@ describe('File', () => {
         const expires = new Date('31-12-2019');
 
         assert.throws(() => {
-          file.generateSignedPostPolicyV2(
+          (file.generateSignedPostPolicyV2(
             {
               expires,
             },
             () => {},
           ),
-            ExceptionMessages.EXPIRATION_DATE_INVALID;
+            ExceptionMessages.EXPIRATION_DATE_INVALID);
         });
       });
 
@@ -2885,13 +2885,13 @@ describe('File', () => {
         const expires = Date.now() - 5;
 
         assert.throws(() => {
-          file.generateSignedPostPolicyV2(
+          (file.generateSignedPostPolicyV2(
             {
               expires,
             },
             () => {},
           ),
-            ExceptionMessages.EXPIRATION_DATE_PAST;
+            ExceptionMessages.EXPIRATION_DATE_PAST);
         });
       });
     });
@@ -2931,27 +2931,27 @@ describe('File', () => {
 
       it('should throw if equal condition is not an array', () => {
         assert.throws(() => {
-          file.generateSignedPostPolicyV2(
+          (file.generateSignedPostPolicyV2(
             {
               expires: Date.now() + 2000,
               equals: [],
             },
             () => {},
           ),
-            FileExceptionMessages.EQUALS_CONDITION_TWO_ELEMENTS;
+            FileExceptionMessages.EQUALS_CONDITION_TWO_ELEMENTS);
         });
       });
 
       it('should throw if equal condition length is not 2', () => {
         assert.throws(() => {
-          file.generateSignedPostPolicyV2(
+          (file.generateSignedPostPolicyV2(
             {
               expires: Date.now() + 2000,
               equals: [['1', '2', '3']],
             },
             () => {},
           ),
-            FileExceptionMessages.EQUALS_CONDITION_TWO_ELEMENTS;
+            FileExceptionMessages.EQUALS_CONDITION_TWO_ELEMENTS);
         });
       });
     });
@@ -3004,14 +3004,14 @@ describe('File', () => {
 
       it('should throw if prefix condition length is not 2', () => {
         assert.throws(() => {
-          file.generateSignedPostPolicyV2(
+          (file.generateSignedPostPolicyV2(
             {
               expires: Date.now() + 2000,
               startsWith: [['1', '2', '3']],
             },
             () => {},
           ),
-            FileExceptionMessages.STARTS_WITH_TWO_ELEMENTS;
+            FileExceptionMessages.STARTS_WITH_TWO_ELEMENTS);
         });
       });
     });
@@ -3035,27 +3035,27 @@ describe('File', () => {
 
       it('should throw if content length has no min', () => {
         assert.throws(() => {
-          file.generateSignedPostPolicyV2(
+          (file.generateSignedPostPolicyV2(
             {
               expires: Date.now() + 2000,
               contentLengthRange: {max: 1},
             },
             () => {},
           ),
-            FileExceptionMessages.CONTENT_LENGTH_RANGE_MIN_MAX;
+            FileExceptionMessages.CONTENT_LENGTH_RANGE_MIN_MAX);
         });
       });
 
       it('should throw if content length has no max', () => {
         assert.throws(() => {
-          file.generateSignedPostPolicyV2(
+          (file.generateSignedPostPolicyV2(
             {
               expires: Date.now() + 2000,
               contentLengthRange: {min: 0},
             },
             () => {},
           ),
-            FileExceptionMessages.CONTENT_LENGTH_RANGE_MIN_MAX;
+            FileExceptionMessages.CONTENT_LENGTH_RANGE_MIN_MAX);
         });
       });
     });
@@ -3385,13 +3385,13 @@ describe('File', () => {
         const expires = new Date('31-12-2019');
 
         assert.throws(() => {
-          file.generateSignedPostPolicyV4(
+          (file.generateSignedPostPolicyV4(
             {
               expires,
             },
             () => {},
           ),
-            ExceptionMessages.EXPIRATION_DATE_INVALID;
+            ExceptionMessages.EXPIRATION_DATE_INVALID);
         });
       });
 
@@ -3399,13 +3399,13 @@ describe('File', () => {
         const expires = Date.now() - 5;
 
         assert.throws(() => {
-          file.generateSignedPostPolicyV4(
+          (file.generateSignedPostPolicyV4(
             {
               expires,
             },
             () => {},
           ),
-            ExceptionMessages.EXPIRATION_DATE_PAST;
+            ExceptionMessages.EXPIRATION_DATE_PAST);
         });
       });
 
@@ -3413,13 +3413,15 @@ describe('File', () => {
         const expires = Date.now() + 7.1 * 24 * 60 * 60 * 1000;
 
         assert.throws(() => {
-          file.generateSignedPostPolicyV4(
+          (file.generateSignedPostPolicyV4(
             {
               expires,
             },
             () => {},
           ),
-            {message: 'Max allowed expiration is seven days (604800 seconds).'};
+            {
+              message: 'Max allowed expiration is seven days (604800 seconds).',
+            });
         });
       });
     });
@@ -3517,7 +3519,7 @@ describe('File', () => {
         const getSignedUrlArgs = signerGetSignedUrlStub.getCall(0).args;
         assert.strictEqual(
           getSignedUrlArgs[0]['signingEndpoint'],
-          signingEndpoint
+          signingEndpoint,
         );
       });
     });
@@ -3794,10 +3796,10 @@ describe('File', () => {
     it('should correctly format URL and method in the request', done => {
       gaxiosStub.resolves({data: {}});
       // const expectedUrl = `https://${file.storage.apiEndpoint}/storage/v1/b/${BUCKET.name}/o/${encodeURIComponent(file.name)}`;
-      const baseUrl = file.storage.apiEndpoint.startsWith('http') 
-        ? file.storage.apiEndpoint 
+      const baseUrl = file.storage.apiEndpoint.startsWith('http')
+        ? file.storage.apiEndpoint
         : `https://${file.storage.apiEndpoint}`;
-        
+
       const expectedUrl = `${baseUrl}/storage/v1/b/${BUCKET.name}/o/${encodeURIComponent(file.name)}`;
 
       file.isPublic(err => {
@@ -4694,7 +4696,8 @@ describe('File', () => {
       await file.save(DATA, options);
 
       // Verify createWriteStream was called with an invocationId
-      const calledOptions = createWriteStreamStub.firstCall.args[0] as CreateWriteStreamOptionsInternal;
+      const calledOptions = createWriteStreamStub.firstCall
+        .args[0] as CreateWriteStreamOptionsInternal;
       assert.ok(calledOptions?.invocationId);
       assert.strictEqual(typeof calledOptions?.invocationId, 'string');
     });
@@ -4702,7 +4705,7 @@ describe('File', () => {
     it('should use the same invocationId across retries in a simple upload', async () => {
       const options = {
         resumable: false,
-        preconditionOpts: { ifGenerationMatch: 123 },
+        preconditionOpts: {ifGenerationMatch: 123},
       };
       let retryCount = 0;
       let firstInvocationId: string | undefined;
@@ -4714,7 +4717,8 @@ describe('File', () => {
 
       sandbox.stub(file, 'createWriteStream').callsFake(options_ => {
         retryCount++;
-        const currentId = (options_ as CreateWriteStreamOptionsInternal)?.invocationId;
+        const currentId = (options_ as CreateWriteStreamOptionsInternal)
+          ?.invocationId;
 
         if (retryCount === 1) {
           firstInvocationId = currentId;
@@ -4733,7 +4737,7 @@ describe('File', () => {
       const options = {
         resumable: false,
         validation: false,
-        preconditionOpts: { ifGenerationMatch: 123 },
+        preconditionOpts: {ifGenerationMatch: 123},
       };
 
       const authClient = new GoogleAuth();
@@ -4746,7 +4750,7 @@ describe('File', () => {
         projectId: 'project-id',
         retryOptions: file.storage.retryOptions,
         scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-        packageJson: { name: 'test-package', version: '1.0.0' },
+        packageJson: {name: 'test-package', version: '1.0.0'},
       });
       // Use real transport to verify StorageTransport header formatting
       const originalTransport = file.storageTransport;
@@ -4762,7 +4766,7 @@ describe('File', () => {
 
       // Stub the authClient.request method used by the transport
       const requestStub = realTransport.authClient.request as sinon.SinonStub;
-      requestStub.callsFake(async (reqOpts) => {
+      requestStub.callsFake(async reqOpts => {
         if (reqOpts.method !== 'POST') {
           return {
             config: {},
@@ -4775,7 +4779,11 @@ describe('File', () => {
 
         if (reqOpts.multipart && Array.isArray(reqOpts.multipart)) {
           const part = reqOpts.multipart[1];
-          if (part && part.content && typeof part.content.resume === 'function') {
+          if (
+            part &&
+            part.content &&
+            typeof part.content.resume === 'function'
+          ) {
             part.content.resume();
           }
         }
@@ -5375,8 +5383,6 @@ describe('File', () => {
         });
         assert.strictEqual(file.storage.retryOptions.autoRetry, true);
       });
-
-
     });
   });
 

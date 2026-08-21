@@ -209,13 +209,13 @@ describe('signer', () => {
 
           assert.throws(() => {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            signer.getSignedUrl({
+            (signer.getSignedUrl({
               version: 'v4',
               method: 'GET',
               accessibleAt,
               expires,
             }),
-              SignerExceptionMessages.EXPIRATION_BEFORE_ACCESSIBLE_DATE;
+              SignerExceptionMessages.EXPIRATION_BEFORE_ACCESSIBLE_DATE);
           });
         });
 
@@ -262,13 +262,13 @@ describe('signer', () => {
 
             assert.throws(() => {
               // eslint-disable-next-line @typescript-eslint/no-floating-promises
-              signer.getSignedUrl({
+              (signer.getSignedUrl({
                 version: 'v4',
                 method: 'GET',
                 accessibleAt,
                 expires: expiresNumber,
               }),
-                SignerExceptionMessages.ACCESSIBLE_DATE_INVALID;
+                SignerExceptionMessages.ACCESSIBLE_DATE_INVALID);
             });
           });
         });
@@ -723,8 +723,8 @@ describe('signer', () => {
 
           assert.throws(() => {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            signer['getSignedUrlV4'](CONFIG),
-              SignerExceptionMessages.X_GOOG_CONTENT_SHA256;
+            (signer['getSignedUrlV4'](CONFIG),
+              SignerExceptionMessages.X_GOOG_CONTENT_SHA256);
           });
         });
       });

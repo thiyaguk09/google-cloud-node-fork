@@ -402,7 +402,7 @@ export async function bucketUploadResumableInstancePrecondition(
 ) {
   const filePath = path.join(
     getDirName(),
-    `../conformance-test/test-data/tmp-${crypto.randomUUID()}.txt`
+    `../conformance-test/test-data/tmp-${crypto.randomUUID()}.txt`,
   );
   createTestFileFromBuffer(FILE_SIZE_BYTES, filePath);
   if (options.bucket!.instancePreconditionOpts) {
@@ -420,7 +420,7 @@ export async function bucketUploadResumableInstancePrecondition(
 export async function bucketUploadResumable(options: ConformanceTestOptions) {
   const filePath = path.join(
     getDirName(),
-    `../conformance-test/test-data/tmp-${crypto.randomUUID()}.txt`
+    `../conformance-test/test-data/tmp-${crypto.randomUUID()}.txt`,
   );
   createTestFileFromBuffer(FILE_SIZE_BYTES, filePath);
   if (options.preconditionRequired) {

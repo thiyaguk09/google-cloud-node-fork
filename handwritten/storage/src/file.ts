@@ -102,10 +102,7 @@ export interface PolicyDocument {
 }
 
 export type SaveData =
-  | string
-  | Buffer
-  | Uint8Array
-  | PipelineSource<string | Buffer | Uint8Array>;
+  string | Buffer | Uint8Array | PipelineSource<string | Buffer | Uint8Array>;
 
 export type GenerateSignedPostPolicyV2Response = [PolicyDocument];
 
@@ -155,8 +152,10 @@ export interface SignedPostPolicyV4Output {
   url: string;
   fields: PolicyFields;
 }
-export interface GetSignedUrlConfig
-  extends Pick<SignerGetSignedUrlConfig, 'host' | 'signingEndpoint'> {
+export interface GetSignedUrlConfig extends Pick<
+  SignerGetSignedUrlConfig,
+  'host' | 'signingEndpoint'
+> {
   /**
    * The action to permit with the signed URL.
    * - `'read'`: Allows downloading/viewing the file (HTTP GET).
@@ -311,8 +310,10 @@ type PublicResumableUploadOptions =
   | 'uri'
   | 'userProject';
 
-export interface CreateResumableUploadOptions
-  extends Pick<resumableUpload.UploadConfig, PublicResumableUploadOptions> {
+export interface CreateResumableUploadOptions extends Pick<
+  resumableUpload.UploadConfig,
+  PublicResumableUploadOptions
+> {
   /**
    * A CRC32C to resume from when continuing a previous upload. It is recommended
    * to capture the `crc32c` event from previous upload sessions to provide in
@@ -343,8 +344,7 @@ export interface CreateWriteStreamOptions extends CreateResumableUploadOptions {
 /**
  * @internal
  */
-export interface CreateWriteStreamOptionsInternal
-  extends CreateWriteStreamOptions {
+export interface CreateWriteStreamOptionsInternal extends CreateWriteStreamOptions {
   invocationId?: string;
 }
 
@@ -1958,8 +1958,7 @@ class File extends ServiceObject<File, FileMetadata> {
    */
   createResumableUpload(
     optionsOrCallback?:
-      | CreateResumableUploadOptions
-      | CreateResumableUploadCallback,
+      CreateResumableUploadOptions | CreateResumableUploadCallback,
     callback?: CreateResumableUploadCallback,
   ): void | Promise<CreateResumableUploadResponse> {
     const options =
@@ -2832,8 +2831,7 @@ class File extends ServiceObject<File, FileMetadata> {
    */
   generateSignedPostPolicyV2(
     optionsOrCallback?:
-      | GenerateSignedPostPolicyV2Options
-      | GenerateSignedPostPolicyV2Callback,
+      GenerateSignedPostPolicyV2Options | GenerateSignedPostPolicyV2Callback,
     cb?: GenerateSignedPostPolicyV2Callback,
   ): void | Promise<GenerateSignedPostPolicyV2Response> {
     const args = normalize<GenerateSignedPostPolicyV2Options>(
@@ -3038,8 +3036,7 @@ class File extends ServiceObject<File, FileMetadata> {
    */
   generateSignedPostPolicyV4(
     optionsOrCallback?:
-      | GenerateSignedPostPolicyV4Options
-      | GenerateSignedPostPolicyV4Callback,
+      GenerateSignedPostPolicyV4Options | GenerateSignedPostPolicyV4Callback,
     cb?: GenerateSignedPostPolicyV4Callback,
   ): void | Promise<GenerateSignedPostPolicyV4Response> {
     const args = normalize<
@@ -3435,8 +3432,8 @@ class File extends ServiceObject<File, FileMetadata> {
       undefined,
       callback,
     );
-    const baseUrl = this.storage.apiEndpoint.startsWith('http') 
-      ? this.storage.apiEndpoint 
+    const baseUrl = this.storage.apiEndpoint.startsWith('http')
+      ? this.storage.apiEndpoint
       : `https://${this.storage.apiEndpoint}`;
 
     const url = `${baseUrl}/storage/v1/b/${this.bucket.name}/o/${encodeURIComponent(this.name)}`;
@@ -4199,8 +4196,7 @@ class File extends ServiceObject<File, FileMetadata> {
    */
   rotateEncryptionKey(
     optionsOrCallback?:
-      | RotateEncryptionKeyOptions
-      | RotateEncryptionKeyCallback,
+      RotateEncryptionKeyOptions | RotateEncryptionKeyCallback,
     callback?: RotateEncryptionKeyCallback,
   ): Promise<RotateEncryptionKeyResponse> | void {
     callback =

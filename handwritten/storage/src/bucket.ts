@@ -214,7 +214,7 @@ export class ComposeCleanupError extends Error {
     message: string,
     errors: Error[],
     newFile: File,
-    apiResponse: unknown
+    apiResponse: unknown,
   ) {
     super(message);
     this.name = 'ComposeCleanupError';
@@ -272,8 +272,7 @@ export interface DeleteBucketCallback extends DeleteCallback {
 }
 
 export interface DeleteFilesOptions
-  extends GetFilesOptions,
-    PreconditionOptions {
+  extends GetFilesOptions, PreconditionOptions {
   force?: boolean;
 }
 
@@ -434,8 +433,10 @@ export interface GetBucketMetadataOptions {
   userProject?: string;
 }
 
-export interface GetBucketSignedUrlConfig
-  extends Pick<SignerGetSignedUrlConfig, 'host' | 'signingEndpoint'> {
+export interface GetBucketSignedUrlConfig extends Pick<
+  SignerGetSignedUrlConfig,
+  'host' | 'signingEndpoint'
+> {
   action: 'list';
   version?: 'v2' | 'v4';
   cname?: string;
@@ -545,8 +546,7 @@ export interface UploadCallback {
 }
 
 export interface UploadOptions
-  extends CreateResumableUploadOptions,
-    CreateWriteStreamOptions {
+  extends CreateResumableUploadOptions, CreateWriteStreamOptions {
   destination?: string | File;
   encryptionKey?: string | Buffer;
   kmsKeyName?: string;
@@ -1761,7 +1761,7 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
       Object.assign(
         requestQueryObject,
         destinationFile.instancePreconditionOpts,
-        requestQueryObject
+        requestQueryObject,
       );
     }
 
@@ -1776,16 +1776,19 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
             destination: {
               contentType: destinationFile.metadata.contentType,
               contentEncoding: destinationFile.metadata.contentEncoding,
-              contexts: requestQueryObject.contexts || destinationFile.metadata.contexts,
+              contexts:
+                requestQueryObject.contexts ||
+                destinationFile.metadata.contexts,
             },
             sourceObjects: (sources as File[]).map(source => {
               const sourceObject = {
                 name: source.name,
               } as SourceObject;
 
-              const generation = source.generation ?? source.metadata?.generation;
-                if (generation !== undefined) {
-                  sourceObject.generation = parseInt(generation.toString());
+              const generation =
+                source.generation ?? source.metadata?.generation;
+              if (generation !== undefined) {
+                sourceObject.generation = parseInt(generation.toString());
               }
 
               return sourceObject;
@@ -1794,7 +1797,8 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
           headers: {
             'Content-Type': 'application/json',
           },
-          queryParameters: requestQueryObject as unknown as StorageQueryParameters,
+          queryParameters:
+            requestQueryObject as unknown as StorageQueryParameters,
         },
         (err, resp) => {
           this.storage.retryOptions.autoRetry = this.instanceRetryValue;
@@ -1810,9 +1814,12 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
                 userProject: options.userProject,
               };
 
-              const generation = source.generation ?? source.metadata?.generation;
+              const generation =
+                source.generation ?? source.metadata?.generation;
               if (generation !== undefined) {
-                deleteOptions.ifGenerationMatch = parseInt(generation.toString());
+                deleteOptions.ifGenerationMatch = parseInt(
+                  generation.toString(),
+                );
               }
 
               return source
@@ -1822,7 +1829,7 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
 
             Promise.all(deletePromises).then(results => {
               const errors = results.filter(
-                (res): res is Error => res instanceof Error
+                (res): res is Error => res instanceof Error,
               );
 
               if (errors.length > 0) {
@@ -1830,7 +1837,7 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
                   `Compose operation succeeded, but cleaning up source objects failed. Failed to delete ${errors.length} source object(s).`,
                   errors,
                   destinationFile,
-                  resp
+                  resp,
                 );
                 callback!(cleanupErr, destinationFile, resp);
                 return;
@@ -2397,10 +2404,7 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
    */
   deleteLabels(
     labelsOrCallbackOrOptions?:
-      | string
-      | string[]
-      | DeleteLabelsCallback
-      | DeleteLabelsOptions,
+      string | string[] | DeleteLabelsCallback | DeleteLabelsOptions,
     optionsOrCallback?: DeleteLabelsCallback | DeleteLabelsOptions,
     callback?: DeleteLabelsCallback,
   ): Promise<DeleteLabelsResponse> | void {
@@ -2506,8 +2510,7 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
    */
   disableRequesterPays(
     optionsOrCallback?:
-      | DisableRequesterPaysOptions
-      | DisableRequesterPaysCallback,
+      DisableRequesterPaysOptions | DisableRequesterPaysCallback,
     callback?: DisableRequesterPaysCallback,
   ): Promise<DisableRequesterPaysResponse> | void {
     let options: DisableRequesterPaysOptions = {};
@@ -2705,8 +2708,7 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
    */
   enableRequesterPays(
     optionsOrCallback?:
-      | EnableRequesterPaysCallback
-      | EnableRequesterPaysOptions,
+      EnableRequesterPaysCallback | EnableRequesterPaysOptions,
     cb?: EnableRequesterPaysCallback,
   ): Promise<EnableRequesterPaysResponse> | void {
     let options: EnableRequesterPaysOptions = {};
@@ -4187,8 +4189,7 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
   setStorageClass(
     storageClass: string,
     optionsOrCallback?:
-      | SetBucketStorageClassOptions
-      | SetBucketStorageClassCallback,
+      SetBucketStorageClassOptions | SetBucketStorageClassCallback,
     callback?: SetBucketStorageClassCallback,
   ): Promise<SetBucketMetadataResponse> | void {
     const options =
@@ -4690,8 +4691,7 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
    */
   makeAllFilesPublicPrivate_(
     optionsOrCallback?:
-      | MakeAllFilesPublicPrivateOptions
-      | MakeAllFilesPublicPrivateCallback,
+      MakeAllFilesPublicPrivateOptions | MakeAllFilesPublicPrivateCallback,
     callback?: MakeAllFilesPublicPrivateCallback,
   ): Promise<MakeAllFilesPublicPrivateResponse> | void {
     const MAX_PARALLEL_LIMIT = 10;

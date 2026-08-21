@@ -838,14 +838,19 @@ describe('Bucket', () => {
         return [{}] as any;
       };
 
-      storageTransport.makeRequest = sandbox.stub().callsFake((reqOpts, callback) => {
-        assert.strictEqual((reqOpts.queryParameters as any)?.deleteSourceObjects, undefined);
-        const body = JSON.parse(reqOpts.body as string);
-        assert.strictEqual(body.deleteSourceObjects, undefined);
-        assert.strictEqual(body.sourceObjects[0].generation, 12345);
-        callback!(null, {});
-        return Promise.resolve();
-      });
+      storageTransport.makeRequest = sandbox
+        .stub()
+        .callsFake((reqOpts, callback) => {
+          assert.strictEqual(
+            (reqOpts.queryParameters as any)?.deleteSourceObjects,
+            undefined,
+          );
+          const body = JSON.parse(reqOpts.body as string);
+          assert.strictEqual(body.deleteSourceObjects, undefined);
+          assert.strictEqual(body.sourceObjects[0].generation, 12345);
+          callback!(null, {});
+          return Promise.resolve();
+        });
 
       bucket.combine(
         sources,
@@ -855,7 +860,7 @@ describe('Bucket', () => {
           assert.ifError(err);
           assert.strictEqual(deletedCount, 2);
           done();
-        }
+        },
       );
     });
 
@@ -871,12 +876,14 @@ describe('Bucket', () => {
         };
       });
 
-      storageTransport.makeRequest = sandbox.stub().callsFake((reqOpts, callback) => {
-        const body = JSON.parse(reqOpts.body as string);
-        assert.strictEqual(body.deleteSourceObjects, undefined);
-        callback!(null, {});
-        return Promise.resolve();
-      });
+      storageTransport.makeRequest = sandbox
+        .stub()
+        .callsFake((reqOpts, callback) => {
+          const body = JSON.parse(reqOpts.body as string);
+          assert.strictEqual(body.deleteSourceObjects, undefined);
+          callback!(null, {});
+          return Promise.resolve();
+        });
 
       bucket.combine(sources, destination, (err: any) => {
         assert.ifError(err);
@@ -898,18 +905,25 @@ describe('Bucket', () => {
         };
       });
 
-      storageTransport.makeRequest = sandbox.stub().callsFake((reqOpts, callback) => {
-        const body = JSON.parse(reqOpts.body as string);
-        assert.strictEqual(body.deleteSourceObjects, undefined);
-        callback!(composeError);
-        return Promise.resolve();
-      });
+      storageTransport.makeRequest = sandbox
+        .stub()
+        .callsFake((reqOpts, callback) => {
+          const body = JSON.parse(reqOpts.body as string);
+          assert.strictEqual(body.deleteSourceObjects, undefined);
+          callback!(composeError);
+          return Promise.resolve();
+        });
 
-      bucket.combine(sources, destination, {deleteSourceObjects: true}, (err: any) => {
-        assert.strictEqual(err, composeError);
-        assert.strictEqual(deletedCount, 0);
-        done();
-      });
+      bucket.combine(
+        sources,
+        destination,
+        {deleteSourceObjects: true},
+        (err: any) => {
+          assert.strictEqual(err, composeError);
+          assert.strictEqual(deletedCount, 0);
+          done();
+        },
+      );
     });
 
     it('should return ComposeCleanupError if deleting source objects fails', done => {
@@ -928,12 +942,14 @@ describe('Bucket', () => {
         return [{}] as any;
       };
 
-      storageTransport.makeRequest = sandbox.stub().callsFake((reqOpts, callback) => {
-        const body = JSON.parse(reqOpts.body as string);
-        assert.strictEqual(body.deleteSourceObjects, undefined);
-        callback!(null, {success: true});
-        return Promise.resolve();
-      });
+      storageTransport.makeRequest = sandbox
+        .stub()
+        .callsFake((reqOpts, callback) => {
+          const body = JSON.parse(reqOpts.body as string);
+          assert.strictEqual(body.deleteSourceObjects, undefined);
+          callback!(null, {success: true});
+          return Promise.resolve();
+        });
 
       bucket.combine(
         sources,
@@ -954,7 +970,7 @@ describe('Bucket', () => {
           } catch (assertErr) {
             done(assertErr);
           }
-        }
+        },
       );
     });
   });
@@ -2913,9 +2929,10 @@ describe('Bucket', () => {
         bucket.storage.retryOptions.idempotencyStrategy = 1;
         bucket.storage.retryOptions.retryableErrorFn = () => true;
 
-        fakeFile.createWriteStream = (options_) => {
+        fakeFile.createWriteStream = options_ => {
           retryCount++;
-          const currentId = (options_ as CreateWriteStreamOptionsInternal)?.invocationId;
+          const currentId = (options_ as CreateWriteStreamOptionsInternal)
+            ?.invocationId;
 
           if (retryCount === 1) {
             firstInvocationId = currentId;
@@ -2936,7 +2953,7 @@ describe('Bucket', () => {
               ws.emit('metadata', {});
             }
           });
-          
+
           return ws as any;
         };
 
@@ -2954,7 +2971,7 @@ describe('Bucket', () => {
           destination: fakeFile,
           resumable: false,
           validation: false,
-          preconditionOpts: { ifGenerationMatch: 123 },
+          preconditionOpts: {ifGenerationMatch: 123},
         };
 
         const authClient = new GoogleAuth();
@@ -2967,7 +2984,7 @@ describe('Bucket', () => {
           projectId: 'project-id',
           retryOptions: STORAGE.retryOptions,
           scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-          packageJson: { name: 'test-package', version: '1.0.0' },
+          packageJson: {name: 'test-package', version: '1.0.0'},
         });
 
         // Swap storage transport to test real header compilation
@@ -2987,7 +3004,7 @@ describe('Bucket', () => {
         bucket.storage.retryOptions.retryableErrorFn = () => true;
 
         const requestStub = realTransport.authClient.request as sinon.SinonStub;
-        requestStub.callsFake(async (reqOpts) => {
+        requestStub.callsFake(async reqOpts => {
           if (reqOpts.method !== 'POST') {
             return {
               config: {},
@@ -3000,7 +3017,11 @@ describe('Bucket', () => {
 
           if (reqOpts.multipart && Array.isArray(reqOpts.multipart)) {
             const part = reqOpts.multipart[1];
-            if (part && part.content && typeof part.content.resume === 'function') {
+            if (
+              part &&
+              part.content &&
+              typeof part.content.resume === 'function'
+            ) {
               part.content.resume();
             }
           }
@@ -3008,7 +3029,9 @@ describe('Bucket', () => {
           retryCount++;
           const headers = reqOpts.headers || {};
           const apiClientHeader = headers['x-goog-api-client'] || '';
-          const match = apiClientHeader.match(/gccl-invocation-id\/([a-f0-9-]+)/);
+          const match = apiClientHeader.match(
+            /gccl-invocation-id\/([a-f0-9-]+)/,
+          );
           const currentId = match ? match[1] : undefined;
 
           if (retryCount === 1) {
@@ -3060,7 +3083,7 @@ describe('Bucket', () => {
 
       const textfilepath = path.join(
         getDirName(),
-        '../../../test/testdata/textfile.txt'
+        '../../../test/testdata/textfile.txt',
       );
 
       bucket.upload(textfilepath, options, (err: Error | null) => {

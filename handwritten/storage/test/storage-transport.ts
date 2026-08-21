@@ -137,10 +137,12 @@ describe('Storage Transport', () => {
     };
 
     let capturedGaxiosInstance: Gaxios | undefined;
-    const gaxiosRequestStub = sandbox.stub(Gaxios.prototype, 'request').callsFake(function(this: Gaxios, opts: any) {
-      capturedGaxiosInstance = this;
-      return Promise.resolve({ data: {} } as any);
-    });
+    const gaxiosRequestStub = sandbox
+      .stub(Gaxios.prototype, 'request')
+      .callsFake(function (this: Gaxios, opts: any) {
+        capturedGaxiosInstance = this;
+        return Promise.resolve({data: {}} as any);
+      });
 
     const requestStub = authClientStub.request as sinon.SinonStub;
     requestStub.resolves({data: {}});
@@ -152,11 +154,12 @@ describe('Storage Transport', () => {
     assert.ok(calledWith.adapter);
 
     // Manually call the adapter (simulating what the real authClient request does)
-    await calledWith.adapter({ headers: {} });
+    await calledWith.adapter({headers: {}});
 
     assert.strictEqual(gaxiosRequestStub.calledOnce, true);
     assert.ok(capturedGaxiosInstance);
-    const interceptorSet = capturedGaxiosInstance.interceptors.request as any as Set<any>;
+    const interceptorSet = capturedGaxiosInstance.interceptors
+      .request as any as Set<any>;
     assert.strictEqual(interceptorSet.size, 1);
     const handlers = Array.from(interceptorSet);
     assert.strictEqual(handlers[0].resolved, interceptorStub.resolved);
