@@ -208,13 +208,13 @@ describe('signer', () => {
           const expires = accessibleAt - 86400000;
 
           assert.throws(() => {
-            signer.getSignedUrl({
+            (signer.getSignedUrl({
               version: 'v4',
               method: 'GET',
               accessibleAt,
               expires,
             }),
-              SignerExceptionMessages.EXPIRATION_BEFORE_ACCESSIBLE_DATE;
+              SignerExceptionMessages.EXPIRATION_BEFORE_ACCESSIBLE_DATE);
           });
         });
 
@@ -260,13 +260,13 @@ describe('signer', () => {
             const accessibleAt = new Date('31-12-2019');
 
             assert.throws(() => {
-              signer.getSignedUrl({
+              (signer.getSignedUrl({
                 version: 'v4',
                 method: 'GET',
                 accessibleAt,
                 expires: expiresNumber,
               }),
-                SignerExceptionMessages.ACCESSIBLE_DATE_INVALID;
+                SignerExceptionMessages.ACCESSIBLE_DATE_INVALID);
             });
           });
         });
@@ -719,8 +719,8 @@ describe('signer', () => {
           };
 
           assert.throws(() => {
-            signer['getSignedUrlV4'](CONFIG),
-              SignerExceptionMessages.X_GOOG_CONTENT_SHA256;
+            (signer['getSignedUrlV4'](CONFIG),
+              SignerExceptionMessages.X_GOOG_CONTENT_SHA256);
           });
         });
       });

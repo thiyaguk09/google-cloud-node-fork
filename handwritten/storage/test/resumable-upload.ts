@@ -2287,7 +2287,7 @@ describe('resumable-upload', () => {
         up.destroy = (err: Error) => {
           assert.strictEqual(
             err.message,
-            `Retry limit exceeded - status: 500 - error message from server`,
+            `Retry limit exceeded - status: 500 - error message from server`
           );
           done();
         };
@@ -2328,7 +2328,7 @@ describe('resumable-upload', () => {
             assert.strictEqual(up.numRetries, 3);
             assert.strictEqual(
               err.message,
-              `Retry limit exceeded - status: 500 - error message from server`,
+              `Retry limit exceeded - status: 500 - error message from server`
             );
             done();
           });
@@ -2494,11 +2494,11 @@ describe('resumable-upload', () => {
       up.numRetries = 3;
       up.retryLimit = 3;
       const nativeError = new Error('native connection issue');
-      
+
       up.on('error', (err: Error) => {
         assert.strictEqual(
           err.message,
-          'Retry limit exceeded - native connection issue',
+          'Retry limit exceeded - native connection issue'
         );
         done();
       });
@@ -2518,7 +2518,7 @@ describe('resumable-upload', () => {
       up.on('error', (err: Error) => {
         assert.strictEqual(
           err.message,
-          'Retry limit exceeded - code: ERR_SOMETHING_SPECIAL',
+          'Retry limit exceeded - code: ERR_SOMETHING_SPECIAL'
         );
         done();
       });
@@ -2552,7 +2552,10 @@ describe('resumable-upload', () => {
         // Assert that the formatted error message includes key HTTP details from the GaxiosError.
         assert(err.message.includes('Retry limit exceeded'));
         assert(err.message.includes('Request failed with status code 429'));
-        assert(err.message.includes('status: 429') || err.message.includes('code: 429'));
+        assert(
+          err.message.includes('status: 429') ||
+            err.message.includes('code: 429')
+        );
         assert(err.message.includes('statusText: Too Many Requests'));
         done();
       });
@@ -2591,7 +2594,10 @@ describe('resumable-upload', () => {
         // Assert that the formatted error message includes key HTTP details and the inner API error message.
         assert(err.message.includes('Retry limit exceeded'));
         assert(err.message.includes('Request failed with status code 400'));
-        assert(err.message.includes('status: 400') || err.message.includes('code: 400'));
+        assert(
+          err.message.includes('status: 400') ||
+            err.message.includes('code: 400')
+        );
         assert(err.message.includes('Invalid query parameter value'));
         done();
       });
