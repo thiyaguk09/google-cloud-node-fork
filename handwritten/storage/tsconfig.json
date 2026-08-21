@@ -4,7 +4,13 @@
         "rootDir": ".",
         "outDir": "build/esm",
         "resolveJsonModule": true,
-        "lib": ["ES2020"],
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "target": "esnext",
+        "lib": [
+            "esnext",
+            "DOM"
+        ],
         "sourceMap": false,
         "esModuleInterop": true
     },
