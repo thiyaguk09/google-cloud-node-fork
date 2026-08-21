@@ -62,7 +62,7 @@ describe('storage/iam', () => {
       Object.assign(BUCKET_INSTANCE, {
         request(callback: Function) {
           assert.strictEqual(this, BUCKET_INSTANCE);
-          callback(); // done()
+          callback();
         },
       });
 
