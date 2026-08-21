@@ -4,7 +4,6 @@
         "rootDir": ".",
         "outDir": "build/esm",
         "resolveJsonModule": true,
-        "module": "es2020",
         "lib": ["ES2020"],
         "sourceMap": false,
         "esModuleInterop": true
@@ -12,7 +11,10 @@
     "include": [
         "src/*.ts",
         "src/*.cjs",
-        "internal-tooling/*.ts",
-        "system-test/*.ts"
+        "test/**/*.ts",
+        "system-test/*.ts",
+        "conformance-test/*.ts",
+        "conformance-test/scenarios/*.ts",
+        "internal-tooling/*.ts"
     ]
 }
