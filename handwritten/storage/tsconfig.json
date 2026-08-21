@@ -8,7 +8,9 @@
     "moduleResolution": "nodenext",
     "lib": ["ES2020"],
     "sourceMap": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots": ["../../node_modules/@types", "./node_modules/@types"],
+    "types": ["node", "mocha", "sinon"]
   },
   "include": [
     "src/*.ts",
