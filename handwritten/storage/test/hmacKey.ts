@@ -101,7 +101,7 @@ describe('HmacKey', () => {
       hmacKey.setMetadata = (metadata: HmacKeyMetadata, callback: Function) => {
         assert.deepStrictEqual(metadata.accessId, ACCESS_ID);
         Promise.resolve([])
-          .then(resp => callback(null, ...resp))
+          .then(resp => callback!(null, ...resp))
           .catch(() => {});
       };
 

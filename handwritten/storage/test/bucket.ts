@@ -25,9 +25,10 @@ import {
   CreateWriteStreamOptions,
   GaxiosOptionsPrepared,
 } from '../src/index.js';
-import sinon from 'sinon';
+import * as sinon from 'sinon';
 import {StorageTransport} from '../src/storage-transport.js';
 import {GoogleAuth} from 'google-auth-library';
+import {GaxiosResponse} from 'gaxios';
 import {
   AvailableServiceObjectMethods,
   BucketExceptionMessages,
@@ -40,7 +41,7 @@ import {
 import mime from 'mime';
 import {CreateWriteStreamOptionsInternal} from '../src/file.js';
 import {convertObjKeysToSnakeCase, getDirName} from '../src/util.js';
-import {util} from '../src/nodejs-common/index.js';
+import {DeleteOptions, util} from '../src/nodejs-common/index.js';
 import path from 'path';
 import fs from 'fs';
 import * as stream from 'stream';
@@ -59,7 +60,7 @@ describe('Bucket', () => {
   let STORAGE: Storage;
   let sandbox: sinon.SinonSandbox;
   let storageTransport: StorageTransport;
-  let originalRetryOptions: any;
+  let originalRetryOptions: Storage['retryOptions'];
   const PROJECT_ID = 'project-id';
   const BUCKET_NAME = 'test-bucket';
 
@@ -80,7 +81,7 @@ describe('Bucket', () => {
     sandbox.restore();
     for (const key of Object.keys(STORAGE.retryOptions)) {
       if (!(key in originalRetryOptions)) {
-        delete (STORAGE.retryOptions as any)[key];
+        delete (STORAGE.retryOptions as Record<string, unknown>)[key];
       }
     }
     Object.assign(STORAGE.retryOptions, originalRetryOptions);
@@ -823,26 +824,27 @@ describe('Bucket', () => {
       sources[0].generation = 12345;
 
       let deletedCount = 0;
-      sources[0].delete = async (opts?: any) => {
+      sources[0].delete = (async (opts?: DeleteOptions) => {
         assert.strictEqual(opts?.userProject, 'user-project-id');
         assert.strictEqual(opts?.ignoreNotFound, true);
         assert.strictEqual(opts?.ifGenerationMatch, 12345);
         deletedCount++;
-        return [{}] as any;
-      };
-      sources[1].delete = async (opts?: any) => {
+        return [{}] as unknown as [GaxiosResponse];
+      }) as unknown as File['delete'];
+      sources[1].delete = (async (opts?: DeleteOptions) => {
         assert.strictEqual(opts?.userProject, 'user-project-id');
         assert.strictEqual(opts?.ignoreNotFound, true);
         assert.strictEqual(opts?.ifGenerationMatch, undefined);
         deletedCount++;
-        return [{}] as any;
-      };
+        return [{}] as unknown as [GaxiosResponse];
+      }) as unknown as File['delete'];
 
       storageTransport.makeRequest = sandbox
         .stub()
         .callsFake((reqOpts, callback) => {
           assert.strictEqual(
-            (reqOpts.queryParameters as any)?.deleteSourceObjects,
+            (reqOpts.queryParameters as Record<string, unknown>)
+              ?.deleteSourceObjects,
             undefined,
           );
           const body = JSON.parse(reqOpts.body as string);
@@ -856,7 +858,7 @@ describe('Bucket', () => {
         sources,
         destination,
         {deleteSourceObjects: true, userProject: 'user-project-id'},
-        (err: any) => {
+        (err: Error | null) => {
           assert.ifError(err);
           assert.strictEqual(deletedCount, 2);
           done();
@@ -870,10 +872,10 @@ describe('Bucket', () => {
 
       let deletedCount = 0;
       sources.forEach(source => {
-        source.delete = async () => {
+        source.delete = (async () => {
           deletedCount++;
-          return [{}] as any;
-        };
+          return [{}] as unknown as [GaxiosResponse];
+        }) as unknown as File['delete'];
       });
 
       storageTransport.makeRequest = sandbox
@@ -885,7 +887,7 @@ describe('Bucket', () => {
           return Promise.resolve();
         });
 
-      bucket.combine(sources, destination, (err: any) => {
+      bucket.combine(sources, destination, (err: Error | null) => {
         assert.ifError(err);
         assert.strictEqual(deletedCount, 0);
         done();
@@ -899,10 +901,10 @@ describe('Bucket', () => {
 
       let deletedCount = 0;
       sources.forEach(source => {
-        source.delete = async () => {
+        source.delete = (async () => {
           deletedCount++;
-          return [{}] as any;
-        };
+          return [{}] as unknown as [GaxiosResponse];
+        }) as unknown as File['delete'];
       });
 
       storageTransport.makeRequest = sandbox
@@ -918,7 +920,7 @@ describe('Bucket', () => {
         sources,
         destination,
         {deleteSourceObjects: true},
-        (err: any) => {
+        (err: Error | null) => {
           assert.strictEqual(err, composeError);
           assert.strictEqual(deletedCount, 0);
           done();
@@ -931,16 +933,16 @@ describe('Bucket', () => {
       const destination = bucket.file('destination.foo');
       const deleteError = new Error('Delete failed.');
 
-      sources[0].delete = async (opts?: any) => {
+      sources[0].delete = (async (opts?: DeleteOptions) => {
         assert.strictEqual(opts?.userProject, 'user-project-id');
         assert.strictEqual(opts?.ignoreNotFound, true);
         throw deleteError;
-      };
-      sources[1].delete = async (opts?: any) => {
+      }) as unknown as File['delete'];
+      sources[1].delete = (async (opts?: DeleteOptions) => {
         assert.strictEqual(opts?.userProject, 'user-project-id');
         assert.strictEqual(opts?.ignoreNotFound, true);
-        return [{}] as any;
-      };
+        return [{}] as unknown as [GaxiosResponse];
+      }) as unknown as File['delete'];
 
       storageTransport.makeRequest = sandbox
         .stub()
@@ -955,13 +957,20 @@ describe('Bucket', () => {
         sources,
         destination,
         {deleteSourceObjects: true, userProject: 'user-project-id'},
-        (err: any, newFile: any, apiResponse: any) => {
+        (err: Error | null, newFile: unknown, apiResponse: unknown) => {
           try {
             assert.ok(err instanceof ComposeCleanupError);
             assert.strictEqual(err.name, 'ComposeCleanupError');
-            assert.deepStrictEqual((err as any).errors, [deleteError]);
-            assert.strictEqual((err as any).newFile, destination);
-            assert.deepStrictEqual((err as any).apiResponse, {success: true});
+            assert.deepStrictEqual((err as ComposeCleanupError).errors, [
+              deleteError,
+            ]);
+            assert.strictEqual(
+              (err as ComposeCleanupError).newFile,
+              destination,
+            );
+            assert.deepStrictEqual((err as ComposeCleanupError).apiResponse, {
+              success: true,
+            });
 
             // Also check callback arguments
             assert.strictEqual(newFile, destination);
@@ -1435,7 +1444,7 @@ describe('Bucket', () => {
               },
             });
             Promise.resolve([])
-              .then(resp => callback(null, ...resp))
+              .then(resp => callback!(null, ...resp))
               .catch(() => {});
           },
         );
@@ -1623,7 +1632,7 @@ describe('Bucket', () => {
         .callsFake(
           (metadata: {}, optionsOrCallback: {}, callback: Function) => {
             Promise.resolve([setMetadataResponse])
-              .then(resp => callback(null, ...resp))
+              .then(resp => callback!(null, ...resp))
               .catch(() => {});
           },
         );
@@ -1661,7 +1670,7 @@ describe('Bucket', () => {
               },
             });
             Promise.resolve([])
-              .then(resp => callback(null, ...resp))
+              .then(resp => callback!(null, ...resp))
               .catch(() => {});
           },
         );
@@ -1988,14 +1997,12 @@ describe('Bucket', () => {
         .callsFake((reqOpts, callback) => {
           const response = {items: [fileMetadata]};
 
-          const promise = Promise.resolve(response);
           if (typeof callback === 'function') {
-            promise.then(
-              res => callback(null, res),
-              err => callback(err),
-            );
+            return Promise.resolve(response)
+              .then(res => callback!(null, res))
+              .catch(err => callback!(err));
           }
-          return promise;
+          return Promise.resolve(response);
         });
 
       bucket.getFiles((err, files) => {
@@ -2451,7 +2458,7 @@ describe('Bucket', () => {
           });
 
           Promise.resolve([])
-            .then(resp => callback(null, ...resp))
+            .then(resp => callback!(null, ...resp))
             .catch(() => {});
         });
 
@@ -2484,7 +2491,7 @@ describe('Bucket', () => {
         .callsFake((metadata, _callbackOrOptions, callback) => {
           assert.strictEqual(metadata.labels, labels);
           Promise.resolve([])
-            .then(resp => callback(null, ...resp))
+            .then(resp => callback!(null, ...resp))
             .catch(() => {});
         });
       bucket.setLabels(labels, done);
@@ -2515,7 +2522,7 @@ describe('Bucket', () => {
           });
 
           Promise.resolve([])
-            .then(resp => callback(null, ...resp))
+            .then(resp => callback!(null, ...resp))
             .catch(() => {});
         });
 
@@ -2534,7 +2541,7 @@ describe('Bucket', () => {
             cors: corsConfiguration,
           });
 
-          return Promise.resolve([]).then(resp => callback(null, ...resp));
+          return Promise.resolve([]).then(resp => callback!(null, ...resp));
         });
 
       bucket.setCorsConfiguration(corsConfiguration, done);
@@ -2571,7 +2578,7 @@ describe('Bucket', () => {
           assert.deepStrictEqual(metadata, {storageClass: STORAGE_CLASS});
           assert.strictEqual(options, OPTIONS);
           Promise.resolve([])
-            .then(resp => callback(null, ...resp))
+            .then(resp => callback!(null, ...resp))
             .catch(() => {});
         });
 
@@ -2945,8 +2952,10 @@ describe('Bucket', () => {
 
           setImmediate(() => {
             if (retryCount === 1) {
-              const error = new Error('Retryable failure') as GaxiosError;
-              error.code = 500;
+              const error = Object.assign(new Error('Retryable failure'), {
+                code: '500',
+                status: 500,
+              }) as GaxiosError;
               error.status = 500;
               ws.destroy(error);
             } else {
@@ -2954,7 +2963,7 @@ describe('Bucket', () => {
             }
           });
 
-          return ws as any;
+          return ws as never;
         };
 
         bucket.upload(filepath, options, err => {
@@ -3007,12 +3016,12 @@ describe('Bucket', () => {
         requestStub.callsFake(async reqOpts => {
           if (reqOpts.method !== 'POST') {
             return {
-              config: {},
+              config: {} as unknown as GaxiosOptionsPrepared,
               data: {},
-              headers: {},
+              headers: {} as unknown as Headers,
               status: 204,
               statusText: 'No Content',
-            } as any;
+            } as unknown as GaxiosResponse;
           }
 
           if (reqOpts.multipart && Array.isArray(reqOpts.multipart)) {
@@ -3036,19 +3045,21 @@ describe('Bucket', () => {
 
           if (retryCount === 1) {
             firstInvocationId = currentId;
-            const error = new Error('Retryable failure') as GaxiosError;
-            error.code = 500;
+            const error = Object.assign(new Error('Retryable failure'), {
+              code: '500',
+              status: 500,
+            }) as GaxiosError;
             error.status = 500;
             throw error;
           } else {
             assert.strictEqual(currentId, firstInvocationId);
             return {
-              config: {},
+              config: {} as unknown as GaxiosOptionsPrepared,
               data: {},
-              headers: {},
+              headers: {} as unknown as Headers,
               status: 200,
               statusText: 'OK',
-            } as any;
+            } as unknown as GaxiosResponse;
           }
         });
 
@@ -3072,7 +3083,7 @@ describe('Bucket', () => {
         return readStream;
       });
 
-      fakeFile.createWriteStream = (options_: CreateWriteStreamOptions) => {
+      fakeFile.createWriteStream = () => {
         const ws = new stream.Writable({
           write(chunk, encoding, callback) {
             callback(new Error('write error'));

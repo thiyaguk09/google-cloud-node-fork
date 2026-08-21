@@ -634,7 +634,7 @@ describe('Transfer Manager', () => {
     });
 
     it('should disable individual sharded chunk validation in download calls', async () => {
-      let shardedValidationOption: any = undefined;
+      let shardedValidationOption: DownloadOptions['validation'] = undefined;
       sandbox.stub(file, 'download').callsFake(async options => {
         shardedValidationOption = (options as DownloadOptions).validation;
         return [Buffer.alloc(100)];

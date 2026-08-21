@@ -27,7 +27,7 @@ import {
   StorageTransport,
 } from '../src/storage-transport.js';
 import {GoogleAuth} from 'google-auth-library';
-import sinon from 'sinon';
+import * as sinon from 'sinon';
 import {
   FileExceptionMessages,
   FileOptions,
@@ -49,7 +49,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as tmp from 'tmp';
 import {formatAsUTCISO} from '../src/util.js';
-import {Gaxios} from 'gaxios';
+import {Gaxios, GaxiosResponse} from 'gaxios';
 class HTTPError extends Error {
   code: number;
   constructor(message: string, code: number) {
@@ -615,14 +615,14 @@ describe('File', () => {
             'x-goog-encryption-key-sha256': 'hash-dest',
           });
           callback?.(null, {done: true}, {});
-          return {data: {done: true}} as any;
+          return {data: {done: true}} as never;
         } catch (e) {
           done(e);
           throw e;
         }
       };
 
-      file.copy(newFile, (err: any) => {
+      file.copy(newFile, (err: Error | null) => {
         assert.ifError(err);
         done();
       });
@@ -3613,7 +3613,7 @@ describe('File', () => {
         .stub(file, 'setMetadata')
         .callsFake((metadata, optionsOrCallback, cb) => {
           Promise.resolve([apiResponse])
-            .then(resp => cb(null, ...resp))
+            .then(resp => cb!(null, ...resp))
             .catch(() => {});
         });
 
@@ -4610,7 +4610,8 @@ describe('File', () => {
       const options = {resumable: false};
 
       sandbox.stub(file, 'createWriteStream').callsFake(options_ => {
-        const {invocationId, ...rest} = options_ as any;
+        const {invocationId, ...rest} =
+          options_ as CreateWriteStreamOptionsInternal;
         assert.ok(invocationId);
         assert.deepStrictEqual(rest, {resumable: false});
         const ws = new PassThrough();
@@ -4623,7 +4624,8 @@ describe('File', () => {
 
     it('should not require options', async () => {
       sandbox.stub(file, 'createWriteStream').callsFake(options_ => {
-        const {invocationId, ...rest} = options_ as any;
+        const {invocationId, ...rest} =
+          options_ as CreateWriteStreamOptionsInternal;
         assert.ok(invocationId);
         assert.deepStrictEqual(rest, {});
         const ws = new PassThrough();
@@ -4769,12 +4771,12 @@ describe('File', () => {
       requestStub.callsFake(async reqOpts => {
         if (reqOpts.method !== 'POST') {
           return {
-            config: {},
+            config: {} as unknown as GaxiosOptionsPrepared,
             data: {},
-            headers: {},
+            headers: {} as unknown as Headers,
             status: 204,
             statusText: 'No Content',
-          } as any;
+          } as unknown as GaxiosResponse;
         }
 
         if (reqOpts.multipart && Array.isArray(reqOpts.multipart)) {
@@ -4796,19 +4798,21 @@ describe('File', () => {
 
         if (retryCount === 1) {
           firstInvocationId = currentId;
-          const error = new Error('Retryable failure') as GaxiosError;
-          error.code = 500;
+          const error = Object.assign(new Error('Retryable failure'), {
+            code: '500',
+            status: 500,
+          }) as GaxiosError;
           error.status = 500;
           throw error;
         } else {
           assert.strictEqual(currentId, firstInvocationId);
           return {
-            config: {},
+            config: {} as unknown as GaxiosOptionsPrepared,
             data: {},
-            headers: {},
+            headers: {} as unknown as Headers,
             status: 200,
             statusText: 'OK',
-          } as any;
+          } as unknown as GaxiosResponse;
         }
       });
 
@@ -5193,29 +5197,26 @@ describe('File', () => {
       assert.strictEqual(_file, file);
     });
 
-    it('should push the correct request interceptor', done => {
+    it('should push the correct request interceptor', async () => {
       const reqOpts = {headers: {}};
-      const expectedInterceptor = {
-        headers: {
-          'x-goog-encryption-algorithm': 'AES256',
-          'x-goog-encryption-key': KEY_BASE64,
-          'x-goog-encryption-key-sha256': KEY_HASH,
-        },
+      const expectedHeaders = {
+        'x-goog-encryption-algorithm': 'AES256',
+        'x-goog-encryption-key': KEY_BASE64,
+        'x-goog-encryption-key-sha256': KEY_HASH,
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      _file.interceptors[0].resolved(reqOpts).then((actualInterceptor: any) => {
-        assert.deepStrictEqual(actualInterceptor, expectedInterceptor);
-      });
+      const actualInterceptor0 = await _file.interceptors[0].resolved(reqOpts);
+      assert.deepStrictEqual(
+        Object.fromEntries(actualInterceptor0.headers.entries()),
+        expectedHeaders,
+      );
 
-      _file.encryptionKeyInterceptor
-        .resolved(reqOpts)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((actualInterceptor: any) => {
-          assert.deepStrictEqual(actualInterceptor, expectedInterceptor);
-        });
-
-      done();
+      const actualInterceptor1 =
+        await _file.encryptionKeyInterceptor.resolved(reqOpts);
+      assert.deepStrictEqual(
+        Object.fromEntries(actualInterceptor1.headers.entries()),
+        expectedHeaders,
+      );
     });
   });
 

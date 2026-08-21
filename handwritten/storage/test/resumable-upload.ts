@@ -690,8 +690,8 @@ describe('resumable-upload', () => {
     });
 
     it('should wait for `wroteToChunkBuffer` if !`writeBuffers.length` && !`upstreamEnded`', async () => {
-      const result = await new Promise(resolve => {
-        up.waitForNextChunk().then(resolve);
+      const result = await new Promise((resolve, reject) => {
+        up.waitForNextChunk().then(resolve).catch(reject);
         up.emit('wroteToChunkBuffer');
       });
 
@@ -699,15 +699,15 @@ describe('resumable-upload', () => {
     });
 
     it("should wait for 'upstreamFinished' if !`writeBuffers.length` && !`upstreamEnded`", async () => {
-      await new Promise(resolve => {
-        up.waitForNextChunk().then(resolve);
+      await new Promise((resolve, reject) => {
+        up.waitForNextChunk().then(resolve).catch(reject);
         up.emit('upstreamFinished');
       });
     });
 
     it("should wait for 'upstreamFinished' and resolve `false` if data is not available", async () => {
-      const result = await new Promise(resolve => {
-        up.waitForNextChunk().then(resolve);
+      const result = await new Promise((resolve, reject) => {
+        up.waitForNextChunk().then(resolve).catch(reject);
         up.emit('upstreamFinished');
       });
 
@@ -715,7 +715,7 @@ describe('resumable-upload', () => {
     });
 
     it("should wait for 'upstreamFinished' and resolve `true` if data is available", async () => {
-      const result = await new Promise(resolve => {
+      const result = await new Promise((resolve, reject) => {
         up.on('newListener', (event: string) => {
           if (event === 'upstreamFinished') {
             // Update the `writeBuffers` before emitting 'upstreamFinished'
@@ -725,22 +725,22 @@ describe('resumable-upload', () => {
           }
         });
 
-        up.waitForNextChunk().then(resolve);
+        up.waitForNextChunk().then(resolve).catch(reject);
       });
 
       assert.equal(result, true);
     });
 
     it("should wait for 'upstreamFinished' if !`writeBuffers.length` && !`upstreamEnded`", async () => {
-      await new Promise(resolve => {
-        up.waitForNextChunk().then(resolve);
+      await new Promise((resolve, reject) => {
+        up.waitForNextChunk().then(resolve).catch(reject);
         up.emit('upstreamFinished');
       });
     });
 
     it("should wait for 'upstreamFinished' and resolve `false` if data is not available", async () => {
-      const result = await new Promise(resolve => {
-        up.waitForNextChunk().then(resolve);
+      const result = await new Promise((resolve, reject) => {
+        up.waitForNextChunk().then(resolve).catch(reject);
         up.emit('upstreamFinished');
       });
 
@@ -748,7 +748,7 @@ describe('resumable-upload', () => {
     });
 
     it("should wait for 'upstreamFinished' and resolve `true` if data is available", async () => {
-      const result = await new Promise(resolve => {
+      const result = await new Promise((resolve, reject) => {
         up.on('newListener', (event: string) => {
           if (event === 'upstreamFinished') {
             // Update the `writeBuffers` before emitting 'upstreamFinished'
@@ -758,7 +758,7 @@ describe('resumable-upload', () => {
           }
         });
 
-        up.waitForNextChunk().then(resolve);
+        up.waitForNextChunk().then(resolve).catch(reject);
       });
 
       assert.equal(result, true);
@@ -768,14 +768,14 @@ describe('resumable-upload', () => {
       assert.equal(up.listenerCount('wroteToChunkBuffer'), 0);
       assert.equal(up.listenerCount('upstreamFinished'), 0);
 
-      await new Promise(resolve => {
+      await new Promise((resolve, reject) => {
         up.on('newListener', (event: string) => {
           if (event === 'wroteToChunkBuffer') {
             process.nextTick(() => up.emit('wroteToChunkBuffer'));
           }
         });
 
-        up.waitForNextChunk().then(resolve);
+        up.waitForNextChunk().then(resolve).catch(reject);
       });
 
       assert.equal(up.listenerCount('wroteToChunkBuffer'), 0);
@@ -786,14 +786,14 @@ describe('resumable-upload', () => {
       assert.equal(up.listenerCount('wroteToChunkBuffer'), 0);
       assert.equal(up.listenerCount('upstreamFinished'), 0);
 
-      await new Promise(resolve => {
+      await new Promise((resolve, reject) => {
         up.on('newListener', (event: string) => {
           if (event === 'upstreamFinished') {
             process.nextTick(() => up.emit('upstreamFinished'));
           }
         });
 
-        up.waitForNextChunk().then(resolve);
+        up.waitForNextChunk().then(resolve).catch(reject);
       });
 
       assert.equal(up.listenerCount('wroteToChunkBuffer'), 0);
@@ -1866,20 +1866,22 @@ describe('resumable-upload', () => {
     );
   });
 
-  it('currentInvocationId.checkUploadStatus should be the same on error', done => {
+  it('currentInvocationId.checkUploadStatus should be the same on error', async () => {
     const beforeCallInvocationId = up.currentInvocationId.checkUploadStatus;
+    let destroyed = false;
     up.destroy = () => {
       assert.equal(
         beforeCallInvocationId,
         up.currentInvocationId.checkUploadStatus,
       );
-      done();
+      destroyed = true;
     };
     up.makeRequest = () => {
       throw new Error() as GaxiosError;
     };
 
-    up.getAndSetOffset().catch(done);
+    await up.getAndSetOffset().catch(() => {});
+    assert.strictEqual(destroyed, true);
   });
 
   describe('#getAndSetOffset', () => {
@@ -2527,7 +2529,7 @@ describe('resumable-upload', () => {
       up.numRetries = 3;
       up.retryLimit = 3;
       const customError = new Error('');
-      (customError as any).code = 'ERR_SOMETHING_SPECIAL';
+      (customError as {code?: string}).code = 'ERR_SOMETHING_SPECIAL';
 
       up.on('error', (err: Error) => {
         assert.strictEqual(
@@ -2552,14 +2554,14 @@ describe('resumable-upload', () => {
         {
           method: 'POST',
           url: 'https://example.com',
-        } as any,
+        } as unknown as GaxiosOptionsPrepared,
         {
           status: 429,
           statusText: 'Too Many Requests',
           data: '',
-          config: {},
-          headers: {},
-        } as any,
+          config: {} as unknown as GaxiosOptionsPrepared,
+          headers: {} as unknown as Headers,
+        } as unknown as GaxiosResponse,
       );
 
       up.on('error', (err: Error) => {
@@ -2589,7 +2591,7 @@ describe('resumable-upload', () => {
         {
           method: 'POST',
           url: 'https://example.com',
-        } as any,
+        } as unknown as GaxiosOptionsPrepared,
         {
           status: 400,
           statusText: 'Bad Request',
@@ -2600,9 +2602,9 @@ describe('resumable-upload', () => {
               code: 400,
             },
           },
-          config: {},
-          headers: {},
-        } as any,
+          config: {} as unknown as GaxiosOptionsPrepared,
+          headers: {} as unknown as Headers,
+        } as unknown as GaxiosResponse,
       );
 
       up.on('error', (err: Error) => {
