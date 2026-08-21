@@ -5,7 +5,6 @@
     "outDir": "build/esm",
     "resolveJsonModule": true,
     "module": "es2020",
-    "moduleResolution": "node",
     "lib": ["ES2020"],
     "sourceMap": false,
     "esModuleInterop": true
