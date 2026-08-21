@@ -85,6 +85,7 @@ export function executeScenario(testCase: RetryTestCase) {
           : methodMap.get(jsonMethod?.name);
       functionList?.forEach(storageMethodString => {
         const storageMethodObject =
+          // eslint-disable-next-line import/namespace
           libraryMethods[storageMethodString as keyof LibraryMethodsModuleType];
         let bucket: Bucket;
         let file: File;

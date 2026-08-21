@@ -373,7 +373,7 @@ class Iam {
           cb(null, data as Policy, resp);
         },
       )
-      .catch(err => cb(err));
+      .catch(err => cb!(err));
   }
 
   testPermissions(

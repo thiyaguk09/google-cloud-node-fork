@@ -1723,12 +1723,11 @@ class File extends ServiceObject<File, FileMetadata> {
     ) => {
       if (err) {
         // Get error message from the body.
-        await this.getBufferFromReadable(rawResponseStream as Readable).then(
-          body => {
-            err.message = body.toString('utf8');
-            throughStream.destroy(err);
-          },
+        const body = await this.getBufferFromReadable(
+          rawResponseStream as Readable,
         );
+        err.message = body.toString('utf8');
+        throughStream.destroy(err);
 
         return;
       }
@@ -2390,10 +2389,10 @@ class File extends ServiceObject<File, FileMetadata> {
     super
       .delete(options)
       .then(resp => cb!(null, ...resp))
-      .catch(cb!)
       .finally(() => {
         this.storage.retryOptions.autoRetry = this.instanceRetryValue;
-      });
+      })
+      .catch(cb!);
   }
 
   download(options?: DownloadOptions): Promise<DownloadResponse>;
@@ -2524,8 +2523,10 @@ class File extends ServiceObject<File, FileMetadata> {
         });
     } else {
       this.getBufferFromReadable(fileStream)
-        .then(contents => callback?.(null, contents))
-        .catch(callback as (err: RequestError) => void);
+        .then(contents => callback!(null, contents))
+        .catch(err =>
+          callback!(err as RequestError, null as unknown as Buffer),
+        );
     }
   }
 
@@ -2922,18 +2923,16 @@ class File extends ServiceObject<File, FileMetadata> {
 
     this.storage.storageTransport.authClient
       .sign(policyBase64, options.signingEndpoint)
-      .then(
-        signature => {
-          callback(null, {
-            string: policyString,
-            base64: policyBase64,
-            signature,
-          });
-        },
-        err => {
-          callback(new SigningError(err.message));
-        },
-      );
+      .then(signature =>
+        callback!(null, {
+          string: policyString,
+          base64: policyBase64,
+          signature,
+        }),
+      )
+      .catch(err => {
+        callback!(new SigningError(err.message));
+      });
   }
 
   generateSignedPostPolicyV4(
@@ -3135,7 +3134,9 @@ class File extends ServiceObject<File, FileMetadata> {
       }
     };
 
-    sign().then(res => callback!(null, res), callback!);
+    sign()
+      .then(res => callback!(null, res))
+      .catch(err => callback!(err));
   }
 
   getSignedUrl(cfg: GetSignedUrlConfig): Promise<GetSignedUrlResponse>;
@@ -3373,7 +3374,8 @@ class File extends ServiceObject<File, FileMetadata> {
 
     this.signer
       .getSignedUrl(signConfig)
-      .then(signedUrl => callback!(null, signedUrl), callback!);
+      .then(signedUrl => callback!(null, signedUrl))
+      .catch(err => callback!(err));
   }
 
   isPublic(): Promise<IsPublicResponse>;
@@ -3459,17 +3461,15 @@ class File extends ServiceObject<File, FileMetadata> {
           totalTimeout: this.storage.retryOptions.totalTimeout,
         },
       })
-      .then(() => {
-        cb(null, true);
-      })
+      .then(() => cb!(null, true))
       .catch(err => {
         const status = err.response?.status;
         // 401 Unauthorized or 403 Forbidden means the object is NOT public.
         if (status === 401 || status === 403) {
-          cb(null, false);
+          cb!(null, false);
         } else {
           // Any other error (like 404) is a real error.
-          cb(err);
+          cb!(err);
         }
       });
   }
@@ -4364,13 +4364,7 @@ class File extends ServiceObject<File, FileMetadata> {
     if (!callback) {
       return returnValue;
     } else {
-      return returnValue
-        .then(() => {
-          if (callback) {
-            return callback();
-          }
-        })
-        .catch(callback);
+      return returnValue.then(() => callback!()).catch(err => callback!(err));
     }
   }
 
@@ -4412,10 +4406,10 @@ class File extends ServiceObject<File, FileMetadata> {
     super
       .setMetadata(metadata, options)
       .then(resp => cb!(null, ...resp))
-      .catch(cb!)
       .finally(() => {
         this.storage.retryOptions.autoRetry = this.instanceRetryValue;
-      });
+      })
+      .catch(cb!);
   }
 
   setStorageClass(

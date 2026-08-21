@@ -146,25 +146,6 @@ export interface LifecycleRule {
   condition: LifecycleCondition;
 }
 
-export interface LifecycleCondition {
-  age?: number;
-  createdBefore?: Date | string;
-  customTimeBefore?: Date | string;
-  daysSinceCustomTime?: number;
-  daysSinceNoncurrentTime?: number;
-  isLive?: boolean;
-  matchesPrefix?: string[];
-  matchesSuffix?: string[];
-  matchesStorageClass?: string[];
-  noncurrentTimeBefore?: Date | string;
-  numNewerVersions?: number;
-}
-
-export interface LifecycleRule {
-  action: LifecycleAction;
-  condition: LifecycleCondition;
-}
-
 export interface EnableLoggingOptions extends PreconditionOptions {
   bucket?: string | Bucket;
   prefix: string;
@@ -1827,24 +1808,28 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
                 .catch(deleteErr => deleteErr as Error);
             });
 
-            Promise.all(deletePromises).then(results => {
-              const errors = results.filter(
-                (res): res is Error => res instanceof Error,
-              );
-
-              if (errors.length > 0) {
-                const cleanupErr = new ComposeCleanupError(
-                  `Compose operation succeeded, but cleaning up source objects failed. Failed to delete ${errors.length} source object(s).`,
-                  errors,
-                  destinationFile,
-                  resp,
+            // eslint-disable-next-line promise/no-promise-in-callback
+            void Promise.all(deletePromises)
+              .then(results => {
+                const errors = results.filter(
+                  (res): res is Error => res instanceof Error,
                 );
-                callback!(cleanupErr, destinationFile, resp);
-                return;
-              }
 
-              callback!(null, destinationFile, resp);
-            });
+                if (errors.length > 0) {
+                  const cleanupErr = new ComposeCleanupError(
+                    `Compose operation succeeded, but cleaning up source objects failed. Failed to delete ${errors.length} source object(s).`,
+                    errors,
+                    destinationFile,
+                    resp,
+                  );
+                  return callback!(cleanupErr, destinationFile, resp);
+                }
+
+                return callback!(null, destinationFile, resp);
+              })
+              .catch(cleanupErr => {
+                callback!(cleanupErr as Error, destinationFile, resp);
+              });
           } else {
             callback!(null, destinationFile, resp);
           }
@@ -3401,7 +3386,8 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
 
     this.signer
       .getSignedUrl(signConfig)
-      .then(signedUrl => callback!(null, signedUrl), callback!);
+      .then(signedUrl => callback!(null, signedUrl))
+      .catch(err => callback!(err));
   }
 
   lock(metageneration: number | string): Promise<BucketLockResponse>;
@@ -3637,6 +3623,7 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
     this.setMetadata(metadata, query, (err: Error | null | undefined) => {
       if (err) {
         callback!(err);
+        return;
       }
       const internalCall = () => {
         if (options.includeFiles) {
@@ -3646,9 +3633,10 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
         }
         return Promise.resolve([] as File[]);
       };
-      internalCall()
+      // eslint-disable-next-line promise/no-promise-in-callback
+      void internalCall()
         .then(files => callback!(null, files))
-        .catch(callback!);
+        .catch(err => callback!(err));
     });
   }
 
@@ -3783,7 +3771,8 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
         }
         return [];
       })
-      .then(files => callback!(null, files), callback);
+      .then(files => callback!(null, files))
+      .catch(err => callback!(err));
   }
 
   /**
@@ -3974,10 +3963,10 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
     super
       .setMetadata(metadata, options)
       .then(resp => cb!(null, ...resp))
-      .catch(cb!)
       .finally(() => {
         this.storage.retryOptions.autoRetry = this.instanceRetryValue;
-      });
+      })
+      .catch(cb!);
   }
 
   setRetentionPeriod(
@@ -4570,12 +4559,8 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
         return returnValue;
       } else {
         return returnValue
-          .then(() => {
-            if (callback) {
-              return callback!(null, newFile, newFile.metadata);
-            }
-          })
-          .catch(callback);
+          .then(() => callback!(null, newFile, newFile.metadata))
+          .catch(err => callback!(err));
       }
     };
 
@@ -4723,10 +4708,8 @@ class Bucket extends ServiceObject<Bucket, BucketMetadata> {
         });
         return Promise.all(promises);
       })
-      .then(
-        () => callback!(errors.length > 0 ? errors : null, updatedFiles),
-        err => callback!(err, updatedFiles),
-      );
+      .then(() => callback!(errors.length > 0 ? errors : null, updatedFiles))
+      .catch(err => callback!(err, updatedFiles));
   }
 
   getId(): string {

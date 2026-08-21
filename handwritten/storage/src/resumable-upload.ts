@@ -786,7 +786,9 @@ export class Upload extends Writable {
     if (!callback) {
       return this.createURIAsync();
     }
-    this.createURIAsync().then(r => callback(null, r), callback);
+    this.createURIAsync()
+      .then(r => callback!(null, r))
+      .catch(err => callback!(err));
   }
 
   protected async createURIAsync(): Promise<string> {
@@ -1243,7 +1245,7 @@ export class Upload extends Writable {
         throw e;
       }
 
-      await new Promise(res => setTimeout(res, retryDelay));
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
 
       return this.checkUploadStatus(config);
     }
@@ -1463,7 +1465,16 @@ function buildRetryError(
   const err = resp.data;
   if (err !== undefined && err !== null) {
     if (typeof err === 'object') {
-      const gaxiosErrLike = err as any;
+      const gaxiosErrLike = err as {
+        message?: string;
+        status?: number;
+        response?: {
+          status?: number;
+          statusText?: string;
+          data?: unknown;
+        };
+        code?: string | number;
+      };
       const errParts: string[] = [];
       if (gaxiosErrLike.message) {
         errParts.push(String(gaxiosErrLike.message));
@@ -1535,7 +1546,9 @@ export function createURI(
   if (!callback) {
     return up.createURI();
   }
-  up.createURI().then(r => callback(null, r), callback);
+  up.createURI()
+    .then(r => callback!(null, r))
+    .catch(err => callback!(err));
 }
 
 /**

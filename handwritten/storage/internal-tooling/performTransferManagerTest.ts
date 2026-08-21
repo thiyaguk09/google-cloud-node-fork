@@ -87,7 +87,7 @@ async function performTestCleanup(fileOrFiles: File[] | File | string[]) {
     if (typeof f === 'string') {
       fileToDelete = bucket.file(f);
     }
-    (fileToDelete as File).delete({ignoreNotFound: true});
+    return (fileToDelete as File).delete({ignoreNotFound: true});
   });
   return Promise.all(promises);
 }
@@ -276,4 +276,4 @@ async function performChunkUploadDownloadTest(): Promise<TestResult[]> {
   return results;
 }
 
-main();
+void main();

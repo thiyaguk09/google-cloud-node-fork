@@ -35,7 +35,12 @@ import {
   GoogleAuthOptions,
 } from 'google-auth-library';
 import {StorageQueryParameters, StorageTransport} from './storage-transport.js';
-import {GaxiosError, GaxiosInterceptor, GaxiosOptionsPrepared} from 'gaxios';
+import {
+  GaxiosError,
+  GaxiosInterceptor,
+  GaxiosOptions,
+  GaxiosOptionsPrepared,
+} from 'gaxios';
 
 export interface GetServiceAccountOptions {
   userProject?: string;
@@ -328,9 +333,13 @@ export function isTransientError(err: GaxiosError): boolean {
   // Immediate exit for non-retryable status codes
   if (status && [401, 405, 412].includes(status)) return false;
 
-  const gcsErrors = err.response?.data?.error?.errors || [];
-  const hasRateLimitReason = gcsErrors.some((e: any) =>
-    ['rateLimitExceeded', 'userRateLimitExceeded'].includes(e.reason),
+  const gcsErrors = (err.response?.data?.error?.errors || []) as Array<{
+    reason?: string;
+  }>;
+  const hasRateLimitReason = gcsErrors.some(
+    e =>
+      typeof e?.reason === 'string' &&
+      ['rateLimitExceeded', 'userRateLimitExceeded'].includes(e.reason),
   );
   if (hasRateLimitReason) return true;
 
@@ -374,7 +383,9 @@ export function isTransientError(err: GaxiosError): boolean {
  * Evaluates request configurations to determine if the request is idempotent and safe to retry.
  * @private
  */
-export function isRequestIdempotent(config: any): boolean {
+export function isRequestIdempotent(
+  config: GaxiosOptions & {hasPrecondition?: boolean},
+): boolean {
   const method = (config.method || 'GET').toUpperCase();
   const url = config.url ? config.url.toString() : '';
   const params = config.params || {};

@@ -406,10 +406,10 @@ export class HmacKey extends ServiceObject<HmacKey, HmacKeyMetadata> {
     super
       .setMetadata(metadata, options)
       .then(resp => cb!(null, ...resp))
-      .catch(cb!)
       .finally(() => {
         this.storage.retryOptions.autoRetry = this.instanceRetryValue;
-      });
+      })
+      .catch(cb!);
   }
 }
 

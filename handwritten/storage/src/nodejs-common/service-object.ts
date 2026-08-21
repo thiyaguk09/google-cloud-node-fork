@@ -562,7 +562,7 @@ class ServiceObject<T, K extends BaseMetadata> extends EventEmitter {
           callback(err, this.metadata, resp);
         },
       )
-      .catch(err => callback(err));
+      .catch(err => callback!(err));
   }
 }
 
