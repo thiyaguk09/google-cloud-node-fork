@@ -17,7 +17,7 @@ import {
   getTestBenchDockerImage,
   runTestBenchDockerImage,
   stopTestBenchDockerImage,
-} from './testBenchUtil';
+} from './testBenchUtil.js';
 
 const TIMEOUT_FOR_DOCKER_OPS = 60000;
 const TIME_TO_WAIT_FOR_CONTAINER_READY = 10000;

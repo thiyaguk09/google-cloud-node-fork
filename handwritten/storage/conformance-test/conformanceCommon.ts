@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import * as jsonToNodeApiMapping from './test-data/retryInvocationMap.json';
-import * as libraryMethods from './libraryMethods';
+import type * as jsonToNodeApiMapping from './test-data/retryInvocationMap.json';
+import * as libraryMethods from './libraryMethods.js';
 import {
   Bucket,
   File,
@@ -24,13 +24,13 @@ import {
   HmacKey,
   Notification,
   Storage,
-} from '../src';
+} from '../src/index.js';
 import * as crypto from 'crypto';
 import * as assert from 'assert';
 import {
   StorageRequestOptions,
   StorageTransport,
-} from '../src/storage-transport';
+} from '../src/storage-transport.js';
 interface RetryCase {
   instructions: String[];
 }
@@ -58,7 +58,7 @@ interface ConformanceTestResult {
   completed: boolean;
 }
 
-type LibraryMethodsModuleType = typeof import('./libraryMethods');
+type LibraryMethodsModuleType = typeof import('./libraryMethods.js');
 const methodMap: Map<String, String[]> = new Map(
   Object.entries({}), // TODO: replace with Object.entries(jsonToNodeApiMapping)
 );

@@ -21,7 +21,7 @@ import * as path from 'path';
 import * as sinon from 'sinon';
 import * as querystring from 'querystring';
 
-import {Storage, GenerateSignedPostPolicyV4Options} from '../src/';
+import {Storage, GenerateSignedPostPolicyV4Options} from '../src/index.js';
 import * as url from 'url';
 import {getDirName} from '../src/util.js';
 
