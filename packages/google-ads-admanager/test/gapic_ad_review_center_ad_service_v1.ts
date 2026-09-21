@@ -19,18 +19,13 @@
 import * as protos from '../protos/protos';
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { SinonStub } from 'sinon';
-import { describe, it, beforeEach, afterEach } from 'mocha';
+import {SinonStub} from 'sinon';
+import {describe, it, beforeEach, afterEach} from 'mocha';
 import * as adreviewcenteradserviceModule from '../src';
 
-import { PassThrough } from 'stream';
+import {PassThrough} from 'stream';
 
-import {
-  GoogleAuth,
-  protobuf,
-  LROperation,
-  operationsProtos,
-} from 'google-gax';
+import {GoogleAuth, protobuf, LROperation, operationsProtos} from 'google-gax';
 
 // Dynamically loaded proto JSON is needed to get the type information
 // to fill in default values for request objects
@@ -50,7 +45,7 @@ function getTypeDefaultValue(typeName: string, fields: string[]) {
 function generateSampleMessage<T extends object>(instance: T) {
   const filledObject = (
     instance.constructor as typeof protobuf.Message
-  ).toObject(instance as protobuf.Message<T>, { defaults: true });
+  ).toObject(instance as protobuf.Message<T>, {defaults: true});
   return (instance.constructor as typeof protobuf.Message).fromObject(
     filledObject,
   ) as T;
@@ -154,9 +149,9 @@ function stubAsyncIterationCall<ResponseType>(
             return Promise.reject(error);
           }
           if (counter >= responses!.length) {
-            return Promise.resolve({ done: true, value: undefined });
+            return Promise.resolve({done: true, value: undefined});
           }
-          return Promise.resolve({ done: false, value: responses![counter++] });
+          return Promise.resolve({done: false, value: responses![counter++]});
         },
       };
     },
@@ -171,7 +166,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       getClient: sinon.stub().resolves({
         getRequestHeaders: sinon
           .stub()
-          .resolves({ Authorization: 'Bearer SOME_TOKEN' }),
+          .resolves({Authorization: 'Bearer SOME_TOKEN'}),
       }),
     } as unknown as GoogleAuth;
   });
@@ -309,13 +304,13 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       assert(client.adReviewCenterAdServiceStub);
     });
 
-    it('has close method for the initialized client', (done) => {
+    it('has close method for the initialized client', done => {
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
           auth: googleAuth,
           projectId: 'bogus',
         });
-      client.initialize().catch((err) => {
+      client.initialize().catch(err => {
         throw err;
       });
       assert(client.adReviewCenterAdServiceStub);
@@ -324,12 +319,12 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
         .then(() => {
           done();
         })
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     });
 
-    it('has close method for the non-initialized client', (done) => {
+    it('has close method for the non-initialized client', done => {
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
           auth: googleAuth,
@@ -341,7 +336,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
         .then(() => {
           done();
         })
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     });
@@ -553,8 +548,8 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
         new operationsProtos.google.longrunning.Operation(),
       );
       expectedResponse.name = 'test';
-      expectedResponse.response = { type_url: 'url', value: Buffer.from('') };
-      expectedResponse.metadata = { type_url: 'url', value: Buffer.from('') };
+      expectedResponse.response = {type_url: 'url', value: Buffer.from('')};
+      expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')};
 
       client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
       const decodedOperation =
@@ -757,8 +752,8 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
         new operationsProtos.google.longrunning.Operation(),
       );
       expectedResponse.name = 'test';
-      expectedResponse.response = { type_url: 'url', value: Buffer.from('') };
-      expectedResponse.metadata = { type_url: 'url', value: Buffer.from('') };
+      expectedResponse.response = {type_url: 'url', value: Buffer.from('')};
+      expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')};
 
       client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
       const decodedOperation =
@@ -795,7 +790,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
     it('invokes searchAdReviewCenterAds without error', async () => {
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -836,7 +831,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
     it('invokes searchAdReviewCenterAds without error using callback', async () => {
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -892,7 +887,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
     it('invokes searchAdReviewCenterAds with error', async () => {
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -927,7 +922,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
     it('invokes searchAdReviewCenterAdsStream without error', async () => {
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -994,7 +989,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
     it('invokes searchAdReviewCenterAdsStream with error', async () => {
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -1104,7 +1099,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
     it('uses async iteration with searchAdReviewCenterAds with error', async () => {
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -1201,7 +1196,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
               }
             },
           )
-          .catch((err) => {
+          .catch(err => {
             throw err;
           });
       });
@@ -1288,7 +1283,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
               }
             },
           )
-          .catch((err) => {
+          .catch(err => {
             throw err;
           });
       });
@@ -1375,7 +1370,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
               }
             },
           )
-          .catch((err) => {
+          .catch(err => {
             throw err;
           });
       });
@@ -1447,7 +1442,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
     it('uses async iteration with listOperations with error', async () => {
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -1484,7 +1479,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -1549,7 +1544,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -1619,7 +1614,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -1669,7 +1664,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -1719,7 +1714,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -1769,7 +1764,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -1822,7 +1817,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -1876,7 +1871,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -1922,6 +1917,59 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       });
     });
 
+    describe('breakTemplate', async () => {
+      const fakePath = '/rendered/path/breakTemplate';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        break_template: 'breakTemplateValue',
+      };
+      const client =
+        new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
+          projectId: 'bogus',
+        });
+      await client.initialize();
+      client.pathTemplates.breakTemplatePathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.breakTemplatePathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('breakTemplatePath', () => {
+        const result = client.breakTemplatePath(
+          'networkCodeValue',
+          'breakTemplateValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromBreakTemplateName', () => {
+        const result = client.matchNetworkCodeFromBreakTemplateName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchBreakTemplateFromBreakTemplateName', () => {
+        const result = client.matchBreakTemplateFromBreakTemplateName(fakePath);
+        assert.strictEqual(result, 'breakTemplateValue');
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('browser', async () => {
       const fakePath = '/rendered/path/browser';
       const expectedParameters = {
@@ -1930,7 +1978,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -1980,7 +2028,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2034,7 +2082,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2087,7 +2135,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2141,7 +2189,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2195,7 +2243,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2253,7 +2301,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2303,7 +2351,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2353,7 +2401,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2403,7 +2451,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2456,7 +2504,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2509,7 +2557,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2559,7 +2607,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2612,7 +2660,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2670,7 +2718,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2724,7 +2772,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2777,7 +2825,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2841,7 +2889,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2907,7 +2955,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -2973,7 +3021,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3029,6 +3077,106 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       });
     });
 
+    describe('daiSession', async () => {
+      const fakePath = '/rendered/path/daiSession';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        dai_session: 'daiSessionValue',
+      };
+      const client =
+        new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
+          projectId: 'bogus',
+        });
+      await client.initialize();
+      client.pathTemplates.daiSessionPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.daiSessionPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('daiSessionPath', () => {
+        const result = client.daiSessionPath(
+          'networkCodeValue',
+          'daiSessionValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromDaiSessionName', () => {
+        const result = client.matchNetworkCodeFromDaiSessionName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchDaiSessionFromDaiSessionName', () => {
+        const result = client.matchDaiSessionFromDaiSessionName(fakePath);
+        assert.strictEqual(result, 'daiSessionValue');
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
+    describe('defaultThirdPartyDataDeclaration', async () => {
+      const fakePath = '/rendered/path/defaultThirdPartyDataDeclaration';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+      };
+      const client =
+        new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
+          projectId: 'bogus',
+        });
+      await client.initialize();
+      client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
+
+      it('defaultThirdPartyDataDeclarationPath', () => {
+        const result =
+          client.defaultThirdPartyDataDeclarationPath('networkCodeValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromDefaultThirdPartyDataDeclarationName', () => {
+        const result =
+          client.matchNetworkCodeFromDefaultThirdPartyDataDeclarationName(
+            fakePath,
+          );
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (
+            client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('deviceCapability', async () => {
       const fakePath = '/rendered/path/deviceCapability';
       const expectedParameters = {
@@ -3037,7 +3185,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3095,7 +3243,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3149,7 +3297,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3213,7 +3361,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3279,7 +3427,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3332,7 +3480,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3382,7 +3530,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3432,7 +3580,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3485,7 +3633,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3538,7 +3686,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3592,7 +3740,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3645,7 +3793,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3698,7 +3846,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3756,6 +3904,59 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       });
     });
 
+    describe('nativeStyle', async () => {
+      const fakePath = '/rendered/path/nativeStyle';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        native_style: 'nativeStyleValue',
+      };
+      const client =
+        new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
+          projectId: 'bogus',
+        });
+      await client.initialize();
+      client.pathTemplates.nativeStylePathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.nativeStylePathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('nativeStylePath', () => {
+        const result = client.nativeStylePath(
+          'networkCodeValue',
+          'nativeStyleValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromNativeStyleName', () => {
+        const result = client.matchNetworkCodeFromNativeStyleName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchNativeStyleFromNativeStyleName', () => {
+        const result = client.matchNativeStyleFromNativeStyleName(fakePath);
+        assert.strictEqual(result, 'nativeStyleValue');
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('network', async () => {
       const fakePath = '/rendered/path/network';
       const expectedParameters = {
@@ -3763,7 +3964,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3803,7 +4004,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3857,7 +4058,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3923,7 +4124,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -3973,7 +4174,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4023,7 +4224,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4076,7 +4277,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4130,7 +4331,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4194,7 +4395,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4258,7 +4459,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4308,7 +4509,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4372,7 +4573,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4422,7 +4623,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4472,7 +4673,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4522,7 +4723,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4576,7 +4777,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4630,7 +4831,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4688,7 +4889,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4738,7 +4939,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4802,7 +5003,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4852,7 +5053,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();
@@ -4916,7 +5117,7 @@ describe('v1.AdReviewCenterAdServiceClient', () => {
       };
       const client =
         new adreviewcenteradserviceModule.v1.AdReviewCenterAdServiceClient({
-          credentials: { client_email: 'bogus', private_key: 'bogus' },
+          credentials: {client_email: 'bogus', private_key: 'bogus'},
           projectId: 'bogus',
         });
       await client.initialize();

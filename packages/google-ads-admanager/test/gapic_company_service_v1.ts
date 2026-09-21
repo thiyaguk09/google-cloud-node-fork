@@ -19,13 +19,13 @@
 import * as protos from '../protos/protos';
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { SinonStub } from 'sinon';
-import { describe, it, beforeEach, afterEach } from 'mocha';
+import {SinonStub} from 'sinon';
+import {describe, it, beforeEach, afterEach} from 'mocha';
 import * as companyserviceModule from '../src';
 
-import { PassThrough } from 'stream';
+import {PassThrough} from 'stream';
 
-import { GoogleAuth, protobuf } from 'google-gax';
+import {GoogleAuth, protobuf} from 'google-gax';
 
 // Dynamically loaded proto JSON is needed to get the type information
 // to fill in default values for request objects
@@ -45,7 +45,7 @@ function getTypeDefaultValue(typeName: string, fields: string[]) {
 function generateSampleMessage<T extends object>(instance: T) {
   const filledObject = (
     instance.constructor as typeof protobuf.Message
-  ).toObject(instance as protobuf.Message<T>, { defaults: true });
+  ).toObject(instance as protobuf.Message<T>, {defaults: true});
   return (instance.constructor as typeof protobuf.Message).fromObject(
     filledObject,
   ) as T;
@@ -117,9 +117,9 @@ function stubAsyncIterationCall<ResponseType>(
             return Promise.reject(error);
           }
           if (counter >= responses!.length) {
-            return Promise.resolve({ done: true, value: undefined });
+            return Promise.resolve({done: true, value: undefined});
           }
-          return Promise.resolve({ done: false, value: responses![counter++] });
+          return Promise.resolve({done: false, value: responses![counter++]});
         },
       };
     },
@@ -134,7 +134,7 @@ describe('v1.CompanyServiceClient', () => {
       getClient: sinon.stub().resolves({
         getRequestHeaders: sinon
           .stub()
-          .resolves({ Authorization: 'Bearer SOME_TOKEN' }),
+          .resolves({Authorization: 'Bearer SOME_TOKEN'}),
       }),
     } as unknown as GoogleAuth;
   });
@@ -260,12 +260,12 @@ describe('v1.CompanyServiceClient', () => {
       assert(client.companyServiceStub);
     });
 
-    it('has close method for the initialized client', (done) => {
+    it('has close method for the initialized client', done => {
       const client = new companyserviceModule.v1.CompanyServiceClient({
         auth: googleAuth,
         projectId: 'bogus',
       });
-      client.initialize().catch((err) => {
+      client.initialize().catch(err => {
         throw err;
       });
       assert(client.companyServiceStub);
@@ -274,12 +274,12 @@ describe('v1.CompanyServiceClient', () => {
         .then(() => {
           done();
         })
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     });
 
-    it('has close method for the non-initialized client', (done) => {
+    it('has close method for the non-initialized client', done => {
       const client = new companyserviceModule.v1.CompanyServiceClient({
         auth: googleAuth,
         projectId: 'bogus',
@@ -290,7 +290,7 @@ describe('v1.CompanyServiceClient', () => {
         .then(() => {
           done();
         })
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     });
@@ -455,7 +455,7 @@ describe('v1.CompanyServiceClient', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.getCompany(request), expectedError);
@@ -587,7 +587,7 @@ describe('v1.CompanyServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.createCompany(request), expectedError);
@@ -720,7 +720,7 @@ describe('v1.CompanyServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.batchCreateCompanies(request), expectedError);
@@ -856,7 +856,7 @@ describe('v1.CompanyServiceClient', () => {
       );
       request.company.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.updateCompany(request), expectedError);
@@ -989,7 +989,7 @@ describe('v1.CompanyServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.batchUpdateCompanies(request), expectedError);
@@ -999,7 +999,7 @@ describe('v1.CompanyServiceClient', () => {
   describe('listCompanies', () => {
     it('invokes listCompanies without error', async () => {
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1032,7 +1032,7 @@ describe('v1.CompanyServiceClient', () => {
 
     it('invokes listCompanies without error using callback', async () => {
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1081,7 +1081,7 @@ describe('v1.CompanyServiceClient', () => {
 
     it('invokes listCompanies with error', async () => {
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1112,7 +1112,7 @@ describe('v1.CompanyServiceClient', () => {
 
     it('invokes listCompaniesStream without error', async () => {
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1158,15 +1158,15 @@ describe('v1.CompanyServiceClient', () => {
       assert(
         (client.descriptors.page.listCompanies.createStream as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
     it('invokes listCompaniesStream with error', async () => {
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1207,9 +1207,9 @@ describe('v1.CompanyServiceClient', () => {
       assert(
         (client.descriptors.page.listCompanies.createStream as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
@@ -1250,15 +1250,15 @@ describe('v1.CompanyServiceClient', () => {
       assert(
         (client.descriptors.page.listCompanies.asyncIterate as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
     it('uses async iteration with listCompanies with error', async () => {
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1290,9 +1290,9 @@ describe('v1.CompanyServiceClient', () => {
       assert(
         (client.descriptors.page.listCompanies.asyncIterate as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
   });
@@ -1306,7 +1306,7 @@ describe('v1.CompanyServiceClient', () => {
         ad_break: 'adBreakValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1370,7 +1370,7 @@ describe('v1.CompanyServiceClient', () => {
         ad_review_center_ad: 'adReviewCenterAdValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1439,7 +1439,7 @@ describe('v1.CompanyServiceClient', () => {
         ad_rule: 'adRuleValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1488,7 +1488,7 @@ describe('v1.CompanyServiceClient', () => {
         ad_spot: 'adSpotValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1537,7 +1537,7 @@ describe('v1.CompanyServiceClient', () => {
         ad_unit: 'adUnitValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1586,7 +1586,7 @@ describe('v1.CompanyServiceClient', () => {
         application: 'applicationValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1638,7 +1638,7 @@ describe('v1.CompanyServiceClient', () => {
         audience_segment: 'audienceSegmentValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1691,7 +1691,7 @@ describe('v1.CompanyServiceClient', () => {
         bandwidth_group: 'bandwidthGroupValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1737,6 +1737,58 @@ describe('v1.CompanyServiceClient', () => {
       });
     });
 
+    describe('breakTemplate', async () => {
+      const fakePath = '/rendered/path/breakTemplate';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        break_template: 'breakTemplateValue',
+      };
+      const client = new companyserviceModule.v1.CompanyServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.breakTemplatePathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.breakTemplatePathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('breakTemplatePath', () => {
+        const result = client.breakTemplatePath(
+          'networkCodeValue',
+          'breakTemplateValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromBreakTemplateName', () => {
+        const result = client.matchNetworkCodeFromBreakTemplateName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchBreakTemplateFromBreakTemplateName', () => {
+        const result = client.matchBreakTemplateFromBreakTemplateName(fakePath);
+        assert.strictEqual(result, 'breakTemplateValue');
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('browser', async () => {
       const fakePath = '/rendered/path/browser';
       const expectedParameters = {
@@ -1744,7 +1796,7 @@ describe('v1.CompanyServiceClient', () => {
         browser: 'browserValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1793,7 +1845,7 @@ describe('v1.CompanyServiceClient', () => {
         browser_language: 'browserLanguageValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1846,7 +1898,7 @@ describe('v1.CompanyServiceClient', () => {
         cdn_config: 'cdnConfigValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1898,7 +1950,7 @@ describe('v1.CompanyServiceClient', () => {
         child_publisher: 'childPublisherValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1951,7 +2003,7 @@ describe('v1.CompanyServiceClient', () => {
         cms_metadata_key: 'cmsMetadataKeyValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2004,7 +2056,7 @@ describe('v1.CompanyServiceClient', () => {
         cms_metadata_value: 'cmsMetadataValueValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2061,7 +2113,7 @@ describe('v1.CompanyServiceClient', () => {
         company: 'companyValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2110,7 +2162,7 @@ describe('v1.CompanyServiceClient', () => {
         contact: 'contactValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2159,7 +2211,7 @@ describe('v1.CompanyServiceClient', () => {
         content: 'contentValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2208,7 +2260,7 @@ describe('v1.CompanyServiceClient', () => {
         content_bundle: 'contentBundleValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2260,7 +2312,7 @@ describe('v1.CompanyServiceClient', () => {
         content_label: 'contentLabelValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2312,7 +2364,7 @@ describe('v1.CompanyServiceClient', () => {
         creative: 'creativeValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2361,7 +2413,7 @@ describe('v1.CompanyServiceClient', () => {
         creative_set: 'creativeSetValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2413,7 +2465,7 @@ describe('v1.CompanyServiceClient', () => {
         creative_template: 'creativeTemplateValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2470,7 +2522,7 @@ describe('v1.CompanyServiceClient', () => {
         creative_wrapper: 'creativeWrapperValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2523,7 +2575,7 @@ describe('v1.CompanyServiceClient', () => {
         custom_field: 'customFieldValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2575,7 +2627,7 @@ describe('v1.CompanyServiceClient', () => {
         custom_targeting_key: 'customTargetingKeyValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2638,7 +2690,7 @@ describe('v1.CompanyServiceClient', () => {
         custom_targeting_value: 'customTargetingValueValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2703,7 +2755,7 @@ describe('v1.CompanyServiceClient', () => {
         dai_authentication_key: 'daiAuthenticationKeyValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2768,7 +2820,7 @@ describe('v1.CompanyServiceClient', () => {
         dai_encoding_profile: 'daiEncodingProfileValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2824,6 +2876,104 @@ describe('v1.CompanyServiceClient', () => {
       });
     });
 
+    describe('daiSession', async () => {
+      const fakePath = '/rendered/path/daiSession';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        dai_session: 'daiSessionValue',
+      };
+      const client = new companyserviceModule.v1.CompanyServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.daiSessionPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.daiSessionPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('daiSessionPath', () => {
+        const result = client.daiSessionPath(
+          'networkCodeValue',
+          'daiSessionValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromDaiSessionName', () => {
+        const result = client.matchNetworkCodeFromDaiSessionName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchDaiSessionFromDaiSessionName', () => {
+        const result = client.matchDaiSessionFromDaiSessionName(fakePath);
+        assert.strictEqual(result, 'daiSessionValue');
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
+    describe('defaultThirdPartyDataDeclaration', async () => {
+      const fakePath = '/rendered/path/defaultThirdPartyDataDeclaration';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+      };
+      const client = new companyserviceModule.v1.CompanyServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
+
+      it('defaultThirdPartyDataDeclarationPath', () => {
+        const result =
+          client.defaultThirdPartyDataDeclarationPath('networkCodeValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromDefaultThirdPartyDataDeclarationName', () => {
+        const result =
+          client.matchNetworkCodeFromDefaultThirdPartyDataDeclarationName(
+            fakePath,
+          );
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (
+            client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('deviceCapability', async () => {
       const fakePath = '/rendered/path/deviceCapability';
       const expectedParameters = {
@@ -2831,7 +2981,7 @@ describe('v1.CompanyServiceClient', () => {
         device_capability: 'deviceCapabilityValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2888,7 +3038,7 @@ describe('v1.CompanyServiceClient', () => {
         device_category: 'deviceCategoryValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2941,7 +3091,7 @@ describe('v1.CompanyServiceClient', () => {
         device_manufacturer: 'deviceManufacturerValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3004,7 +3154,7 @@ describe('v1.CompanyServiceClient', () => {
         entity_signals_mapping: 'entitySignalsMappingValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3069,7 +3219,7 @@ describe('v1.CompanyServiceClient', () => {
         geo_target: 'geoTargetValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3121,7 +3271,7 @@ describe('v1.CompanyServiceClient', () => {
         label: 'labelValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3170,7 +3320,7 @@ describe('v1.CompanyServiceClient', () => {
         line_item: 'lineItemValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3219,7 +3369,7 @@ describe('v1.CompanyServiceClient', () => {
         linked_device: 'linkedDeviceValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3271,7 +3421,7 @@ describe('v1.CompanyServiceClient', () => {
         live_stream: 'liveStreamValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3323,7 +3473,7 @@ describe('v1.CompanyServiceClient', () => {
         live_stream_event: 'liveStreamEventValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3376,7 +3526,7 @@ describe('v1.CompanyServiceClient', () => {
         mobile_carrier: 'mobileCarrierValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3428,7 +3578,7 @@ describe('v1.CompanyServiceClient', () => {
         mobile_device: 'mobileDeviceValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3480,7 +3630,7 @@ describe('v1.CompanyServiceClient', () => {
         mobile_device_submodel: 'mobileDeviceSubmodelValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3538,13 +3688,65 @@ describe('v1.CompanyServiceClient', () => {
       });
     });
 
+    describe('nativeStyle', async () => {
+      const fakePath = '/rendered/path/nativeStyle';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        native_style: 'nativeStyleValue',
+      };
+      const client = new companyserviceModule.v1.CompanyServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.nativeStylePathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.nativeStylePathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('nativeStylePath', () => {
+        const result = client.nativeStylePath(
+          'networkCodeValue',
+          'nativeStyleValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromNativeStyleName', () => {
+        const result = client.matchNetworkCodeFromNativeStyleName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchNativeStyleFromNativeStyleName', () => {
+        const result = client.matchNativeStyleFromNativeStyleName(fakePath);
+        assert.strictEqual(result, 'nativeStyleValue');
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('network', async () => {
       const fakePath = '/rendered/path/network';
       const expectedParameters = {
         network_code: 'networkCodeValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3583,7 +3785,7 @@ describe('v1.CompanyServiceClient', () => {
         operating_system: 'operatingSystemValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3636,7 +3838,7 @@ describe('v1.CompanyServiceClient', () => {
         operating_system_version: 'operatingSystemVersionValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3701,7 +3903,7 @@ describe('v1.CompanyServiceClient', () => {
         order: 'orderValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3750,7 +3952,7 @@ describe('v1.CompanyServiceClient', () => {
         partner: 'partnerValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3799,7 +4001,7 @@ describe('v1.CompanyServiceClient', () => {
         placement: 'placementValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3851,7 +4053,7 @@ describe('v1.CompanyServiceClient', () => {
         private_auction: 'privateAuctionValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3904,7 +4106,7 @@ describe('v1.CompanyServiceClient', () => {
         private_auction_deal: 'privateAuctionDealValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3967,7 +4169,7 @@ describe('v1.CompanyServiceClient', () => {
         programmatic_buyer: 'programmaticBuyerValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4030,7 +4232,7 @@ describe('v1.CompanyServiceClient', () => {
         report: 'reportValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4079,7 +4281,7 @@ describe('v1.CompanyServiceClient', () => {
         rich_media_ads_company: 'richMediaAdsCompanyValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4142,7 +4344,7 @@ describe('v1.CompanyServiceClient', () => {
         role: 'roleValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4191,7 +4393,7 @@ describe('v1.CompanyServiceClient', () => {
         site: 'siteValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4240,7 +4442,7 @@ describe('v1.CompanyServiceClient', () => {
         slate: 'slateValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4289,7 +4491,7 @@ describe('v1.CompanyServiceClient', () => {
         suggested_ad_unit: 'suggestedAdUnitValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4342,7 +4544,7 @@ describe('v1.CompanyServiceClient', () => {
         targeting_preset: 'targetingPresetValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4395,7 +4597,7 @@ describe('v1.CompanyServiceClient', () => {
         taxonomy_category: 'taxonomyCategoryValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4452,7 +4654,7 @@ describe('v1.CompanyServiceClient', () => {
         team: 'teamValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4501,7 +4703,7 @@ describe('v1.CompanyServiceClient', () => {
         third_party_company: 'thirdPartyCompanyValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4564,7 +4766,7 @@ describe('v1.CompanyServiceClient', () => {
         user: 'userValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4613,7 +4815,7 @@ describe('v1.CompanyServiceClient', () => {
         viewability_provider: 'viewabilityProviderValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4676,7 +4878,7 @@ describe('v1.CompanyServiceClient', () => {
         web_property: 'webPropertyValue',
       };
       const client = new companyserviceModule.v1.CompanyServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();

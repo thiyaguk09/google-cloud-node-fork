@@ -29,6 +29,7 @@ function main() {
   const applicationServiceClient = new admanager.ApplicationServiceClient();
   const audienceSegmentServiceClient = new admanager.AudienceSegmentServiceClient();
   const bandwidthGroupServiceClient = new admanager.BandwidthGroupServiceClient();
+  const breakTemplateServiceClient = new admanager.BreakTemplateServiceClient();
   const browserLanguageServiceClient = new admanager.BrowserLanguageServiceClient();
   const browserServiceClient = new admanager.BrowserServiceClient();
   const cdnConfigServiceClient = new admanager.CdnConfigServiceClient();
@@ -48,6 +49,7 @@ function main() {
   const customTargetingValueServiceClient = new admanager.CustomTargetingValueServiceClient();
   const daiAuthenticationKeyServiceClient = new admanager.DaiAuthenticationKeyServiceClient();
   const daiEncodingProfileServiceClient = new admanager.DaiEncodingProfileServiceClient();
+  const daiSessionServiceClient = new admanager.DaiSessionServiceClient();
   const deviceCapabilityServiceClient = new admanager.DeviceCapabilityServiceClient();
   const deviceCategoryServiceClient = new admanager.DeviceCategoryServiceClient();
   const deviceManufacturerServiceClient = new admanager.DeviceManufacturerServiceClient();
@@ -61,6 +63,7 @@ function main() {
   const mobileCarrierServiceClient = new admanager.MobileCarrierServiceClient();
   const mobileDeviceServiceClient = new admanager.MobileDeviceServiceClient();
   const mobileDeviceSubmodelServiceClient = new admanager.MobileDeviceSubmodelServiceClient();
+  const nativeStyleServiceClient = new admanager.NativeStyleServiceClient();
   const networkServiceClient = new admanager.NetworkServiceClient();
   const operatingSystemServiceClient = new admanager.OperatingSystemServiceClient();
   const operatingSystemVersionServiceClient = new admanager.OperatingSystemVersionServiceClient();

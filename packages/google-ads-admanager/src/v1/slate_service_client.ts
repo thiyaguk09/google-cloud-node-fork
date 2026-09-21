@@ -26,10 +26,10 @@ import type {
   PaginationCallback,
   GaxCall,
 } from 'google-gax';
-import { Transform } from 'stream';
+import {Transform} from 'stream';
 import * as protos from '../../protos/protos';
 import jsonProtos = require('../../protos/protos.json');
-import { loggingUtils as logging, decodeAnyProtosInArray } from 'google-gax';
+import {loggingUtils as logging, decodeAnyProtosInArray} from 'google-gax';
 
 /**
  * Client JSON configuration object, loaded from
@@ -51,7 +51,7 @@ export class SlateServiceClient {
   private _gaxModule: typeof gax | typeof gax.fallback;
   private _gaxGrpc: gax.GrpcClient | gax.fallback.GrpcClient;
   private _protos: {};
-  private _defaults: { [method: string]: gax.CallSettings };
+  private _defaults: {[method: string]: gax.CallSettings};
   private _universeDomain: string;
   private _servicePath: string;
   private _log = logging.log('admanager');
@@ -64,9 +64,9 @@ export class SlateServiceClient {
     batching: {},
   };
   warn: (code: string, message: string, warnType?: string) => void;
-  innerApiCalls: { [name: string]: Function };
-  pathTemplates: { [name: string]: gax.PathTemplate };
-  slateServiceStub?: Promise<{ [name: string]: Function }>;
+  innerApiCalls: {[name: string]: Function};
+  pathTemplates: {[name: string]: gax.PathTemplate};
+  slateServiceStub?: Promise<{[name: string]: Function}>;
 
   /**
    * Construct an instance of SlateServiceClient.
@@ -141,14 +141,14 @@ export class SlateServiceClient {
     const clientConfig = opts?.clientConfig ?? {};
     // Implicitly enable HTTP transport for the APIs that use REST as transport (e.g. Google Cloud Compute).
     if (!opts) {
-      opts = { fallback: true };
+      opts = {fallback: true};
     } else {
       opts.fallback = opts.fallback ?? true;
     }
     const fallback =
       opts?.fallback ??
       (typeof window !== 'undefined' && typeof window?.fetch === 'function');
-    opts = Object.assign({ servicePath, port, clientConfig, fallback }, opts);
+    opts = Object.assign({servicePath, port, clientConfig, fallback}, opts);
 
     // Request numeric enum values if REST transport is used.
     opts.numericEnums = true;
@@ -232,6 +232,9 @@ export class SlateServiceClient {
       bandwidthGroupPathTemplate: new this._gaxModule.PathTemplate(
         'networks/{network_code}/bandwidthGroups/{bandwidth_group}',
       ),
+      breakTemplatePathTemplate: new this._gaxModule.PathTemplate(
+        'networks/{network_code}/breakTemplates/{break_template}',
+      ),
       browserPathTemplate: new this._gaxModule.PathTemplate(
         'networks/{network_code}/browsers/{browser}',
       ),
@@ -292,6 +295,13 @@ export class SlateServiceClient {
       daiEncodingProfilePathTemplate: new this._gaxModule.PathTemplate(
         'networks/{network_code}/daiEncodingProfiles/{dai_encoding_profile}',
       ),
+      daiSessionPathTemplate: new this._gaxModule.PathTemplate(
+        'networks/{network_code}/daiSessions/{dai_session}',
+      ),
+      defaultThirdPartyDataDeclarationPathTemplate:
+        new this._gaxModule.PathTemplate(
+          'networks/{network_code}/defaultThirdPartyDataDeclaration',
+        ),
       deviceCapabilityPathTemplate: new this._gaxModule.PathTemplate(
         'networks/{network_code}/deviceCapabilities/{device_capability}',
       ),
@@ -330,6 +340,9 @@ export class SlateServiceClient {
       ),
       mobileDeviceSubmodelPathTemplate: new this._gaxModule.PathTemplate(
         'networks/{network_code}/mobileDeviceSubmodels/{mobile_device_submodel}',
+      ),
+      nativeStylePathTemplate: new this._gaxModule.PathTemplate(
+        'networks/{network_code}/nativeStyles/{native_style}',
       ),
       networkPathTemplate: new this._gaxModule.PathTemplate(
         'networks/{network_code}',
@@ -415,7 +428,7 @@ export class SlateServiceClient {
       'google.ads.admanager.v1.SlateService',
       gapicConfig as gax.ClientConfig,
       opts.clientConfig || {},
-      { 'x-goog-api-client': clientHeader.join(' ') },
+      {'x-goog-api-client': clientHeader.join(' ')},
     );
 
     // Set up a dictionary of "inner API calls"; the core implementation
@@ -455,7 +468,7 @@ export class SlateServiceClient {
           (this._protos as any).google.ads.admanager.v1.SlateService,
       this._opts,
       this._providedCustomServicePath,
-    ) as Promise<{ [method: string]: Function }>;
+    ) as Promise<{[method: string]: Function}>;
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
@@ -471,7 +484,7 @@ export class SlateServiceClient {
     ];
     for (const methodName of slateServiceStubMethods) {
       const callPromise = this.slateServiceStub.then(
-        (stub) =>
+        stub =>
           (...args: Array<{}>) => {
             if (this._terminated) {
               return Promise.reject('The client has already been closed.');
@@ -665,7 +678,7 @@ export class SlateServiceClient {
       this._gaxModule.routingHeader.fromParams({
         name: request.name ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('getSlate request %j', request);
@@ -792,7 +805,7 @@ export class SlateServiceClient {
       this._gaxModule.routingHeader.fromParams({
         parent: request.parent ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('createSlate request %j', request);
@@ -930,7 +943,7 @@ export class SlateServiceClient {
       this._gaxModule.routingHeader.fromParams({
         parent: request.parent ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('batchCreateSlates request %j', request);
@@ -1060,7 +1073,7 @@ export class SlateServiceClient {
       this._gaxModule.routingHeader.fromParams({
         'slate.name': request.slate!.name ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('updateSlate request %j', request);
@@ -1198,7 +1211,7 @@ export class SlateServiceClient {
       this._gaxModule.routingHeader.fromParams({
         parent: request.parent ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('batchUpdateSlates request %j', request);
@@ -1336,7 +1349,7 @@ export class SlateServiceClient {
       this._gaxModule.routingHeader.fromParams({
         parent: request.parent ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('batchArchiveSlates request %j', request);
@@ -1474,7 +1487,7 @@ export class SlateServiceClient {
       this._gaxModule.routingHeader.fromParams({
         parent: request.parent ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('batchUnarchiveSlates request %j', request);
@@ -1633,7 +1646,7 @@ export class SlateServiceClient {
       this._gaxModule.routingHeader.fromParams({
         parent: request.parent ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     const wrappedCallback:
@@ -1720,7 +1733,7 @@ export class SlateServiceClient {
       });
     const defaultCallSettings = this._defaults['listSlates'];
     const callSettings = defaultCallSettings.merge(options);
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('listSlates stream %j', request);
@@ -1791,7 +1804,7 @@ export class SlateServiceClient {
       });
     const defaultCallSettings = this._defaults['listSlates'];
     const callSettings = defaultCallSettings.merge(options);
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('listSlates iterate %j', request);
@@ -2138,6 +2151,44 @@ export class SlateServiceClient {
     return this.pathTemplates.bandwidthGroupPathTemplate.match(
       bandwidthGroupName,
     ).bandwidth_group;
+  }
+
+  /**
+   * Return a fully-qualified breakTemplate resource name string.
+   *
+   * @param {string} network_code
+   * @param {string} break_template
+   * @returns {string} Resource name string.
+   */
+  breakTemplatePath(networkCode: string, breakTemplate: string) {
+    return this.pathTemplates.breakTemplatePathTemplate.render({
+      network_code: networkCode,
+      break_template: breakTemplate,
+    });
+  }
+
+  /**
+   * Parse the network_code from BreakTemplate resource.
+   *
+   * @param {string} breakTemplateName
+   *   A fully-qualified path representing BreakTemplate resource.
+   * @returns {string} A string representing the network_code.
+   */
+  matchNetworkCodeFromBreakTemplateName(breakTemplateName: string) {
+    return this.pathTemplates.breakTemplatePathTemplate.match(breakTemplateName)
+      .network_code;
+  }
+
+  /**
+   * Parse the break_template from BreakTemplate resource.
+   *
+   * @param {string} breakTemplateName
+   *   A fully-qualified path representing BreakTemplate resource.
+   * @returns {string} A string representing the break_template.
+   */
+  matchBreakTemplateFromBreakTemplateName(breakTemplateName: string) {
+    return this.pathTemplates.breakTemplatePathTemplate.match(breakTemplateName)
+      .break_template;
   }
 
   /**
@@ -2928,6 +2979,73 @@ export class SlateServiceClient {
   }
 
   /**
+   * Return a fully-qualified daiSession resource name string.
+   *
+   * @param {string} network_code
+   * @param {string} dai_session
+   * @returns {string} Resource name string.
+   */
+  daiSessionPath(networkCode: string, daiSession: string) {
+    return this.pathTemplates.daiSessionPathTemplate.render({
+      network_code: networkCode,
+      dai_session: daiSession,
+    });
+  }
+
+  /**
+   * Parse the network_code from DaiSession resource.
+   *
+   * @param {string} daiSessionName
+   *   A fully-qualified path representing DaiSession resource.
+   * @returns {string} A string representing the network_code.
+   */
+  matchNetworkCodeFromDaiSessionName(daiSessionName: string) {
+    return this.pathTemplates.daiSessionPathTemplate.match(daiSessionName)
+      .network_code;
+  }
+
+  /**
+   * Parse the dai_session from DaiSession resource.
+   *
+   * @param {string} daiSessionName
+   *   A fully-qualified path representing DaiSession resource.
+   * @returns {string} A string representing the dai_session.
+   */
+  matchDaiSessionFromDaiSessionName(daiSessionName: string) {
+    return this.pathTemplates.daiSessionPathTemplate.match(daiSessionName)
+      .dai_session;
+  }
+
+  /**
+   * Return a fully-qualified defaultThirdPartyDataDeclaration resource name string.
+   *
+   * @param {string} network_code
+   * @returns {string} Resource name string.
+   */
+  defaultThirdPartyDataDeclarationPath(networkCode: string) {
+    return this.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.render(
+      {
+        network_code: networkCode,
+      },
+    );
+  }
+
+  /**
+   * Parse the network_code from DefaultThirdPartyDataDeclaration resource.
+   *
+   * @param {string} defaultThirdPartyDataDeclarationName
+   *   A fully-qualified path representing DefaultThirdPartyDataDeclaration resource.
+   * @returns {string} A string representing the network_code.
+   */
+  matchNetworkCodeFromDefaultThirdPartyDataDeclarationName(
+    defaultThirdPartyDataDeclarationName: string,
+  ) {
+    return this.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.match(
+      defaultThirdPartyDataDeclarationName,
+    ).network_code;
+  }
+
+  /**
    * Return a fully-qualified deviceCapability resource name string.
    *
    * @param {string} network_code
@@ -3439,6 +3557,44 @@ export class SlateServiceClient {
     return this.pathTemplates.mobileDeviceSubmodelPathTemplate.match(
       mobileDeviceSubmodelName,
     ).mobile_device_submodel;
+  }
+
+  /**
+   * Return a fully-qualified nativeStyle resource name string.
+   *
+   * @param {string} network_code
+   * @param {string} native_style
+   * @returns {string} Resource name string.
+   */
+  nativeStylePath(networkCode: string, nativeStyle: string) {
+    return this.pathTemplates.nativeStylePathTemplate.render({
+      network_code: networkCode,
+      native_style: nativeStyle,
+    });
+  }
+
+  /**
+   * Parse the network_code from NativeStyle resource.
+   *
+   * @param {string} nativeStyleName
+   *   A fully-qualified path representing NativeStyle resource.
+   * @returns {string} A string representing the network_code.
+   */
+  matchNetworkCodeFromNativeStyleName(nativeStyleName: string) {
+    return this.pathTemplates.nativeStylePathTemplate.match(nativeStyleName)
+      .network_code;
+  }
+
+  /**
+   * Parse the native_style from NativeStyle resource.
+   *
+   * @param {string} nativeStyleName
+   *   A fully-qualified path representing NativeStyle resource.
+   * @returns {string} A string representing the native_style.
+   */
+  matchNativeStyleFromNativeStyleName(nativeStyleName: string) {
+    return this.pathTemplates.nativeStylePathTemplate.match(nativeStyleName)
+      .native_style;
   }
 
   /**
@@ -4295,7 +4451,7 @@ export class SlateServiceClient {
    */
   close(): Promise<void> {
     if (this.slateServiceStub && !this._terminated) {
-      return this.slateServiceStub.then((stub) => {
+      return this.slateServiceStub.then(stub => {
         this._log.info('ending gRPC channel');
         this._terminated = true;
         stub.close();

@@ -19,13 +19,13 @@
 import * as protos from '../protos/protos';
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { SinonStub } from 'sinon';
-import { describe, it, beforeEach, afterEach } from 'mocha';
+import {SinonStub} from 'sinon';
+import {describe, it, beforeEach, afterEach} from 'mocha';
 import * as adunitserviceModule from '../src';
 
-import { PassThrough } from 'stream';
+import {PassThrough} from 'stream';
 
-import { GoogleAuth, protobuf } from 'google-gax';
+import {GoogleAuth, protobuf} from 'google-gax';
 
 // Dynamically loaded proto JSON is needed to get the type information
 // to fill in default values for request objects
@@ -45,7 +45,7 @@ function getTypeDefaultValue(typeName: string, fields: string[]) {
 function generateSampleMessage<T extends object>(instance: T) {
   const filledObject = (
     instance.constructor as typeof protobuf.Message
-  ).toObject(instance as protobuf.Message<T>, { defaults: true });
+  ).toObject(instance as protobuf.Message<T>, {defaults: true});
   return (instance.constructor as typeof protobuf.Message).fromObject(
     filledObject,
   ) as T;
@@ -117,9 +117,9 @@ function stubAsyncIterationCall<ResponseType>(
             return Promise.reject(error);
           }
           if (counter >= responses!.length) {
-            return Promise.resolve({ done: true, value: undefined });
+            return Promise.resolve({done: true, value: undefined});
           }
-          return Promise.resolve({ done: false, value: responses![counter++] });
+          return Promise.resolve({done: false, value: responses![counter++]});
         },
       };
     },
@@ -134,7 +134,7 @@ describe('v1.AdUnitServiceClient', () => {
       getClient: sinon.stub().resolves({
         getRequestHeaders: sinon
           .stub()
-          .resolves({ Authorization: 'Bearer SOME_TOKEN' }),
+          .resolves({Authorization: 'Bearer SOME_TOKEN'}),
       }),
     } as unknown as GoogleAuth;
   });
@@ -260,12 +260,12 @@ describe('v1.AdUnitServiceClient', () => {
       assert(client.adUnitServiceStub);
     });
 
-    it('has close method for the initialized client', (done) => {
+    it('has close method for the initialized client', done => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
         auth: googleAuth,
         projectId: 'bogus',
       });
-      client.initialize().catch((err) => {
+      client.initialize().catch(err => {
         throw err;
       });
       assert(client.adUnitServiceStub);
@@ -274,12 +274,12 @@ describe('v1.AdUnitServiceClient', () => {
         .then(() => {
           done();
         })
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     });
 
-    it('has close method for the non-initialized client', (done) => {
+    it('has close method for the non-initialized client', done => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
         auth: googleAuth,
         projectId: 'bogus',
@@ -290,7 +290,7 @@ describe('v1.AdUnitServiceClient', () => {
         .then(() => {
           done();
         })
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     });
@@ -452,7 +452,7 @@ describe('v1.AdUnitServiceClient', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.getAdUnit(request), expectedError);
@@ -584,7 +584,7 @@ describe('v1.AdUnitServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.createAdUnit(request), expectedError);
@@ -720,7 +720,7 @@ describe('v1.AdUnitServiceClient', () => {
       );
       request.adUnit.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.updateAdUnit(request), expectedError);
@@ -853,7 +853,7 @@ describe('v1.AdUnitServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.batchCreateAdUnits(request), expectedError);
@@ -986,7 +986,7 @@ describe('v1.AdUnitServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.batchUpdateAdUnits(request), expectedError);
@@ -1119,7 +1119,7 @@ describe('v1.AdUnitServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.batchActivateAdUnits(request), expectedError);
@@ -1255,7 +1255,7 @@ describe('v1.AdUnitServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -1391,7 +1391,7 @@ describe('v1.AdUnitServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.batchArchiveAdUnits(request), expectedError);
@@ -1401,7 +1401,7 @@ describe('v1.AdUnitServiceClient', () => {
   describe('listAdUnits', () => {
     it('invokes listAdUnits without error', async () => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1434,7 +1434,7 @@ describe('v1.AdUnitServiceClient', () => {
 
     it('invokes listAdUnits without error using callback', async () => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1483,7 +1483,7 @@ describe('v1.AdUnitServiceClient', () => {
 
     it('invokes listAdUnits with error', async () => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1514,7 +1514,7 @@ describe('v1.AdUnitServiceClient', () => {
 
     it('invokes listAdUnitsStream without error', async () => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1557,15 +1557,15 @@ describe('v1.AdUnitServiceClient', () => {
       assert(
         (client.descriptors.page.listAdUnits.createStream as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
     it('invokes listAdUnitsStream with error', async () => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1605,9 +1605,9 @@ describe('v1.AdUnitServiceClient', () => {
       assert(
         (client.descriptors.page.listAdUnits.createStream as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
@@ -1648,15 +1648,15 @@ describe('v1.AdUnitServiceClient', () => {
       assert(
         (client.descriptors.page.listAdUnits.asyncIterate as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
     it('uses async iteration with listAdUnits with error', async () => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1690,9 +1690,9 @@ describe('v1.AdUnitServiceClient', () => {
       assert(
         (client.descriptors.page.listAdUnits.asyncIterate as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
   });
@@ -1700,7 +1700,7 @@ describe('v1.AdUnitServiceClient', () => {
   describe('listAdUnitSizes', () => {
     it('invokes listAdUnitSizes without error', async () => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1733,7 +1733,7 @@ describe('v1.AdUnitServiceClient', () => {
 
     it('invokes listAdUnitSizes without error using callback', async () => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1782,7 +1782,7 @@ describe('v1.AdUnitServiceClient', () => {
 
     it('invokes listAdUnitSizes with error', async () => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1813,7 +1813,7 @@ describe('v1.AdUnitServiceClient', () => {
 
     it('invokes listAdUnitSizesStream without error', async () => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1859,15 +1859,15 @@ describe('v1.AdUnitServiceClient', () => {
       assert(
         (client.descriptors.page.listAdUnitSizes.createStream as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
     it('invokes listAdUnitSizesStream with error', async () => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1908,9 +1908,9 @@ describe('v1.AdUnitServiceClient', () => {
       assert(
         (client.descriptors.page.listAdUnitSizes.createStream as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
@@ -1951,15 +1951,15 @@ describe('v1.AdUnitServiceClient', () => {
       assert(
         (client.descriptors.page.listAdUnitSizes.asyncIterate as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
     it('uses async iteration with listAdUnitSizes with error', async () => {
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1991,9 +1991,9 @@ describe('v1.AdUnitServiceClient', () => {
       assert(
         (client.descriptors.page.listAdUnitSizes.asyncIterate as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
   });
@@ -2007,7 +2007,7 @@ describe('v1.AdUnitServiceClient', () => {
         ad_break: 'adBreakValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2071,7 +2071,7 @@ describe('v1.AdUnitServiceClient', () => {
         ad_review_center_ad: 'adReviewCenterAdValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2140,7 +2140,7 @@ describe('v1.AdUnitServiceClient', () => {
         ad_rule: 'adRuleValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2189,7 +2189,7 @@ describe('v1.AdUnitServiceClient', () => {
         ad_spot: 'adSpotValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2238,7 +2238,7 @@ describe('v1.AdUnitServiceClient', () => {
         ad_unit: 'adUnitValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2287,7 +2287,7 @@ describe('v1.AdUnitServiceClient', () => {
         application: 'applicationValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2339,7 +2339,7 @@ describe('v1.AdUnitServiceClient', () => {
         audience_segment: 'audienceSegmentValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2392,7 +2392,7 @@ describe('v1.AdUnitServiceClient', () => {
         bandwidth_group: 'bandwidthGroupValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2438,6 +2438,58 @@ describe('v1.AdUnitServiceClient', () => {
       });
     });
 
+    describe('breakTemplate', async () => {
+      const fakePath = '/rendered/path/breakTemplate';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        break_template: 'breakTemplateValue',
+      };
+      const client = new adunitserviceModule.v1.AdUnitServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.breakTemplatePathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.breakTemplatePathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('breakTemplatePath', () => {
+        const result = client.breakTemplatePath(
+          'networkCodeValue',
+          'breakTemplateValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromBreakTemplateName', () => {
+        const result = client.matchNetworkCodeFromBreakTemplateName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchBreakTemplateFromBreakTemplateName', () => {
+        const result = client.matchBreakTemplateFromBreakTemplateName(fakePath);
+        assert.strictEqual(result, 'breakTemplateValue');
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('browser', async () => {
       const fakePath = '/rendered/path/browser';
       const expectedParameters = {
@@ -2445,7 +2497,7 @@ describe('v1.AdUnitServiceClient', () => {
         browser: 'browserValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2494,7 +2546,7 @@ describe('v1.AdUnitServiceClient', () => {
         browser_language: 'browserLanguageValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2547,7 +2599,7 @@ describe('v1.AdUnitServiceClient', () => {
         cdn_config: 'cdnConfigValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2599,7 +2651,7 @@ describe('v1.AdUnitServiceClient', () => {
         child_publisher: 'childPublisherValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2652,7 +2704,7 @@ describe('v1.AdUnitServiceClient', () => {
         cms_metadata_key: 'cmsMetadataKeyValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2705,7 +2757,7 @@ describe('v1.AdUnitServiceClient', () => {
         cms_metadata_value: 'cmsMetadataValueValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2762,7 +2814,7 @@ describe('v1.AdUnitServiceClient', () => {
         company: 'companyValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2811,7 +2863,7 @@ describe('v1.AdUnitServiceClient', () => {
         contact: 'contactValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2860,7 +2912,7 @@ describe('v1.AdUnitServiceClient', () => {
         content: 'contentValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2909,7 +2961,7 @@ describe('v1.AdUnitServiceClient', () => {
         content_bundle: 'contentBundleValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2961,7 +3013,7 @@ describe('v1.AdUnitServiceClient', () => {
         content_label: 'contentLabelValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3013,7 +3065,7 @@ describe('v1.AdUnitServiceClient', () => {
         creative: 'creativeValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3062,7 +3114,7 @@ describe('v1.AdUnitServiceClient', () => {
         creative_set: 'creativeSetValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3114,7 +3166,7 @@ describe('v1.AdUnitServiceClient', () => {
         creative_template: 'creativeTemplateValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3171,7 +3223,7 @@ describe('v1.AdUnitServiceClient', () => {
         creative_wrapper: 'creativeWrapperValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3224,7 +3276,7 @@ describe('v1.AdUnitServiceClient', () => {
         custom_field: 'customFieldValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3276,7 +3328,7 @@ describe('v1.AdUnitServiceClient', () => {
         custom_targeting_key: 'customTargetingKeyValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3339,7 +3391,7 @@ describe('v1.AdUnitServiceClient', () => {
         custom_targeting_value: 'customTargetingValueValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3404,7 +3456,7 @@ describe('v1.AdUnitServiceClient', () => {
         dai_authentication_key: 'daiAuthenticationKeyValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3469,7 +3521,7 @@ describe('v1.AdUnitServiceClient', () => {
         dai_encoding_profile: 'daiEncodingProfileValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3525,6 +3577,104 @@ describe('v1.AdUnitServiceClient', () => {
       });
     });
 
+    describe('daiSession', async () => {
+      const fakePath = '/rendered/path/daiSession';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        dai_session: 'daiSessionValue',
+      };
+      const client = new adunitserviceModule.v1.AdUnitServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.daiSessionPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.daiSessionPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('daiSessionPath', () => {
+        const result = client.daiSessionPath(
+          'networkCodeValue',
+          'daiSessionValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromDaiSessionName', () => {
+        const result = client.matchNetworkCodeFromDaiSessionName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchDaiSessionFromDaiSessionName', () => {
+        const result = client.matchDaiSessionFromDaiSessionName(fakePath);
+        assert.strictEqual(result, 'daiSessionValue');
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
+    describe('defaultThirdPartyDataDeclaration', async () => {
+      const fakePath = '/rendered/path/defaultThirdPartyDataDeclaration';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+      };
+      const client = new adunitserviceModule.v1.AdUnitServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
+
+      it('defaultThirdPartyDataDeclarationPath', () => {
+        const result =
+          client.defaultThirdPartyDataDeclarationPath('networkCodeValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromDefaultThirdPartyDataDeclarationName', () => {
+        const result =
+          client.matchNetworkCodeFromDefaultThirdPartyDataDeclarationName(
+            fakePath,
+          );
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (
+            client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('deviceCapability', async () => {
       const fakePath = '/rendered/path/deviceCapability';
       const expectedParameters = {
@@ -3532,7 +3682,7 @@ describe('v1.AdUnitServiceClient', () => {
         device_capability: 'deviceCapabilityValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3589,7 +3739,7 @@ describe('v1.AdUnitServiceClient', () => {
         device_category: 'deviceCategoryValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3642,7 +3792,7 @@ describe('v1.AdUnitServiceClient', () => {
         device_manufacturer: 'deviceManufacturerValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3705,7 +3855,7 @@ describe('v1.AdUnitServiceClient', () => {
         entity_signals_mapping: 'entitySignalsMappingValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3770,7 +3920,7 @@ describe('v1.AdUnitServiceClient', () => {
         geo_target: 'geoTargetValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3822,7 +3972,7 @@ describe('v1.AdUnitServiceClient', () => {
         label: 'labelValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3871,7 +4021,7 @@ describe('v1.AdUnitServiceClient', () => {
         line_item: 'lineItemValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3920,7 +4070,7 @@ describe('v1.AdUnitServiceClient', () => {
         linked_device: 'linkedDeviceValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3972,7 +4122,7 @@ describe('v1.AdUnitServiceClient', () => {
         live_stream: 'liveStreamValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4024,7 +4174,7 @@ describe('v1.AdUnitServiceClient', () => {
         live_stream_event: 'liveStreamEventValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4077,7 +4227,7 @@ describe('v1.AdUnitServiceClient', () => {
         mobile_carrier: 'mobileCarrierValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4129,7 +4279,7 @@ describe('v1.AdUnitServiceClient', () => {
         mobile_device: 'mobileDeviceValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4181,7 +4331,7 @@ describe('v1.AdUnitServiceClient', () => {
         mobile_device_submodel: 'mobileDeviceSubmodelValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4239,13 +4389,65 @@ describe('v1.AdUnitServiceClient', () => {
       });
     });
 
+    describe('nativeStyle', async () => {
+      const fakePath = '/rendered/path/nativeStyle';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        native_style: 'nativeStyleValue',
+      };
+      const client = new adunitserviceModule.v1.AdUnitServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.nativeStylePathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.nativeStylePathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('nativeStylePath', () => {
+        const result = client.nativeStylePath(
+          'networkCodeValue',
+          'nativeStyleValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromNativeStyleName', () => {
+        const result = client.matchNetworkCodeFromNativeStyleName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchNativeStyleFromNativeStyleName', () => {
+        const result = client.matchNativeStyleFromNativeStyleName(fakePath);
+        assert.strictEqual(result, 'nativeStyleValue');
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('network', async () => {
       const fakePath = '/rendered/path/network';
       const expectedParameters = {
         network_code: 'networkCodeValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4284,7 +4486,7 @@ describe('v1.AdUnitServiceClient', () => {
         operating_system: 'operatingSystemValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4337,7 +4539,7 @@ describe('v1.AdUnitServiceClient', () => {
         operating_system_version: 'operatingSystemVersionValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4402,7 +4604,7 @@ describe('v1.AdUnitServiceClient', () => {
         order: 'orderValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4451,7 +4653,7 @@ describe('v1.AdUnitServiceClient', () => {
         partner: 'partnerValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4500,7 +4702,7 @@ describe('v1.AdUnitServiceClient', () => {
         placement: 'placementValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4552,7 +4754,7 @@ describe('v1.AdUnitServiceClient', () => {
         private_auction: 'privateAuctionValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4605,7 +4807,7 @@ describe('v1.AdUnitServiceClient', () => {
         private_auction_deal: 'privateAuctionDealValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4668,7 +4870,7 @@ describe('v1.AdUnitServiceClient', () => {
         programmatic_buyer: 'programmaticBuyerValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4731,7 +4933,7 @@ describe('v1.AdUnitServiceClient', () => {
         report: 'reportValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4780,7 +4982,7 @@ describe('v1.AdUnitServiceClient', () => {
         rich_media_ads_company: 'richMediaAdsCompanyValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4843,7 +5045,7 @@ describe('v1.AdUnitServiceClient', () => {
         role: 'roleValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4892,7 +5094,7 @@ describe('v1.AdUnitServiceClient', () => {
         site: 'siteValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4941,7 +5143,7 @@ describe('v1.AdUnitServiceClient', () => {
         slate: 'slateValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4990,7 +5192,7 @@ describe('v1.AdUnitServiceClient', () => {
         suggested_ad_unit: 'suggestedAdUnitValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5043,7 +5245,7 @@ describe('v1.AdUnitServiceClient', () => {
         targeting_preset: 'targetingPresetValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5096,7 +5298,7 @@ describe('v1.AdUnitServiceClient', () => {
         taxonomy_category: 'taxonomyCategoryValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5153,7 +5355,7 @@ describe('v1.AdUnitServiceClient', () => {
         team: 'teamValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5202,7 +5404,7 @@ describe('v1.AdUnitServiceClient', () => {
         third_party_company: 'thirdPartyCompanyValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5265,7 +5467,7 @@ describe('v1.AdUnitServiceClient', () => {
         user: 'userValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5314,7 +5516,7 @@ describe('v1.AdUnitServiceClient', () => {
         viewability_provider: 'viewabilityProviderValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5377,7 +5579,7 @@ describe('v1.AdUnitServiceClient', () => {
         web_property: 'webPropertyValue',
       };
       const client = new adunitserviceModule.v1.AdUnitServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();

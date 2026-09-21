@@ -19,13 +19,13 @@
 import * as protos from '../protos/protos';
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { SinonStub } from 'sinon';
-import { describe, it, beforeEach, afterEach } from 'mocha';
+import {SinonStub} from 'sinon';
+import {describe, it, beforeEach, afterEach} from 'mocha';
 import * as placementserviceModule from '../src';
 
-import { PassThrough } from 'stream';
+import {PassThrough} from 'stream';
 
-import { GoogleAuth, protobuf } from 'google-gax';
+import {GoogleAuth, protobuf} from 'google-gax';
 
 // Dynamically loaded proto JSON is needed to get the type information
 // to fill in default values for request objects
@@ -45,7 +45,7 @@ function getTypeDefaultValue(typeName: string, fields: string[]) {
 function generateSampleMessage<T extends object>(instance: T) {
   const filledObject = (
     instance.constructor as typeof protobuf.Message
-  ).toObject(instance as protobuf.Message<T>, { defaults: true });
+  ).toObject(instance as protobuf.Message<T>, {defaults: true});
   return (instance.constructor as typeof protobuf.Message).fromObject(
     filledObject,
   ) as T;
@@ -117,9 +117,9 @@ function stubAsyncIterationCall<ResponseType>(
             return Promise.reject(error);
           }
           if (counter >= responses!.length) {
-            return Promise.resolve({ done: true, value: undefined });
+            return Promise.resolve({done: true, value: undefined});
           }
-          return Promise.resolve({ done: false, value: responses![counter++] });
+          return Promise.resolve({done: false, value: responses![counter++]});
         },
       };
     },
@@ -134,7 +134,7 @@ describe('v1.PlacementServiceClient', () => {
       getClient: sinon.stub().resolves({
         getRequestHeaders: sinon
           .stub()
-          .resolves({ Authorization: 'Bearer SOME_TOKEN' }),
+          .resolves({Authorization: 'Bearer SOME_TOKEN'}),
       }),
     } as unknown as GoogleAuth;
   });
@@ -260,12 +260,12 @@ describe('v1.PlacementServiceClient', () => {
       assert(client.placementServiceStub);
     });
 
-    it('has close method for the initialized client', (done) => {
+    it('has close method for the initialized client', done => {
       const client = new placementserviceModule.v1.PlacementServiceClient({
         auth: googleAuth,
         projectId: 'bogus',
       });
-      client.initialize().catch((err) => {
+      client.initialize().catch(err => {
         throw err;
       });
       assert(client.placementServiceStub);
@@ -274,12 +274,12 @@ describe('v1.PlacementServiceClient', () => {
         .then(() => {
           done();
         })
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     });
 
-    it('has close method for the non-initialized client', (done) => {
+    it('has close method for the non-initialized client', done => {
       const client = new placementserviceModule.v1.PlacementServiceClient({
         auth: googleAuth,
         projectId: 'bogus',
@@ -290,7 +290,7 @@ describe('v1.PlacementServiceClient', () => {
         .then(() => {
           done();
         })
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     });
@@ -455,7 +455,7 @@ describe('v1.PlacementServiceClient', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.getPlacement(request), expectedError);
@@ -587,7 +587,7 @@ describe('v1.PlacementServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.createPlacement(request), expectedError);
@@ -723,7 +723,7 @@ describe('v1.PlacementServiceClient', () => {
       );
       request.placement.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.updatePlacement(request), expectedError);
@@ -859,7 +859,7 @@ describe('v1.PlacementServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -998,7 +998,7 @@ describe('v1.PlacementServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -1137,7 +1137,7 @@ describe('v1.PlacementServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -1276,7 +1276,7 @@ describe('v1.PlacementServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -1415,7 +1415,7 @@ describe('v1.PlacementServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -1428,7 +1428,7 @@ describe('v1.PlacementServiceClient', () => {
   describe('listPlacements', () => {
     it('invokes listPlacements without error', async () => {
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1461,7 +1461,7 @@ describe('v1.PlacementServiceClient', () => {
 
     it('invokes listPlacements without error using callback', async () => {
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1510,7 +1510,7 @@ describe('v1.PlacementServiceClient', () => {
 
     it('invokes listPlacements with error', async () => {
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1541,7 +1541,7 @@ describe('v1.PlacementServiceClient', () => {
 
     it('invokes listPlacementsStream without error', async () => {
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1587,15 +1587,15 @@ describe('v1.PlacementServiceClient', () => {
       assert(
         (client.descriptors.page.listPlacements.createStream as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
     it('invokes listPlacementsStream with error', async () => {
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1636,9 +1636,9 @@ describe('v1.PlacementServiceClient', () => {
       assert(
         (client.descriptors.page.listPlacements.createStream as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
@@ -1679,15 +1679,15 @@ describe('v1.PlacementServiceClient', () => {
       assert(
         (client.descriptors.page.listPlacements.asyncIterate as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
     it('uses async iteration with listPlacements with error', async () => {
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1719,9 +1719,9 @@ describe('v1.PlacementServiceClient', () => {
       assert(
         (client.descriptors.page.listPlacements.asyncIterate as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
   });
@@ -1735,7 +1735,7 @@ describe('v1.PlacementServiceClient', () => {
         ad_break: 'adBreakValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1799,7 +1799,7 @@ describe('v1.PlacementServiceClient', () => {
         ad_review_center_ad: 'adReviewCenterAdValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1868,7 +1868,7 @@ describe('v1.PlacementServiceClient', () => {
         ad_rule: 'adRuleValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1917,7 +1917,7 @@ describe('v1.PlacementServiceClient', () => {
         ad_spot: 'adSpotValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1966,7 +1966,7 @@ describe('v1.PlacementServiceClient', () => {
         ad_unit: 'adUnitValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2015,7 +2015,7 @@ describe('v1.PlacementServiceClient', () => {
         application: 'applicationValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2067,7 +2067,7 @@ describe('v1.PlacementServiceClient', () => {
         audience_segment: 'audienceSegmentValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2120,7 +2120,7 @@ describe('v1.PlacementServiceClient', () => {
         bandwidth_group: 'bandwidthGroupValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2166,6 +2166,58 @@ describe('v1.PlacementServiceClient', () => {
       });
     });
 
+    describe('breakTemplate', async () => {
+      const fakePath = '/rendered/path/breakTemplate';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        break_template: 'breakTemplateValue',
+      };
+      const client = new placementserviceModule.v1.PlacementServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.breakTemplatePathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.breakTemplatePathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('breakTemplatePath', () => {
+        const result = client.breakTemplatePath(
+          'networkCodeValue',
+          'breakTemplateValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromBreakTemplateName', () => {
+        const result = client.matchNetworkCodeFromBreakTemplateName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchBreakTemplateFromBreakTemplateName', () => {
+        const result = client.matchBreakTemplateFromBreakTemplateName(fakePath);
+        assert.strictEqual(result, 'breakTemplateValue');
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('browser', async () => {
       const fakePath = '/rendered/path/browser';
       const expectedParameters = {
@@ -2173,7 +2225,7 @@ describe('v1.PlacementServiceClient', () => {
         browser: 'browserValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2222,7 +2274,7 @@ describe('v1.PlacementServiceClient', () => {
         browser_language: 'browserLanguageValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2275,7 +2327,7 @@ describe('v1.PlacementServiceClient', () => {
         cdn_config: 'cdnConfigValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2327,7 +2379,7 @@ describe('v1.PlacementServiceClient', () => {
         child_publisher: 'childPublisherValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2380,7 +2432,7 @@ describe('v1.PlacementServiceClient', () => {
         cms_metadata_key: 'cmsMetadataKeyValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2433,7 +2485,7 @@ describe('v1.PlacementServiceClient', () => {
         cms_metadata_value: 'cmsMetadataValueValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2490,7 +2542,7 @@ describe('v1.PlacementServiceClient', () => {
         company: 'companyValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2539,7 +2591,7 @@ describe('v1.PlacementServiceClient', () => {
         contact: 'contactValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2588,7 +2640,7 @@ describe('v1.PlacementServiceClient', () => {
         content: 'contentValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2637,7 +2689,7 @@ describe('v1.PlacementServiceClient', () => {
         content_bundle: 'contentBundleValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2689,7 +2741,7 @@ describe('v1.PlacementServiceClient', () => {
         content_label: 'contentLabelValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2741,7 +2793,7 @@ describe('v1.PlacementServiceClient', () => {
         creative: 'creativeValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2790,7 +2842,7 @@ describe('v1.PlacementServiceClient', () => {
         creative_set: 'creativeSetValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2842,7 +2894,7 @@ describe('v1.PlacementServiceClient', () => {
         creative_template: 'creativeTemplateValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2899,7 +2951,7 @@ describe('v1.PlacementServiceClient', () => {
         creative_wrapper: 'creativeWrapperValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2952,7 +3004,7 @@ describe('v1.PlacementServiceClient', () => {
         custom_field: 'customFieldValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3004,7 +3056,7 @@ describe('v1.PlacementServiceClient', () => {
         custom_targeting_key: 'customTargetingKeyValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3067,7 +3119,7 @@ describe('v1.PlacementServiceClient', () => {
         custom_targeting_value: 'customTargetingValueValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3132,7 +3184,7 @@ describe('v1.PlacementServiceClient', () => {
         dai_authentication_key: 'daiAuthenticationKeyValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3197,7 +3249,7 @@ describe('v1.PlacementServiceClient', () => {
         dai_encoding_profile: 'daiEncodingProfileValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3253,6 +3305,104 @@ describe('v1.PlacementServiceClient', () => {
       });
     });
 
+    describe('daiSession', async () => {
+      const fakePath = '/rendered/path/daiSession';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        dai_session: 'daiSessionValue',
+      };
+      const client = new placementserviceModule.v1.PlacementServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.daiSessionPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.daiSessionPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('daiSessionPath', () => {
+        const result = client.daiSessionPath(
+          'networkCodeValue',
+          'daiSessionValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromDaiSessionName', () => {
+        const result = client.matchNetworkCodeFromDaiSessionName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchDaiSessionFromDaiSessionName', () => {
+        const result = client.matchDaiSessionFromDaiSessionName(fakePath);
+        assert.strictEqual(result, 'daiSessionValue');
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
+    describe('defaultThirdPartyDataDeclaration', async () => {
+      const fakePath = '/rendered/path/defaultThirdPartyDataDeclaration';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+      };
+      const client = new placementserviceModule.v1.PlacementServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
+
+      it('defaultThirdPartyDataDeclarationPath', () => {
+        const result =
+          client.defaultThirdPartyDataDeclarationPath('networkCodeValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromDefaultThirdPartyDataDeclarationName', () => {
+        const result =
+          client.matchNetworkCodeFromDefaultThirdPartyDataDeclarationName(
+            fakePath,
+          );
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (
+            client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('deviceCapability', async () => {
       const fakePath = '/rendered/path/deviceCapability';
       const expectedParameters = {
@@ -3260,7 +3410,7 @@ describe('v1.PlacementServiceClient', () => {
         device_capability: 'deviceCapabilityValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3317,7 +3467,7 @@ describe('v1.PlacementServiceClient', () => {
         device_category: 'deviceCategoryValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3370,7 +3520,7 @@ describe('v1.PlacementServiceClient', () => {
         device_manufacturer: 'deviceManufacturerValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3433,7 +3583,7 @@ describe('v1.PlacementServiceClient', () => {
         entity_signals_mapping: 'entitySignalsMappingValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3498,7 +3648,7 @@ describe('v1.PlacementServiceClient', () => {
         geo_target: 'geoTargetValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3550,7 +3700,7 @@ describe('v1.PlacementServiceClient', () => {
         label: 'labelValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3599,7 +3749,7 @@ describe('v1.PlacementServiceClient', () => {
         line_item: 'lineItemValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3648,7 +3798,7 @@ describe('v1.PlacementServiceClient', () => {
         linked_device: 'linkedDeviceValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3700,7 +3850,7 @@ describe('v1.PlacementServiceClient', () => {
         live_stream: 'liveStreamValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3752,7 +3902,7 @@ describe('v1.PlacementServiceClient', () => {
         live_stream_event: 'liveStreamEventValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3805,7 +3955,7 @@ describe('v1.PlacementServiceClient', () => {
         mobile_carrier: 'mobileCarrierValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3857,7 +4007,7 @@ describe('v1.PlacementServiceClient', () => {
         mobile_device: 'mobileDeviceValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3909,7 +4059,7 @@ describe('v1.PlacementServiceClient', () => {
         mobile_device_submodel: 'mobileDeviceSubmodelValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3967,13 +4117,65 @@ describe('v1.PlacementServiceClient', () => {
       });
     });
 
+    describe('nativeStyle', async () => {
+      const fakePath = '/rendered/path/nativeStyle';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        native_style: 'nativeStyleValue',
+      };
+      const client = new placementserviceModule.v1.PlacementServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.nativeStylePathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.nativeStylePathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('nativeStylePath', () => {
+        const result = client.nativeStylePath(
+          'networkCodeValue',
+          'nativeStyleValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromNativeStyleName', () => {
+        const result = client.matchNetworkCodeFromNativeStyleName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchNativeStyleFromNativeStyleName', () => {
+        const result = client.matchNativeStyleFromNativeStyleName(fakePath);
+        assert.strictEqual(result, 'nativeStyleValue');
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('network', async () => {
       const fakePath = '/rendered/path/network';
       const expectedParameters = {
         network_code: 'networkCodeValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4012,7 +4214,7 @@ describe('v1.PlacementServiceClient', () => {
         operating_system: 'operatingSystemValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4065,7 +4267,7 @@ describe('v1.PlacementServiceClient', () => {
         operating_system_version: 'operatingSystemVersionValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4130,7 +4332,7 @@ describe('v1.PlacementServiceClient', () => {
         order: 'orderValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4179,7 +4381,7 @@ describe('v1.PlacementServiceClient', () => {
         partner: 'partnerValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4228,7 +4430,7 @@ describe('v1.PlacementServiceClient', () => {
         placement: 'placementValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4280,7 +4482,7 @@ describe('v1.PlacementServiceClient', () => {
         private_auction: 'privateAuctionValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4333,7 +4535,7 @@ describe('v1.PlacementServiceClient', () => {
         private_auction_deal: 'privateAuctionDealValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4396,7 +4598,7 @@ describe('v1.PlacementServiceClient', () => {
         programmatic_buyer: 'programmaticBuyerValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4459,7 +4661,7 @@ describe('v1.PlacementServiceClient', () => {
         report: 'reportValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4508,7 +4710,7 @@ describe('v1.PlacementServiceClient', () => {
         rich_media_ads_company: 'richMediaAdsCompanyValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4571,7 +4773,7 @@ describe('v1.PlacementServiceClient', () => {
         role: 'roleValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4620,7 +4822,7 @@ describe('v1.PlacementServiceClient', () => {
         site: 'siteValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4669,7 +4871,7 @@ describe('v1.PlacementServiceClient', () => {
         slate: 'slateValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4718,7 +4920,7 @@ describe('v1.PlacementServiceClient', () => {
         suggested_ad_unit: 'suggestedAdUnitValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4771,7 +4973,7 @@ describe('v1.PlacementServiceClient', () => {
         targeting_preset: 'targetingPresetValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4824,7 +5026,7 @@ describe('v1.PlacementServiceClient', () => {
         taxonomy_category: 'taxonomyCategoryValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4881,7 +5083,7 @@ describe('v1.PlacementServiceClient', () => {
         team: 'teamValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4930,7 +5132,7 @@ describe('v1.PlacementServiceClient', () => {
         third_party_company: 'thirdPartyCompanyValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4993,7 +5195,7 @@ describe('v1.PlacementServiceClient', () => {
         user: 'userValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5042,7 +5244,7 @@ describe('v1.PlacementServiceClient', () => {
         viewability_provider: 'viewabilityProviderValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5105,7 +5307,7 @@ describe('v1.PlacementServiceClient', () => {
         web_property: 'webPropertyValue',
       };
       const client = new placementserviceModule.v1.PlacementServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();

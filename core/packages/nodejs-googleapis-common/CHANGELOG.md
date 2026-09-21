@@ -5,6 +5,20 @@
 
 [1]: https://www.npmjs.com/package/nodejs-googleapis-common?activeTab=versions
 
+## [9.1.0](https://github.com/googleapis/google-cloud-node/compare/googleapis-common-v9.0.4...googleapis-common-v9.1.0) (2026-09-15)
+
+
+### Features
+
+* PNPM workspace ([#8973](https://github.com/googleapis/google-cloud-node/issues/8973)) ([1ea27c9](https://github.com/googleapis/google-cloud-node/commit/1ea27c9c9bf4e4cbf79381321dcb9bce7951a76f))
+
+## [9.0.4](https://github.com/googleapis/google-cloud-node/compare/googleapis-common-v9.0.3...googleapis-common-v9.0.4) (2026-08-21)
+
+
+### Bug Fixes
+
+* Validate path parameters and prevent traversal/injection in apiary request encodings ([#9181](https://github.com/googleapis/google-cloud-node/issues/9181)) ([b5b5afb](https://github.com/googleapis/google-cloud-node/commit/b5b5afb9e053744ff7c3f6334aa2a60f86466c84))
+
 ## [9.0.3](https://github.com/googleapis/google-cloud-node/compare/googleapis-common-v9.0.2...googleapis-common-v9.0.3) (2026-08-12)
 
 

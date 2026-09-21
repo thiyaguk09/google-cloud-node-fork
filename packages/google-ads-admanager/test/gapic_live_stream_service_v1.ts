@@ -19,13 +19,13 @@
 import * as protos from '../protos/protos';
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { SinonStub } from 'sinon';
-import { describe, it, beforeEach, afterEach } from 'mocha';
+import {SinonStub} from 'sinon';
+import {describe, it, beforeEach, afterEach} from 'mocha';
 import * as livestreamserviceModule from '../src';
 
-import { PassThrough } from 'stream';
+import {PassThrough} from 'stream';
 
-import { GoogleAuth, protobuf } from 'google-gax';
+import {GoogleAuth, protobuf} from 'google-gax';
 
 // Dynamically loaded proto JSON is needed to get the type information
 // to fill in default values for request objects
@@ -45,7 +45,7 @@ function getTypeDefaultValue(typeName: string, fields: string[]) {
 function generateSampleMessage<T extends object>(instance: T) {
   const filledObject = (
     instance.constructor as typeof protobuf.Message
-  ).toObject(instance as protobuf.Message<T>, { defaults: true });
+  ).toObject(instance as protobuf.Message<T>, {defaults: true});
   return (instance.constructor as typeof protobuf.Message).fromObject(
     filledObject,
   ) as T;
@@ -117,9 +117,9 @@ function stubAsyncIterationCall<ResponseType>(
             return Promise.reject(error);
           }
           if (counter >= responses!.length) {
-            return Promise.resolve({ done: true, value: undefined });
+            return Promise.resolve({done: true, value: undefined});
           }
-          return Promise.resolve({ done: false, value: responses![counter++] });
+          return Promise.resolve({done: false, value: responses![counter++]});
         },
       };
     },
@@ -134,7 +134,7 @@ describe('v1.LiveStreamServiceClient', () => {
       getClient: sinon.stub().resolves({
         getRequestHeaders: sinon
           .stub()
-          .resolves({ Authorization: 'Bearer SOME_TOKEN' }),
+          .resolves({Authorization: 'Bearer SOME_TOKEN'}),
       }),
     } as unknown as GoogleAuth;
   });
@@ -212,7 +212,7 @@ describe('v1.LiveStreamServiceClient', () => {
           const saved = process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'];
           process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'] = 'example.com';
           const client = new livestreamserviceModule.v1.LiveStreamServiceClient(
-            { universeDomain: 'configured.example.com' },
+            {universeDomain: 'configured.example.com'},
           );
           const servicePath = client.apiEndpoint;
           assert.strictEqual(servicePath, 'admanager.configured.example.com');
@@ -261,12 +261,12 @@ describe('v1.LiveStreamServiceClient', () => {
       assert(client.liveStreamServiceStub);
     });
 
-    it('has close method for the initialized client', (done) => {
+    it('has close method for the initialized client', done => {
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
         auth: googleAuth,
         projectId: 'bogus',
       });
-      client.initialize().catch((err) => {
+      client.initialize().catch(err => {
         throw err;
       });
       assert(client.liveStreamServiceStub);
@@ -275,12 +275,12 @@ describe('v1.LiveStreamServiceClient', () => {
         .then(() => {
           done();
         })
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     });
 
-    it('has close method for the non-initialized client', (done) => {
+    it('has close method for the non-initialized client', done => {
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
         auth: googleAuth,
         projectId: 'bogus',
@@ -291,7 +291,7 @@ describe('v1.LiveStreamServiceClient', () => {
         .then(() => {
           done();
         })
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     });
@@ -456,7 +456,7 @@ describe('v1.LiveStreamServiceClient', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.getLiveStream(request), expectedError);
@@ -588,7 +588,7 @@ describe('v1.LiveStreamServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.createLiveStream(request), expectedError);
@@ -724,7 +724,7 @@ describe('v1.LiveStreamServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -863,7 +863,7 @@ describe('v1.LiveStreamServiceClient', () => {
       );
       request.liveStream.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.updateLiveStream(request), expectedError);
@@ -999,7 +999,7 @@ describe('v1.LiveStreamServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -1138,7 +1138,7 @@ describe('v1.LiveStreamServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -1277,7 +1277,7 @@ describe('v1.LiveStreamServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -1416,7 +1416,7 @@ describe('v1.LiveStreamServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -1555,7 +1555,7 @@ describe('v1.LiveStreamServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -1694,7 +1694,7 @@ describe('v1.LiveStreamServiceClient', () => {
       );
       request.parent = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(
@@ -1707,7 +1707,7 @@ describe('v1.LiveStreamServiceClient', () => {
   describe('listLiveStreams', () => {
     it('invokes listLiveStreams without error', async () => {
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1740,7 +1740,7 @@ describe('v1.LiveStreamServiceClient', () => {
 
     it('invokes listLiveStreams without error using callback', async () => {
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1789,7 +1789,7 @@ describe('v1.LiveStreamServiceClient', () => {
 
     it('invokes listLiveStreams with error', async () => {
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1820,7 +1820,7 @@ describe('v1.LiveStreamServiceClient', () => {
 
     it('invokes listLiveStreamsStream without error', async () => {
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1866,15 +1866,15 @@ describe('v1.LiveStreamServiceClient', () => {
       assert(
         (client.descriptors.page.listLiveStreams.createStream as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
     it('invokes listLiveStreamsStream with error', async () => {
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1915,9 +1915,9 @@ describe('v1.LiveStreamServiceClient', () => {
       assert(
         (client.descriptors.page.listLiveStreams.createStream as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
@@ -1958,15 +1958,15 @@ describe('v1.LiveStreamServiceClient', () => {
       assert(
         (client.descriptors.page.listLiveStreams.asyncIterate as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
     it('uses async iteration with listLiveStreams with error', async () => {
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1998,9 +1998,9 @@ describe('v1.LiveStreamServiceClient', () => {
       assert(
         (client.descriptors.page.listLiveStreams.asyncIterate as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
   });
@@ -2014,7 +2014,7 @@ describe('v1.LiveStreamServiceClient', () => {
         ad_break: 'adBreakValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2078,7 +2078,7 @@ describe('v1.LiveStreamServiceClient', () => {
         ad_review_center_ad: 'adReviewCenterAdValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2147,7 +2147,7 @@ describe('v1.LiveStreamServiceClient', () => {
         ad_rule: 'adRuleValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2196,7 +2196,7 @@ describe('v1.LiveStreamServiceClient', () => {
         ad_spot: 'adSpotValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2245,7 +2245,7 @@ describe('v1.LiveStreamServiceClient', () => {
         ad_unit: 'adUnitValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2294,7 +2294,7 @@ describe('v1.LiveStreamServiceClient', () => {
         application: 'applicationValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2346,7 +2346,7 @@ describe('v1.LiveStreamServiceClient', () => {
         audience_segment: 'audienceSegmentValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2399,7 +2399,7 @@ describe('v1.LiveStreamServiceClient', () => {
         bandwidth_group: 'bandwidthGroupValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2445,6 +2445,58 @@ describe('v1.LiveStreamServiceClient', () => {
       });
     });
 
+    describe('breakTemplate', async () => {
+      const fakePath = '/rendered/path/breakTemplate';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        break_template: 'breakTemplateValue',
+      };
+      const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.breakTemplatePathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.breakTemplatePathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('breakTemplatePath', () => {
+        const result = client.breakTemplatePath(
+          'networkCodeValue',
+          'breakTemplateValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromBreakTemplateName', () => {
+        const result = client.matchNetworkCodeFromBreakTemplateName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchBreakTemplateFromBreakTemplateName', () => {
+        const result = client.matchBreakTemplateFromBreakTemplateName(fakePath);
+        assert.strictEqual(result, 'breakTemplateValue');
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('browser', async () => {
       const fakePath = '/rendered/path/browser';
       const expectedParameters = {
@@ -2452,7 +2504,7 @@ describe('v1.LiveStreamServiceClient', () => {
         browser: 'browserValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2501,7 +2553,7 @@ describe('v1.LiveStreamServiceClient', () => {
         browser_language: 'browserLanguageValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2554,7 +2606,7 @@ describe('v1.LiveStreamServiceClient', () => {
         cdn_config: 'cdnConfigValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2606,7 +2658,7 @@ describe('v1.LiveStreamServiceClient', () => {
         child_publisher: 'childPublisherValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2659,7 +2711,7 @@ describe('v1.LiveStreamServiceClient', () => {
         cms_metadata_key: 'cmsMetadataKeyValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2712,7 +2764,7 @@ describe('v1.LiveStreamServiceClient', () => {
         cms_metadata_value: 'cmsMetadataValueValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2769,7 +2821,7 @@ describe('v1.LiveStreamServiceClient', () => {
         company: 'companyValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2818,7 +2870,7 @@ describe('v1.LiveStreamServiceClient', () => {
         contact: 'contactValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2867,7 +2919,7 @@ describe('v1.LiveStreamServiceClient', () => {
         content: 'contentValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2916,7 +2968,7 @@ describe('v1.LiveStreamServiceClient', () => {
         content_bundle: 'contentBundleValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2968,7 +3020,7 @@ describe('v1.LiveStreamServiceClient', () => {
         content_label: 'contentLabelValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3020,7 +3072,7 @@ describe('v1.LiveStreamServiceClient', () => {
         creative: 'creativeValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3069,7 +3121,7 @@ describe('v1.LiveStreamServiceClient', () => {
         creative_set: 'creativeSetValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3121,7 +3173,7 @@ describe('v1.LiveStreamServiceClient', () => {
         creative_template: 'creativeTemplateValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3178,7 +3230,7 @@ describe('v1.LiveStreamServiceClient', () => {
         creative_wrapper: 'creativeWrapperValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3231,7 +3283,7 @@ describe('v1.LiveStreamServiceClient', () => {
         custom_field: 'customFieldValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3283,7 +3335,7 @@ describe('v1.LiveStreamServiceClient', () => {
         custom_targeting_key: 'customTargetingKeyValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3346,7 +3398,7 @@ describe('v1.LiveStreamServiceClient', () => {
         custom_targeting_value: 'customTargetingValueValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3411,7 +3463,7 @@ describe('v1.LiveStreamServiceClient', () => {
         dai_authentication_key: 'daiAuthenticationKeyValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3476,7 +3528,7 @@ describe('v1.LiveStreamServiceClient', () => {
         dai_encoding_profile: 'daiEncodingProfileValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3532,6 +3584,104 @@ describe('v1.LiveStreamServiceClient', () => {
       });
     });
 
+    describe('daiSession', async () => {
+      const fakePath = '/rendered/path/daiSession';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        dai_session: 'daiSessionValue',
+      };
+      const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.daiSessionPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.daiSessionPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('daiSessionPath', () => {
+        const result = client.daiSessionPath(
+          'networkCodeValue',
+          'daiSessionValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromDaiSessionName', () => {
+        const result = client.matchNetworkCodeFromDaiSessionName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchDaiSessionFromDaiSessionName', () => {
+        const result = client.matchDaiSessionFromDaiSessionName(fakePath);
+        assert.strictEqual(result, 'daiSessionValue');
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
+    describe('defaultThirdPartyDataDeclaration', async () => {
+      const fakePath = '/rendered/path/defaultThirdPartyDataDeclaration';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+      };
+      const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
+
+      it('defaultThirdPartyDataDeclarationPath', () => {
+        const result =
+          client.defaultThirdPartyDataDeclarationPath('networkCodeValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromDefaultThirdPartyDataDeclarationName', () => {
+        const result =
+          client.matchNetworkCodeFromDefaultThirdPartyDataDeclarationName(
+            fakePath,
+          );
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (
+            client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('deviceCapability', async () => {
       const fakePath = '/rendered/path/deviceCapability';
       const expectedParameters = {
@@ -3539,7 +3689,7 @@ describe('v1.LiveStreamServiceClient', () => {
         device_capability: 'deviceCapabilityValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3596,7 +3746,7 @@ describe('v1.LiveStreamServiceClient', () => {
         device_category: 'deviceCategoryValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3649,7 +3799,7 @@ describe('v1.LiveStreamServiceClient', () => {
         device_manufacturer: 'deviceManufacturerValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3712,7 +3862,7 @@ describe('v1.LiveStreamServiceClient', () => {
         entity_signals_mapping: 'entitySignalsMappingValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3777,7 +3927,7 @@ describe('v1.LiveStreamServiceClient', () => {
         geo_target: 'geoTargetValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3829,7 +3979,7 @@ describe('v1.LiveStreamServiceClient', () => {
         label: 'labelValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3878,7 +4028,7 @@ describe('v1.LiveStreamServiceClient', () => {
         line_item: 'lineItemValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3927,7 +4077,7 @@ describe('v1.LiveStreamServiceClient', () => {
         linked_device: 'linkedDeviceValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3979,7 +4129,7 @@ describe('v1.LiveStreamServiceClient', () => {
         live_stream: 'liveStreamValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4031,7 +4181,7 @@ describe('v1.LiveStreamServiceClient', () => {
         live_stream_event: 'liveStreamEventValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4084,7 +4234,7 @@ describe('v1.LiveStreamServiceClient', () => {
         mobile_carrier: 'mobileCarrierValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4136,7 +4286,7 @@ describe('v1.LiveStreamServiceClient', () => {
         mobile_device: 'mobileDeviceValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4188,7 +4338,7 @@ describe('v1.LiveStreamServiceClient', () => {
         mobile_device_submodel: 'mobileDeviceSubmodelValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4246,13 +4396,65 @@ describe('v1.LiveStreamServiceClient', () => {
       });
     });
 
+    describe('nativeStyle', async () => {
+      const fakePath = '/rendered/path/nativeStyle';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        native_style: 'nativeStyleValue',
+      };
+      const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.nativeStylePathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.nativeStylePathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('nativeStylePath', () => {
+        const result = client.nativeStylePath(
+          'networkCodeValue',
+          'nativeStyleValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromNativeStyleName', () => {
+        const result = client.matchNetworkCodeFromNativeStyleName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchNativeStyleFromNativeStyleName', () => {
+        const result = client.matchNativeStyleFromNativeStyleName(fakePath);
+        assert.strictEqual(result, 'nativeStyleValue');
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('network', async () => {
       const fakePath = '/rendered/path/network';
       const expectedParameters = {
         network_code: 'networkCodeValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4291,7 +4493,7 @@ describe('v1.LiveStreamServiceClient', () => {
         operating_system: 'operatingSystemValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4344,7 +4546,7 @@ describe('v1.LiveStreamServiceClient', () => {
         operating_system_version: 'operatingSystemVersionValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4409,7 +4611,7 @@ describe('v1.LiveStreamServiceClient', () => {
         order: 'orderValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4458,7 +4660,7 @@ describe('v1.LiveStreamServiceClient', () => {
         partner: 'partnerValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4507,7 +4709,7 @@ describe('v1.LiveStreamServiceClient', () => {
         placement: 'placementValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4559,7 +4761,7 @@ describe('v1.LiveStreamServiceClient', () => {
         private_auction: 'privateAuctionValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4612,7 +4814,7 @@ describe('v1.LiveStreamServiceClient', () => {
         private_auction_deal: 'privateAuctionDealValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4675,7 +4877,7 @@ describe('v1.LiveStreamServiceClient', () => {
         programmatic_buyer: 'programmaticBuyerValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4738,7 +4940,7 @@ describe('v1.LiveStreamServiceClient', () => {
         report: 'reportValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4787,7 +4989,7 @@ describe('v1.LiveStreamServiceClient', () => {
         rich_media_ads_company: 'richMediaAdsCompanyValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4850,7 +5052,7 @@ describe('v1.LiveStreamServiceClient', () => {
         role: 'roleValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4899,7 +5101,7 @@ describe('v1.LiveStreamServiceClient', () => {
         site: 'siteValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4948,7 +5150,7 @@ describe('v1.LiveStreamServiceClient', () => {
         slate: 'slateValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4997,7 +5199,7 @@ describe('v1.LiveStreamServiceClient', () => {
         suggested_ad_unit: 'suggestedAdUnitValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5050,7 +5252,7 @@ describe('v1.LiveStreamServiceClient', () => {
         targeting_preset: 'targetingPresetValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5103,7 +5305,7 @@ describe('v1.LiveStreamServiceClient', () => {
         taxonomy_category: 'taxonomyCategoryValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5160,7 +5362,7 @@ describe('v1.LiveStreamServiceClient', () => {
         team: 'teamValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5209,7 +5411,7 @@ describe('v1.LiveStreamServiceClient', () => {
         third_party_company: 'thirdPartyCompanyValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5272,7 +5474,7 @@ describe('v1.LiveStreamServiceClient', () => {
         user: 'userValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5321,7 +5523,7 @@ describe('v1.LiveStreamServiceClient', () => {
         viewability_provider: 'viewabilityProviderValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -5384,7 +5586,7 @@ describe('v1.LiveStreamServiceClient', () => {
         web_property: 'webPropertyValue',
       };
       const client = new livestreamserviceModule.v1.LiveStreamServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();

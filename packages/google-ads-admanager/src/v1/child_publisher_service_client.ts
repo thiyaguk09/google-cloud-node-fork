@@ -26,10 +26,10 @@ import type {
   PaginationCallback,
   GaxCall,
 } from 'google-gax';
-import { Transform } from 'stream';
+import {Transform} from 'stream';
 import * as protos from '../../protos/protos';
 import jsonProtos = require('../../protos/protos.json');
-import { loggingUtils as logging, decodeAnyProtosInArray } from 'google-gax';
+import {loggingUtils as logging, decodeAnyProtosInArray} from 'google-gax';
 
 /**
  * Client JSON configuration object, loaded from
@@ -52,7 +52,7 @@ export class ChildPublisherServiceClient {
   private _gaxModule: typeof gax | typeof gax.fallback;
   private _gaxGrpc: gax.GrpcClient | gax.fallback.GrpcClient;
   private _protos: {};
-  private _defaults: { [method: string]: gax.CallSettings };
+  private _defaults: {[method: string]: gax.CallSettings};
   private _universeDomain: string;
   private _servicePath: string;
   private _log = logging.log('admanager');
@@ -65,9 +65,9 @@ export class ChildPublisherServiceClient {
     batching: {},
   };
   warn: (code: string, message: string, warnType?: string) => void;
-  innerApiCalls: { [name: string]: Function };
-  pathTemplates: { [name: string]: gax.PathTemplate };
-  childPublisherServiceStub?: Promise<{ [name: string]: Function }>;
+  innerApiCalls: {[name: string]: Function};
+  pathTemplates: {[name: string]: gax.PathTemplate};
+  childPublisherServiceStub?: Promise<{[name: string]: Function}>;
 
   /**
    * Construct an instance of ChildPublisherServiceClient.
@@ -143,14 +143,14 @@ export class ChildPublisherServiceClient {
     const clientConfig = opts?.clientConfig ?? {};
     // Implicitly enable HTTP transport for the APIs that use REST as transport (e.g. Google Cloud Compute).
     if (!opts) {
-      opts = { fallback: true };
+      opts = {fallback: true};
     } else {
       opts.fallback = opts.fallback ?? true;
     }
     const fallback =
       opts?.fallback ??
       (typeof window !== 'undefined' && typeof window?.fetch === 'function');
-    opts = Object.assign({ servicePath, port, clientConfig, fallback }, opts);
+    opts = Object.assign({servicePath, port, clientConfig, fallback}, opts);
 
     // Request numeric enum values if REST transport is used.
     opts.numericEnums = true;
@@ -234,6 +234,9 @@ export class ChildPublisherServiceClient {
       bandwidthGroupPathTemplate: new this._gaxModule.PathTemplate(
         'networks/{network_code}/bandwidthGroups/{bandwidth_group}',
       ),
+      breakTemplatePathTemplate: new this._gaxModule.PathTemplate(
+        'networks/{network_code}/breakTemplates/{break_template}',
+      ),
       browserPathTemplate: new this._gaxModule.PathTemplate(
         'networks/{network_code}/browsers/{browser}',
       ),
@@ -294,6 +297,13 @@ export class ChildPublisherServiceClient {
       daiEncodingProfilePathTemplate: new this._gaxModule.PathTemplate(
         'networks/{network_code}/daiEncodingProfiles/{dai_encoding_profile}',
       ),
+      daiSessionPathTemplate: new this._gaxModule.PathTemplate(
+        'networks/{network_code}/daiSessions/{dai_session}',
+      ),
+      defaultThirdPartyDataDeclarationPathTemplate:
+        new this._gaxModule.PathTemplate(
+          'networks/{network_code}/defaultThirdPartyDataDeclaration',
+        ),
       deviceCapabilityPathTemplate: new this._gaxModule.PathTemplate(
         'networks/{network_code}/deviceCapabilities/{device_capability}',
       ),
@@ -332,6 +342,9 @@ export class ChildPublisherServiceClient {
       ),
       mobileDeviceSubmodelPathTemplate: new this._gaxModule.PathTemplate(
         'networks/{network_code}/mobileDeviceSubmodels/{mobile_device_submodel}',
+      ),
+      nativeStylePathTemplate: new this._gaxModule.PathTemplate(
+        'networks/{network_code}/nativeStyles/{native_style}',
       ),
       networkPathTemplate: new this._gaxModule.PathTemplate(
         'networks/{network_code}',
@@ -417,7 +430,7 @@ export class ChildPublisherServiceClient {
       'google.ads.admanager.v1.ChildPublisherService',
       gapicConfig as gax.ClientConfig,
       opts.clientConfig || {},
-      { 'x-goog-api-client': clientHeader.join(' ') },
+      {'x-goog-api-client': clientHeader.join(' ')},
     );
 
     // Set up a dictionary of "inner API calls"; the core implementation
@@ -457,7 +470,7 @@ export class ChildPublisherServiceClient {
           (this._protos as any).google.ads.admanager.v1.ChildPublisherService,
       this._opts,
       this._providedCustomServicePath,
-    ) as Promise<{ [method: string]: Function }>;
+    ) as Promise<{[method: string]: Function}>;
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
@@ -468,10 +481,14 @@ export class ChildPublisherServiceClient {
       'batchCreateChildPublishers',
       'updateChildPublisher',
       'batchUpdateChildPublishers',
+      'batchResendChildPublisherInvitationEmails',
+      'batchRenegotiateChildPublisherAgreements',
+      'batchRejectChildPublishers',
+      'batchWithdrawChildPublishers',
     ];
     for (const methodName of childPublisherServiceStubMethods) {
       const callPromise = this.childPublisherServiceStub.then(
-        (stub) =>
+        stub =>
           (...args: Array<{}>) => {
             if (this._terminated) {
               return Promise.reject('The client has already been closed.');
@@ -675,7 +692,7 @@ export class ChildPublisherServiceClient {
       this._gaxModule.routingHeader.fromParams({
         name: request.name ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('getChildPublisher request %j', request);
@@ -814,7 +831,7 @@ export class ChildPublisherServiceClient {
       this._gaxModule.routingHeader.fromParams({
         parent: request.parent ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('createChildPublisher request %j', request);
@@ -964,7 +981,7 @@ export class ChildPublisherServiceClient {
       this._gaxModule.routingHeader.fromParams({
         parent: request.parent ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('batchCreateChildPublishers request %j', request);
@@ -1108,7 +1125,7 @@ export class ChildPublisherServiceClient {
       this._gaxModule.routingHeader.fromParams({
         'child_publisher.name': request.childPublisher!.name ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('updateChildPublisher request %j', request);
@@ -1259,7 +1276,7 @@ export class ChildPublisherServiceClient {
       this._gaxModule.routingHeader.fromParams({
         parent: request.parent ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('batchUpdateChildPublishers request %j', request);
@@ -1289,6 +1306,650 @@ export class ChildPublisherServiceClient {
           {} | undefined,
         ]) => {
           this._log.info('batchUpdateChildPublishers response %j', response);
+          return [response, options, rawResponse];
+        },
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
+  }
+  /**
+   * Batch resends invitation emails to
+   * {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s.
+   *
+   * Only expired and pending
+   * {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s can be sent
+   * invitation emails. Rejected, withdrawn, and accepted
+   * {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s will be ignored.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. Format: `networks/{network_code}`
+   * @param {string[]} request.names
+   *   Required. Resource names of the
+   *   {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s that should be
+   *   resent invitation emails. Format:
+   *   `networks/{network_code}/childPublisher/{child_publisher_id}`
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing {@link protos.google.ads.admanager.v1.BatchResendChildPublisherInvitationEmailsResponse|BatchResendChildPublisherInvitationEmailsResponse}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v1/child_publisher_service.batch_resend_child_publisher_invitation_emails.js</caption>
+   * region_tag:admanager_v1_generated_ChildPublisherService_BatchResendChildPublisherInvitationEmails_async
+   */
+  batchResendChildPublisherInvitationEmails(
+    request?: protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsRequest,
+    options?: CallOptions,
+  ): Promise<
+    [
+      protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsResponse,
+      (
+        | protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsRequest
+        | undefined
+      ),
+      {} | undefined,
+    ]
+  >;
+  batchResendChildPublisherInvitationEmails(
+    request: protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsResponse,
+      | protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  batchResendChildPublisherInvitationEmails(
+    request: protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsRequest,
+    callback: Callback<
+      protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsResponse,
+      | protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  batchResendChildPublisherInvitationEmails(
+    request?: protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsResponse,
+          | protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsRequest
+          | null
+          | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsResponse,
+      | protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): Promise<
+    [
+      protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsResponse,
+      (
+        | protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsRequest
+        | undefined
+      ),
+      {} | undefined,
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    this.initialize().catch(err => {
+      throw err;
+    });
+    this._log.info(
+      'batchResendChildPublisherInvitationEmails request %j',
+      request,
+    );
+    const wrappedCallback:
+      | Callback<
+          protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsResponse,
+          | protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsRequest
+          | null
+          | undefined,
+          {} | null | undefined
+        >
+      | undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info(
+            'batchResendChildPublisherInvitationEmails response %j',
+            response,
+          );
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls
+      .batchResendChildPublisherInvitationEmails(
+        request,
+        options,
+        wrappedCallback,
+      )
+      ?.then(
+        ([response, options, rawResponse]: [
+          protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsResponse,
+          (
+            | protos.google.ads.admanager.v1.IBatchResendChildPublisherInvitationEmailsRequest
+            | undefined
+          ),
+          {} | undefined,
+        ]) => {
+          this._log.info(
+            'batchResendChildPublisherInvitationEmails response %j',
+            response,
+          );
+          return [response, options, rawResponse];
+        },
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
+  }
+  /**
+   * Batch renegotiates {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}
+   * agreements (i.e., invite with updated terms).
+   *
+   * Only the agreements of rejected or withdrawn
+   * {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s can be
+   * renegotiated. Expired, pending, and accepted
+   * {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s will be ignored.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. Format: `networks/{network_code}`
+   * @param {number[]} request.requests
+   *   Required. The requests to renegotiate
+   *   {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher} agreements.
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing {@link protos.google.ads.admanager.v1.BatchRenegotiateChildPublisherAgreementsResponse|BatchRenegotiateChildPublisherAgreementsResponse}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v1/child_publisher_service.batch_renegotiate_child_publisher_agreements.js</caption>
+   * region_tag:admanager_v1_generated_ChildPublisherService_BatchRenegotiateChildPublisherAgreements_async
+   */
+  batchRenegotiateChildPublisherAgreements(
+    request?: protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsRequest,
+    options?: CallOptions,
+  ): Promise<
+    [
+      protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsResponse,
+      (
+        | protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsRequest
+        | undefined
+      ),
+      {} | undefined,
+    ]
+  >;
+  batchRenegotiateChildPublisherAgreements(
+    request: protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsResponse,
+      | protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  batchRenegotiateChildPublisherAgreements(
+    request: protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsRequest,
+    callback: Callback<
+      protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsResponse,
+      | protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  batchRenegotiateChildPublisherAgreements(
+    request?: protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsResponse,
+          | protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsRequest
+          | null
+          | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsResponse,
+      | protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): Promise<
+    [
+      protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsResponse,
+      (
+        | protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsRequest
+        | undefined
+      ),
+      {} | undefined,
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    this.initialize().catch(err => {
+      throw err;
+    });
+    this._log.info(
+      'batchRenegotiateChildPublisherAgreements request %j',
+      request,
+    );
+    const wrappedCallback:
+      | Callback<
+          protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsResponse,
+          | protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsRequest
+          | null
+          | undefined,
+          {} | null | undefined
+        >
+      | undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info(
+            'batchRenegotiateChildPublisherAgreements response %j',
+            response,
+          );
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls
+      .batchRenegotiateChildPublisherAgreements(
+        request,
+        options,
+        wrappedCallback,
+      )
+      ?.then(
+        ([response, options, rawResponse]: [
+          protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsResponse,
+          (
+            | protos.google.ads.admanager.v1.IBatchRenegotiateChildPublisherAgreementsRequest
+            | undefined
+          ),
+          {} | undefined,
+        ]) => {
+          this._log.info(
+            'batchRenegotiateChildPublisherAgreements response %j',
+            response,
+          );
+          return [response, options, rawResponse];
+        },
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
+  }
+  /**
+   * Batch rejects {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s.
+   *
+   * Only pending or active
+   * {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s can be rejected.
+   * Expired, rejected, and withdrawn
+   * {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s will be ignored.
+   *
+   * This method is only intended to be called in response to a child user
+   * rejecting an invitation and exists to support the rejection of
+   * {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s that are not yet
+   * associated with an Ad Manager network.
+   *
+   * To sever the relationship from the parent publisher's side, use
+   * {@link protos.|BatchWithdrawChildPublisher}.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. Format: `networks/{network_code}`
+   * @param {string[]} request.names
+   *   Required. Resource names of the
+   *   {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s to reject.
+   *   Format: `networks/{network_code}/childPublisher/{child_publisher_id}`
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing {@link protos.google.ads.admanager.v1.BatchRejectChildPublishersResponse|BatchRejectChildPublishersResponse}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v1/child_publisher_service.batch_reject_child_publishers.js</caption>
+   * region_tag:admanager_v1_generated_ChildPublisherService_BatchRejectChildPublishers_async
+   */
+  batchRejectChildPublishers(
+    request?: protos.google.ads.admanager.v1.IBatchRejectChildPublishersRequest,
+    options?: CallOptions,
+  ): Promise<
+    [
+      protos.google.ads.admanager.v1.IBatchRejectChildPublishersResponse,
+      (
+        | protos.google.ads.admanager.v1.IBatchRejectChildPublishersRequest
+        | undefined
+      ),
+      {} | undefined,
+    ]
+  >;
+  batchRejectChildPublishers(
+    request: protos.google.ads.admanager.v1.IBatchRejectChildPublishersRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.ads.admanager.v1.IBatchRejectChildPublishersResponse,
+      | protos.google.ads.admanager.v1.IBatchRejectChildPublishersRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  batchRejectChildPublishers(
+    request: protos.google.ads.admanager.v1.IBatchRejectChildPublishersRequest,
+    callback: Callback<
+      protos.google.ads.admanager.v1.IBatchRejectChildPublishersResponse,
+      | protos.google.ads.admanager.v1.IBatchRejectChildPublishersRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  batchRejectChildPublishers(
+    request?: protos.google.ads.admanager.v1.IBatchRejectChildPublishersRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.ads.admanager.v1.IBatchRejectChildPublishersResponse,
+          | protos.google.ads.admanager.v1.IBatchRejectChildPublishersRequest
+          | null
+          | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.ads.admanager.v1.IBatchRejectChildPublishersResponse,
+      | protos.google.ads.admanager.v1.IBatchRejectChildPublishersRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): Promise<
+    [
+      protos.google.ads.admanager.v1.IBatchRejectChildPublishersResponse,
+      (
+        | protos.google.ads.admanager.v1.IBatchRejectChildPublishersRequest
+        | undefined
+      ),
+      {} | undefined,
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    this.initialize().catch(err => {
+      throw err;
+    });
+    this._log.info('batchRejectChildPublishers request %j', request);
+    const wrappedCallback:
+      | Callback<
+          protos.google.ads.admanager.v1.IBatchRejectChildPublishersResponse,
+          | protos.google.ads.admanager.v1.IBatchRejectChildPublishersRequest
+          | null
+          | undefined,
+          {} | null | undefined
+        >
+      | undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info('batchRejectChildPublishers response %j', response);
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls
+      .batchRejectChildPublishers(request, options, wrappedCallback)
+      ?.then(
+        ([response, options, rawResponse]: [
+          protos.google.ads.admanager.v1.IBatchRejectChildPublishersResponse,
+          (
+            | protos.google.ads.admanager.v1.IBatchRejectChildPublishersRequest
+            | undefined
+          ),
+          {} | undefined,
+        ]) => {
+          this._log.info('batchRejectChildPublishers response %j', response);
+          return [response, options, rawResponse];
+        },
+      )
+      .catch((error: any) => {
+        if (
+          error &&
+          'statusDetails' in error &&
+          error.statusDetails instanceof Array
+        ) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(
+            jsonProtos,
+          ) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(
+            error.statusDetails,
+            protos,
+          );
+        }
+        throw error;
+      });
+  }
+  /**
+   * Batch withdraws {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s.
+   *
+   * Only expired, pending, and accepted
+   * {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s can be withdrawn.
+   * Rejected or withdrawn
+   * {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s will be ignored.
+   *
+   * @param {Object} request
+   *   The request object that will be sent.
+   * @param {string} request.parent
+   *   Required. Format: `networks/{network_code}`
+   * @param {string[]} request.names
+   *   Required. Resource names of the
+   *   {@link protos.google.ads.admanager.v1.ChildPublisher|ChildPublisher}s to withdraw.
+   *   Format: `networks/{network_code}/childPublisher/{child_publisher_id}`
+   * @param {object} [options]
+   *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+   * @returns {Promise} - The promise which resolves to an array.
+   *   The first element of the array is an object representing {@link protos.google.ads.admanager.v1.BatchWithdrawChildPublishersResponse|BatchWithdrawChildPublishersResponse}.
+   *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+   *   for more details and examples.
+   * @example <caption>include:samples/generated/v1/child_publisher_service.batch_withdraw_child_publishers.js</caption>
+   * region_tag:admanager_v1_generated_ChildPublisherService_BatchWithdrawChildPublishers_async
+   */
+  batchWithdrawChildPublishers(
+    request?: protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersRequest,
+    options?: CallOptions,
+  ): Promise<
+    [
+      protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersResponse,
+      (
+        | protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersRequest
+        | undefined
+      ),
+      {} | undefined,
+    ]
+  >;
+  batchWithdrawChildPublishers(
+    request: protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersRequest,
+    options: CallOptions,
+    callback: Callback<
+      protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersResponse,
+      | protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  batchWithdrawChildPublishers(
+    request: protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersRequest,
+    callback: Callback<
+      protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersResponse,
+      | protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): void;
+  batchWithdrawChildPublishers(
+    request?: protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersRequest,
+    optionsOrCallback?:
+      | CallOptions
+      | Callback<
+          protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersResponse,
+          | protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersRequest
+          | null
+          | undefined,
+          {} | null | undefined
+        >,
+    callback?: Callback<
+      protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersResponse,
+      | protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersRequest
+      | null
+      | undefined,
+      {} | null | undefined
+    >,
+  ): Promise<
+    [
+      protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersResponse,
+      (
+        | protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersRequest
+        | undefined
+      ),
+      {} | undefined,
+    ]
+  > | void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    } else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers['x-goog-request-params'] =
+      this._gaxModule.routingHeader.fromParams({
+        parent: request.parent ?? '',
+      });
+    this.initialize().catch(err => {
+      throw err;
+    });
+    this._log.info('batchWithdrawChildPublishers request %j', request);
+    const wrappedCallback:
+      | Callback<
+          protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersResponse,
+          | protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersRequest
+          | null
+          | undefined,
+          {} | null | undefined
+        >
+      | undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info('batchWithdrawChildPublishers response %j', response);
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls
+      .batchWithdrawChildPublishers(request, options, wrappedCallback)
+      ?.then(
+        ([response, options, rawResponse]: [
+          protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersResponse,
+          (
+            | protos.google.ads.admanager.v1.IBatchWithdrawChildPublishersRequest
+            | undefined
+          ),
+          {} | undefined,
+        ]) => {
+          this._log.info('batchWithdrawChildPublishers response %j', response);
           return [response, options, rawResponse];
         },
       )
@@ -1443,7 +2104,7 @@ export class ChildPublisherServiceClient {
       this._gaxModule.routingHeader.fromParams({
         parent: request.parent ?? '',
       });
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     const wrappedCallback:
@@ -1549,7 +2210,7 @@ export class ChildPublisherServiceClient {
       });
     const defaultCallSettings = this._defaults['listChildPublishers'];
     const callSettings = defaultCallSettings.merge(options);
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('listChildPublishers stream %j', request);
@@ -1637,7 +2298,7 @@ export class ChildPublisherServiceClient {
       });
     const defaultCallSettings = this._defaults['listChildPublishers'];
     const callSettings = defaultCallSettings.merge(options);
-    this.initialize().catch((err) => {
+    this.initialize().catch(err => {
       throw err;
     });
     this._log.info('listChildPublishers iterate %j', request);
@@ -1984,6 +2645,44 @@ export class ChildPublisherServiceClient {
     return this.pathTemplates.bandwidthGroupPathTemplate.match(
       bandwidthGroupName,
     ).bandwidth_group;
+  }
+
+  /**
+   * Return a fully-qualified breakTemplate resource name string.
+   *
+   * @param {string} network_code
+   * @param {string} break_template
+   * @returns {string} Resource name string.
+   */
+  breakTemplatePath(networkCode: string, breakTemplate: string) {
+    return this.pathTemplates.breakTemplatePathTemplate.render({
+      network_code: networkCode,
+      break_template: breakTemplate,
+    });
+  }
+
+  /**
+   * Parse the network_code from BreakTemplate resource.
+   *
+   * @param {string} breakTemplateName
+   *   A fully-qualified path representing BreakTemplate resource.
+   * @returns {string} A string representing the network_code.
+   */
+  matchNetworkCodeFromBreakTemplateName(breakTemplateName: string) {
+    return this.pathTemplates.breakTemplatePathTemplate.match(breakTemplateName)
+      .network_code;
+  }
+
+  /**
+   * Parse the break_template from BreakTemplate resource.
+   *
+   * @param {string} breakTemplateName
+   *   A fully-qualified path representing BreakTemplate resource.
+   * @returns {string} A string representing the break_template.
+   */
+  matchBreakTemplateFromBreakTemplateName(breakTemplateName: string) {
+    return this.pathTemplates.breakTemplatePathTemplate.match(breakTemplateName)
+      .break_template;
   }
 
   /**
@@ -2774,6 +3473,73 @@ export class ChildPublisherServiceClient {
   }
 
   /**
+   * Return a fully-qualified daiSession resource name string.
+   *
+   * @param {string} network_code
+   * @param {string} dai_session
+   * @returns {string} Resource name string.
+   */
+  daiSessionPath(networkCode: string, daiSession: string) {
+    return this.pathTemplates.daiSessionPathTemplate.render({
+      network_code: networkCode,
+      dai_session: daiSession,
+    });
+  }
+
+  /**
+   * Parse the network_code from DaiSession resource.
+   *
+   * @param {string} daiSessionName
+   *   A fully-qualified path representing DaiSession resource.
+   * @returns {string} A string representing the network_code.
+   */
+  matchNetworkCodeFromDaiSessionName(daiSessionName: string) {
+    return this.pathTemplates.daiSessionPathTemplate.match(daiSessionName)
+      .network_code;
+  }
+
+  /**
+   * Parse the dai_session from DaiSession resource.
+   *
+   * @param {string} daiSessionName
+   *   A fully-qualified path representing DaiSession resource.
+   * @returns {string} A string representing the dai_session.
+   */
+  matchDaiSessionFromDaiSessionName(daiSessionName: string) {
+    return this.pathTemplates.daiSessionPathTemplate.match(daiSessionName)
+      .dai_session;
+  }
+
+  /**
+   * Return a fully-qualified defaultThirdPartyDataDeclaration resource name string.
+   *
+   * @param {string} network_code
+   * @returns {string} Resource name string.
+   */
+  defaultThirdPartyDataDeclarationPath(networkCode: string) {
+    return this.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.render(
+      {
+        network_code: networkCode,
+      },
+    );
+  }
+
+  /**
+   * Parse the network_code from DefaultThirdPartyDataDeclaration resource.
+   *
+   * @param {string} defaultThirdPartyDataDeclarationName
+   *   A fully-qualified path representing DefaultThirdPartyDataDeclaration resource.
+   * @returns {string} A string representing the network_code.
+   */
+  matchNetworkCodeFromDefaultThirdPartyDataDeclarationName(
+    defaultThirdPartyDataDeclarationName: string,
+  ) {
+    return this.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.match(
+      defaultThirdPartyDataDeclarationName,
+    ).network_code;
+  }
+
+  /**
    * Return a fully-qualified deviceCapability resource name string.
    *
    * @param {string} network_code
@@ -3285,6 +4051,44 @@ export class ChildPublisherServiceClient {
     return this.pathTemplates.mobileDeviceSubmodelPathTemplate.match(
       mobileDeviceSubmodelName,
     ).mobile_device_submodel;
+  }
+
+  /**
+   * Return a fully-qualified nativeStyle resource name string.
+   *
+   * @param {string} network_code
+   * @param {string} native_style
+   * @returns {string} Resource name string.
+   */
+  nativeStylePath(networkCode: string, nativeStyle: string) {
+    return this.pathTemplates.nativeStylePathTemplate.render({
+      network_code: networkCode,
+      native_style: nativeStyle,
+    });
+  }
+
+  /**
+   * Parse the network_code from NativeStyle resource.
+   *
+   * @param {string} nativeStyleName
+   *   A fully-qualified path representing NativeStyle resource.
+   * @returns {string} A string representing the network_code.
+   */
+  matchNetworkCodeFromNativeStyleName(nativeStyleName: string) {
+    return this.pathTemplates.nativeStylePathTemplate.match(nativeStyleName)
+      .network_code;
+  }
+
+  /**
+   * Parse the native_style from NativeStyle resource.
+   *
+   * @param {string} nativeStyleName
+   *   A fully-qualified path representing NativeStyle resource.
+   * @returns {string} A string representing the native_style.
+   */
+  matchNativeStyleFromNativeStyleName(nativeStyleName: string) {
+    return this.pathTemplates.nativeStylePathTemplate.match(nativeStyleName)
+      .native_style;
   }
 
   /**
@@ -4141,7 +4945,7 @@ export class ChildPublisherServiceClient {
    */
   close(): Promise<void> {
     if (this.childPublisherServiceStub && !this._terminated) {
-      return this.childPublisherServiceStub.then((stub) => {
+      return this.childPublisherServiceStub.then(stub => {
         this._log.info('ending gRPC channel');
         this._terminated = true;
         stub.close();

@@ -25,6 +25,7 @@ import {
   ApplicationServiceClient,
   AudienceSegmentServiceClient,
   BandwidthGroupServiceClient,
+  BreakTemplateServiceClient,
   BrowserLanguageServiceClient,
   BrowserServiceClient,
   CdnConfigServiceClient,
@@ -44,6 +45,7 @@ import {
   CustomTargetingValueServiceClient,
   DaiAuthenticationKeyServiceClient,
   DaiEncodingProfileServiceClient,
+  DaiSessionServiceClient,
   DeviceCapabilityServiceClient,
   DeviceCategoryServiceClient,
   DeviceManufacturerServiceClient,
@@ -57,6 +59,7 @@ import {
   MobileCarrierServiceClient,
   MobileDeviceServiceClient,
   MobileDeviceSubmodelServiceClient,
+  NativeStyleServiceClient,
   NetworkServiceClient,
   OperatingSystemServiceClient,
   OperatingSystemVersionServiceClient,
@@ -108,6 +111,11 @@ function doStuffWithAudienceSegmentServiceClient(
 }
 function doStuffWithBandwidthGroupServiceClient(
   client: BandwidthGroupServiceClient,
+) {
+  client.close();
+}
+function doStuffWithBreakTemplateServiceClient(
+  client: BreakTemplateServiceClient,
 ) {
   client.close();
 }
@@ -192,6 +200,9 @@ function doStuffWithDaiEncodingProfileServiceClient(
 ) {
   client.close();
 }
+function doStuffWithDaiSessionServiceClient(client: DaiSessionServiceClient) {
+  client.close();
+}
 function doStuffWithDeviceCapabilityServiceClient(
   client: DeviceCapabilityServiceClient,
 ) {
@@ -245,6 +256,9 @@ function doStuffWithMobileDeviceServiceClient(
 function doStuffWithMobileDeviceSubmodelServiceClient(
   client: MobileDeviceSubmodelServiceClient,
 ) {
+  client.close();
+}
+function doStuffWithNativeStyleServiceClient(client: NativeStyleServiceClient) {
   client.close();
 }
 function doStuffWithNetworkServiceClient(client: NetworkServiceClient) {
@@ -359,6 +373,9 @@ function main() {
   const bandwidthGroupServiceClient = new BandwidthGroupServiceClient();
   doStuffWithBandwidthGroupServiceClient(bandwidthGroupServiceClient);
   // check that the client instance can be created
+  const breakTemplateServiceClient = new BreakTemplateServiceClient();
+  doStuffWithBreakTemplateServiceClient(breakTemplateServiceClient);
+  // check that the client instance can be created
   const browserLanguageServiceClient = new BrowserLanguageServiceClient();
   doStuffWithBrowserLanguageServiceClient(browserLanguageServiceClient);
   // check that the client instance can be created
@@ -422,6 +439,9 @@ function main() {
   const daiEncodingProfileServiceClient = new DaiEncodingProfileServiceClient();
   doStuffWithDaiEncodingProfileServiceClient(daiEncodingProfileServiceClient);
   // check that the client instance can be created
+  const daiSessionServiceClient = new DaiSessionServiceClient();
+  doStuffWithDaiSessionServiceClient(daiSessionServiceClient);
+  // check that the client instance can be created
   const deviceCapabilityServiceClient = new DeviceCapabilityServiceClient();
   doStuffWithDeviceCapabilityServiceClient(deviceCapabilityServiceClient);
   // check that the client instance can be created
@@ -466,6 +486,9 @@ function main() {
   doStuffWithMobileDeviceSubmodelServiceClient(
     mobileDeviceSubmodelServiceClient,
   );
+  // check that the client instance can be created
+  const nativeStyleServiceClient = new NativeStyleServiceClient();
+  doStuffWithNativeStyleServiceClient(nativeStyleServiceClient);
   // check that the client instance can be created
   const networkServiceClient = new NetworkServiceClient();
   doStuffWithNetworkServiceClient(networkServiceClient);

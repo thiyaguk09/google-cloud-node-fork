@@ -19,13 +19,13 @@
 import * as protos from '../protos/protos';
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { SinonStub } from 'sinon';
-import { describe, it, beforeEach, afterEach } from 'mocha';
+import {SinonStub} from 'sinon';
+import {describe, it, beforeEach, afterEach} from 'mocha';
 import * as lineitemserviceModule from '../src';
 
-import { PassThrough } from 'stream';
+import {PassThrough} from 'stream';
 
-import { GoogleAuth, protobuf } from 'google-gax';
+import {GoogleAuth, protobuf} from 'google-gax';
 
 // Dynamically loaded proto JSON is needed to get the type information
 // to fill in default values for request objects
@@ -45,7 +45,7 @@ function getTypeDefaultValue(typeName: string, fields: string[]) {
 function generateSampleMessage<T extends object>(instance: T) {
   const filledObject = (
     instance.constructor as typeof protobuf.Message
-  ).toObject(instance as protobuf.Message<T>, { defaults: true });
+  ).toObject(instance as protobuf.Message<T>, {defaults: true});
   return (instance.constructor as typeof protobuf.Message).fromObject(
     filledObject,
   ) as T;
@@ -117,9 +117,9 @@ function stubAsyncIterationCall<ResponseType>(
             return Promise.reject(error);
           }
           if (counter >= responses!.length) {
-            return Promise.resolve({ done: true, value: undefined });
+            return Promise.resolve({done: true, value: undefined});
           }
-          return Promise.resolve({ done: false, value: responses![counter++] });
+          return Promise.resolve({done: false, value: responses![counter++]});
         },
       };
     },
@@ -134,7 +134,7 @@ describe('v1.LineItemServiceClient', () => {
       getClient: sinon.stub().resolves({
         getRequestHeaders: sinon
           .stub()
-          .resolves({ Authorization: 'Bearer SOME_TOKEN' }),
+          .resolves({Authorization: 'Bearer SOME_TOKEN'}),
       }),
     } as unknown as GoogleAuth;
   });
@@ -260,12 +260,12 @@ describe('v1.LineItemServiceClient', () => {
       assert(client.lineItemServiceStub);
     });
 
-    it('has close method for the initialized client', (done) => {
+    it('has close method for the initialized client', done => {
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
         auth: googleAuth,
         projectId: 'bogus',
       });
-      client.initialize().catch((err) => {
+      client.initialize().catch(err => {
         throw err;
       });
       assert(client.lineItemServiceStub);
@@ -274,12 +274,12 @@ describe('v1.LineItemServiceClient', () => {
         .then(() => {
           done();
         })
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     });
 
-    it('has close method for the non-initialized client', (done) => {
+    it('has close method for the non-initialized client', done => {
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
         auth: googleAuth,
         projectId: 'bogus',
@@ -290,7 +290,7 @@ describe('v1.LineItemServiceClient', () => {
         .then(() => {
           done();
         })
-        .catch((err) => {
+        .catch(err => {
           throw err;
         });
     });
@@ -455,7 +455,7 @@ describe('v1.LineItemServiceClient', () => {
       );
       request.name = defaultValue1;
       const expectedError = new Error('The client has already been closed.');
-      client.close().catch((err) => {
+      client.close().catch(err => {
         throw err;
       });
       await assert.rejects(client.getLineItem(request), expectedError);
@@ -465,7 +465,7 @@ describe('v1.LineItemServiceClient', () => {
   describe('listLineItems', () => {
     it('invokes listLineItems without error', async () => {
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -498,7 +498,7 @@ describe('v1.LineItemServiceClient', () => {
 
     it('invokes listLineItems without error using callback', async () => {
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -547,7 +547,7 @@ describe('v1.LineItemServiceClient', () => {
 
     it('invokes listLineItems with error', async () => {
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -578,7 +578,7 @@ describe('v1.LineItemServiceClient', () => {
 
     it('invokes listLineItemsStream without error', async () => {
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -624,15 +624,15 @@ describe('v1.LineItemServiceClient', () => {
       assert(
         (client.descriptors.page.listLineItems.createStream as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
     it('invokes listLineItemsStream with error', async () => {
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -673,9 +673,9 @@ describe('v1.LineItemServiceClient', () => {
       assert(
         (client.descriptors.page.listLineItems.createStream as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
@@ -716,15 +716,15 @@ describe('v1.LineItemServiceClient', () => {
       assert(
         (client.descriptors.page.listLineItems.asyncIterate as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
 
     it('uses async iteration with listLineItems with error', async () => {
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -756,9 +756,9 @@ describe('v1.LineItemServiceClient', () => {
       assert(
         (client.descriptors.page.listLineItems.asyncIterate as SinonStub)
           .getCall(0)
-          .args[2].otherArgs.headers[
-            'x-goog-request-params'
-          ].includes(expectedHeaderRequestParams),
+          .args[2].otherArgs.headers['x-goog-request-params'].includes(
+            expectedHeaderRequestParams,
+          ),
       );
     });
   });
@@ -772,7 +772,7 @@ describe('v1.LineItemServiceClient', () => {
         ad_break: 'adBreakValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -836,7 +836,7 @@ describe('v1.LineItemServiceClient', () => {
         ad_review_center_ad: 'adReviewCenterAdValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -905,7 +905,7 @@ describe('v1.LineItemServiceClient', () => {
         ad_rule: 'adRuleValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -954,7 +954,7 @@ describe('v1.LineItemServiceClient', () => {
         ad_spot: 'adSpotValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1003,7 +1003,7 @@ describe('v1.LineItemServiceClient', () => {
         ad_unit: 'adUnitValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1052,7 +1052,7 @@ describe('v1.LineItemServiceClient', () => {
         application: 'applicationValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1104,7 +1104,7 @@ describe('v1.LineItemServiceClient', () => {
         audience_segment: 'audienceSegmentValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1157,7 +1157,7 @@ describe('v1.LineItemServiceClient', () => {
         bandwidth_group: 'bandwidthGroupValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1203,6 +1203,58 @@ describe('v1.LineItemServiceClient', () => {
       });
     });
 
+    describe('breakTemplate', async () => {
+      const fakePath = '/rendered/path/breakTemplate';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        break_template: 'breakTemplateValue',
+      };
+      const client = new lineitemserviceModule.v1.LineItemServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.breakTemplatePathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.breakTemplatePathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('breakTemplatePath', () => {
+        const result = client.breakTemplatePath(
+          'networkCodeValue',
+          'breakTemplateValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromBreakTemplateName', () => {
+        const result = client.matchNetworkCodeFromBreakTemplateName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchBreakTemplateFromBreakTemplateName', () => {
+        const result = client.matchBreakTemplateFromBreakTemplateName(fakePath);
+        assert.strictEqual(result, 'breakTemplateValue');
+        assert(
+          (client.pathTemplates.breakTemplatePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('browser', async () => {
       const fakePath = '/rendered/path/browser';
       const expectedParameters = {
@@ -1210,7 +1262,7 @@ describe('v1.LineItemServiceClient', () => {
         browser: 'browserValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1259,7 +1311,7 @@ describe('v1.LineItemServiceClient', () => {
         browser_language: 'browserLanguageValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1312,7 +1364,7 @@ describe('v1.LineItemServiceClient', () => {
         cdn_config: 'cdnConfigValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1364,7 +1416,7 @@ describe('v1.LineItemServiceClient', () => {
         child_publisher: 'childPublisherValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1417,7 +1469,7 @@ describe('v1.LineItemServiceClient', () => {
         cms_metadata_key: 'cmsMetadataKeyValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1470,7 +1522,7 @@ describe('v1.LineItemServiceClient', () => {
         cms_metadata_value: 'cmsMetadataValueValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1527,7 +1579,7 @@ describe('v1.LineItemServiceClient', () => {
         company: 'companyValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1576,7 +1628,7 @@ describe('v1.LineItemServiceClient', () => {
         contact: 'contactValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1625,7 +1677,7 @@ describe('v1.LineItemServiceClient', () => {
         content: 'contentValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1674,7 +1726,7 @@ describe('v1.LineItemServiceClient', () => {
         content_bundle: 'contentBundleValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1726,7 +1778,7 @@ describe('v1.LineItemServiceClient', () => {
         content_label: 'contentLabelValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1778,7 +1830,7 @@ describe('v1.LineItemServiceClient', () => {
         creative: 'creativeValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1827,7 +1879,7 @@ describe('v1.LineItemServiceClient', () => {
         creative_set: 'creativeSetValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1879,7 +1931,7 @@ describe('v1.LineItemServiceClient', () => {
         creative_template: 'creativeTemplateValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1936,7 +1988,7 @@ describe('v1.LineItemServiceClient', () => {
         creative_wrapper: 'creativeWrapperValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -1989,7 +2041,7 @@ describe('v1.LineItemServiceClient', () => {
         custom_field: 'customFieldValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2041,7 +2093,7 @@ describe('v1.LineItemServiceClient', () => {
         custom_targeting_key: 'customTargetingKeyValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2104,7 +2156,7 @@ describe('v1.LineItemServiceClient', () => {
         custom_targeting_value: 'customTargetingValueValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2169,7 +2221,7 @@ describe('v1.LineItemServiceClient', () => {
         dai_authentication_key: 'daiAuthenticationKeyValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2234,7 +2286,7 @@ describe('v1.LineItemServiceClient', () => {
         dai_encoding_profile: 'daiEncodingProfileValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2290,6 +2342,104 @@ describe('v1.LineItemServiceClient', () => {
       });
     });
 
+    describe('daiSession', async () => {
+      const fakePath = '/rendered/path/daiSession';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        dai_session: 'daiSessionValue',
+      };
+      const client = new lineitemserviceModule.v1.LineItemServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.daiSessionPathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.daiSessionPathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('daiSessionPath', () => {
+        const result = client.daiSessionPath(
+          'networkCodeValue',
+          'daiSessionValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromDaiSessionName', () => {
+        const result = client.matchNetworkCodeFromDaiSessionName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchDaiSessionFromDaiSessionName', () => {
+        const result = client.matchDaiSessionFromDaiSessionName(fakePath);
+        assert.strictEqual(result, 'daiSessionValue');
+        assert(
+          (client.pathTemplates.daiSessionPathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
+    describe('defaultThirdPartyDataDeclaration', async () => {
+      const fakePath = '/rendered/path/defaultThirdPartyDataDeclaration';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+      };
+      const client = new lineitemserviceModule.v1.LineItemServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.render =
+        sinon.stub().returns(fakePath);
+      client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate.match =
+        sinon.stub().returns(expectedParameters);
+
+      it('defaultThirdPartyDataDeclarationPath', () => {
+        const result =
+          client.defaultThirdPartyDataDeclarationPath('networkCodeValue');
+        assert.strictEqual(result, fakePath);
+        assert(
+          (
+            client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate
+              .render as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromDefaultThirdPartyDataDeclarationName', () => {
+        const result =
+          client.matchNetworkCodeFromDefaultThirdPartyDataDeclarationName(
+            fakePath,
+          );
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (
+            client.pathTemplates.defaultThirdPartyDataDeclarationPathTemplate
+              .match as SinonStub
+          )
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('deviceCapability', async () => {
       const fakePath = '/rendered/path/deviceCapability';
       const expectedParameters = {
@@ -2297,7 +2447,7 @@ describe('v1.LineItemServiceClient', () => {
         device_capability: 'deviceCapabilityValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2354,7 +2504,7 @@ describe('v1.LineItemServiceClient', () => {
         device_category: 'deviceCategoryValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2407,7 +2557,7 @@ describe('v1.LineItemServiceClient', () => {
         device_manufacturer: 'deviceManufacturerValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2470,7 +2620,7 @@ describe('v1.LineItemServiceClient', () => {
         entity_signals_mapping: 'entitySignalsMappingValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2535,7 +2685,7 @@ describe('v1.LineItemServiceClient', () => {
         geo_target: 'geoTargetValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2587,7 +2737,7 @@ describe('v1.LineItemServiceClient', () => {
         label: 'labelValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2636,7 +2786,7 @@ describe('v1.LineItemServiceClient', () => {
         line_item: 'lineItemValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2685,7 +2835,7 @@ describe('v1.LineItemServiceClient', () => {
         linked_device: 'linkedDeviceValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2737,7 +2887,7 @@ describe('v1.LineItemServiceClient', () => {
         live_stream: 'liveStreamValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2789,7 +2939,7 @@ describe('v1.LineItemServiceClient', () => {
         live_stream_event: 'liveStreamEventValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2842,7 +2992,7 @@ describe('v1.LineItemServiceClient', () => {
         mobile_carrier: 'mobileCarrierValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2894,7 +3044,7 @@ describe('v1.LineItemServiceClient', () => {
         mobile_device: 'mobileDeviceValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -2946,7 +3096,7 @@ describe('v1.LineItemServiceClient', () => {
         mobile_device_submodel: 'mobileDeviceSubmodelValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3004,13 +3154,65 @@ describe('v1.LineItemServiceClient', () => {
       });
     });
 
+    describe('nativeStyle', async () => {
+      const fakePath = '/rendered/path/nativeStyle';
+      const expectedParameters = {
+        network_code: 'networkCodeValue',
+        native_style: 'nativeStyleValue',
+      };
+      const client = new lineitemserviceModule.v1.LineItemServiceClient({
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
+        projectId: 'bogus',
+      });
+      await client.initialize();
+      client.pathTemplates.nativeStylePathTemplate.render = sinon
+        .stub()
+        .returns(fakePath);
+      client.pathTemplates.nativeStylePathTemplate.match = sinon
+        .stub()
+        .returns(expectedParameters);
+
+      it('nativeStylePath', () => {
+        const result = client.nativeStylePath(
+          'networkCodeValue',
+          'nativeStyleValue',
+        );
+        assert.strictEqual(result, fakePath);
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.render as SinonStub)
+            .getCall(-1)
+            .calledWith(expectedParameters),
+        );
+      });
+
+      it('matchNetworkCodeFromNativeStyleName', () => {
+        const result = client.matchNetworkCodeFromNativeStyleName(fakePath);
+        assert.strictEqual(result, 'networkCodeValue');
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+
+      it('matchNativeStyleFromNativeStyleName', () => {
+        const result = client.matchNativeStyleFromNativeStyleName(fakePath);
+        assert.strictEqual(result, 'nativeStyleValue');
+        assert(
+          (client.pathTemplates.nativeStylePathTemplate.match as SinonStub)
+            .getCall(-1)
+            .calledWith(fakePath),
+        );
+      });
+    });
+
     describe('network', async () => {
       const fakePath = '/rendered/path/network';
       const expectedParameters = {
         network_code: 'networkCodeValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3049,7 +3251,7 @@ describe('v1.LineItemServiceClient', () => {
         operating_system: 'operatingSystemValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3102,7 +3304,7 @@ describe('v1.LineItemServiceClient', () => {
         operating_system_version: 'operatingSystemVersionValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3167,7 +3369,7 @@ describe('v1.LineItemServiceClient', () => {
         order: 'orderValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3216,7 +3418,7 @@ describe('v1.LineItemServiceClient', () => {
         partner: 'partnerValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3265,7 +3467,7 @@ describe('v1.LineItemServiceClient', () => {
         placement: 'placementValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3317,7 +3519,7 @@ describe('v1.LineItemServiceClient', () => {
         private_auction: 'privateAuctionValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3370,7 +3572,7 @@ describe('v1.LineItemServiceClient', () => {
         private_auction_deal: 'privateAuctionDealValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3433,7 +3635,7 @@ describe('v1.LineItemServiceClient', () => {
         programmatic_buyer: 'programmaticBuyerValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3496,7 +3698,7 @@ describe('v1.LineItemServiceClient', () => {
         report: 'reportValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3545,7 +3747,7 @@ describe('v1.LineItemServiceClient', () => {
         rich_media_ads_company: 'richMediaAdsCompanyValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3608,7 +3810,7 @@ describe('v1.LineItemServiceClient', () => {
         role: 'roleValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3657,7 +3859,7 @@ describe('v1.LineItemServiceClient', () => {
         site: 'siteValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3706,7 +3908,7 @@ describe('v1.LineItemServiceClient', () => {
         slate: 'slateValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3755,7 +3957,7 @@ describe('v1.LineItemServiceClient', () => {
         suggested_ad_unit: 'suggestedAdUnitValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3808,7 +4010,7 @@ describe('v1.LineItemServiceClient', () => {
         targeting_preset: 'targetingPresetValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3861,7 +4063,7 @@ describe('v1.LineItemServiceClient', () => {
         taxonomy_category: 'taxonomyCategoryValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3918,7 +4120,7 @@ describe('v1.LineItemServiceClient', () => {
         team: 'teamValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -3967,7 +4169,7 @@ describe('v1.LineItemServiceClient', () => {
         third_party_company: 'thirdPartyCompanyValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4030,7 +4232,7 @@ describe('v1.LineItemServiceClient', () => {
         user: 'userValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4079,7 +4281,7 @@ describe('v1.LineItemServiceClient', () => {
         viewability_provider: 'viewabilityProviderValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();
@@ -4142,7 +4344,7 @@ describe('v1.LineItemServiceClient', () => {
         web_property: 'webPropertyValue',
       };
       const client = new lineitemserviceModule.v1.LineItemServiceClient({
-        credentials: { client_email: 'bogus', private_key: 'bogus' },
+        credentials: {client_email: 'bogus', private_key: 'bogus'},
         projectId: 'bogus',
       });
       await client.initialize();

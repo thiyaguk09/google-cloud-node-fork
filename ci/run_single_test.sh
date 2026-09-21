@@ -29,6 +29,8 @@ if [ -z "${TEST_TYPE}" ]; then
     TEST_TYPE="units"
 fi
 
+TEST_CMD=${TEST_CMD:-pnpm}
+
 d=$(pwd)
 PROJECT=$(basename ${d})
 
@@ -50,7 +52,21 @@ if command -v cygpath >/dev/null 2>&1; then
 fi
 
 echo "pnpm install --engine-strict --pnpmfile \"${PNPMFILE_PATH}\""
-pnpm install --engine-strict --pnpmfile "${PNPMFILE_PATH}"
+if ! pnpm install --engine-strict --pnpmfile "${PNPMFILE_PATH}"; then
+    echo "::error title=PNPM Install Failed::pnpm install failed in $(pwd)."
+    echo ""
+    echo "===================================================================================================="
+    echo "❌ PNPM Install Failed"
+    echo ""
+    echo "If this failure is caused by an outdated lockfile or changed package.json dependencies, run:"
+    echo "    pnpm install --no-frozen-lockfile"
+    echo "    git add pnpm-lock.yaml"
+    echo "    git commit -m \"chore: update pnpm-lock.yaml\""
+    echo "    git push"
+    echo "===================================================================================================="
+    echo ""
+    exit 1
+fi
 
 
 retval=0
@@ -78,20 +94,20 @@ fi
 set +e
 case ${TEST_TYPE} in
 lint)
-    pnpm prelint
-    pnpm lint
+    ${TEST_CMD} prelint
+    ${TEST_CMD} lint
     retval=$?
     ;;
 samples)
-    pnpm samples-test
+    ${TEST_CMD} samples-test
     retval=$?
     ;;
 system)
-    pnpm system-test
+    ${TEST_CMD} system-test
     retval=$?
     ;;
 units)
-    pnpm test
+    ${TEST_CMD} test
     retval=$?
     ;;
 *)
