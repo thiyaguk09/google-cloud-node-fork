@@ -395,6 +395,7 @@ describe('storage/acl', () => {
         clone: () => gaxiosResponse,
         blob: async () => new Blob([]),
         formData: async () => new FormData(),
+        bytes: async () => new Uint8Array(),
       };
 
       acl.storageTransport.makeRequest = sandbox
