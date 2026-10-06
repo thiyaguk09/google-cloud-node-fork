@@ -655,6 +655,7 @@ export class Storage {
   interceptors: GaxiosInterceptor<GaxiosOptionsPrepared>[];
   universeDomain: string;
   customEndpoint = false;
+  useAuthWithCustomEndpoint?: boolean;
   name = '';
   baseUrl = '';
 
@@ -912,6 +913,7 @@ export class Storage {
     };
 
     this.apiEndpoint = options.apiEndpoint!;
+    this.useAuthWithCustomEndpoint = options.useAuthWithCustomEndpoint;
 
     /**
      * Reference to {@link Storage.acl}.
