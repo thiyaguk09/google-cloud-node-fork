@@ -228,27 +228,17 @@ class XMLMultiPartUploadHelper implements MultiPartUploadHelper {
   }
 
   #setGoogApiClientHeaders(headers = new Headers()): Headers {
-    let headerFound = false;
-    let userAgentFound = false;
-
-    for (const [key, value] of Object.entries(headers)) {
-      if (key.toLocaleLowerCase().trim() === 'x-goog-api-client') {
-        headerFound = true;
-
-        // Prepend command feature to value, if not already there
-        if (!value.includes(GCCL_GCS_CMD_FEATURE.UPLOAD_SHARDED)) {
-          headers.set(
-            key,
-            `${value} gccl-gcs-cmd/${GCCL_GCS_CMD_FEATURE.UPLOAD_SHARDED}`,
-          );
-        }
-      } else if (key.toLocaleLowerCase().trim() === 'user-agent') {
-        userAgentFound = true;
+    const existingGoogApiClient = headers.get('x-goog-api-client');
+    if (existingGoogApiClient) {
+      if (
+        !existingGoogApiClient.includes(GCCL_GCS_CMD_FEATURE.UPLOAD_SHARDED)
+      ) {
+        headers.set(
+          'x-goog-api-client',
+          `${existingGoogApiClient} gccl-gcs-cmd/${GCCL_GCS_CMD_FEATURE.UPLOAD_SHARDED}`,
+        );
       }
-    }
-
-    // If the header isn't present, add it
-    if (!headerFound) {
+    } else {
       headers.set(
         'x-goog-api-client',
         `${getRuntimeTrackingString()} gccl/${
@@ -257,8 +247,7 @@ class XMLMultiPartUploadHelper implements MultiPartUploadHelper {
       );
     }
 
-    // If the User-Agent isn't present, add it
-    if (!userAgentFound) {
+    if (!headers.has('user-agent')) {
       headers.set('User-Agent', getUserAgentString());
     }
 
@@ -276,7 +265,7 @@ class XMLMultiPartUploadHelper implements MultiPartUploadHelper {
     return AsyncRetry(async bail => {
       try {
         const res = await this.authClient.request<
-          string | MultiPartUploadErrorResponse
+          string | Buffer | MultiPartUploadErrorResponse
         >({
           headers: this.#setGoogApiClientHeaders(headersObject),
           method: 'POST',
@@ -286,9 +275,12 @@ class XMLMultiPartUploadHelper implements MultiPartUploadHelper {
         if ((res?.data as MultiPartUploadErrorResponse)?.error) {
           throw (res.data as MultiPartUploadErrorResponse).error;
         }
-        if (typeof res.data === 'string') {
+        if (typeof res.data === 'string' || Buffer.isBuffer(res.data)) {
           const parsedXML = this.xmlParser.parse(res.data);
-          this.uploadId = parsedXML.InitiateMultipartUploadResult.UploadId;
+          this.uploadId = parsedXML?.InitiateMultipartUploadResult?.UploadId;
+        }
+        if (!this.uploadId) {
+          throw new Error('Failed to parse UploadId from response');
         }
       } catch (e) {
         this.#handleErrorResponse(e as Error, bail);
@@ -373,7 +365,7 @@ class XMLMultiPartUploadHelper implements MultiPartUploadHelper {
         if (res.data && res.data.error) {
           throw res.data.error;
         }
-        return res;
+        return res as unknown as GaxiosResponse;
       } catch (e) {
         this.#handleErrorResponse(e as Error, bail);
         return;
@@ -420,7 +412,7 @@ class XMLMultiPartUploadHelper implements MultiPartUploadHelper {
     ) {
       throw err;
     } else {
-      bail(err as Error);
+      bail(err);
     }
   }
 }

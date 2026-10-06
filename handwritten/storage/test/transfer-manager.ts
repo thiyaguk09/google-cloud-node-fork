@@ -33,7 +33,7 @@ import {
 import assert from 'assert';
 import {describe, it, beforeEach, before, afterEach, after} from 'mocha';
 import * as path from 'path';
-import {GaxiosError, GaxiosOptions, GaxiosResponse} from 'gaxios';
+import {GaxiosError, GaxiosResponse} from 'gaxios';
 import {GCCL_GCS_CMD_KEY} from '../src/nodejs-common/util.js';
 import {AuthClient, GoogleAuth} from 'google-auth-library';
 import {tmpdir} from 'os';
@@ -887,7 +887,8 @@ describe('Transfer Manager', () => {
           return new Headers({});
         }
 
-        async request(opts: GaxiosOptions) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async request(opts: any): Promise<any> {
           called = true;
           const headers = Object.fromEntries(
             (opts.headers as Headers).entries(),
@@ -931,7 +932,8 @@ describe('Transfer Manager', () => {
           return new Headers({});
         }
 
-        async request(opts: GaxiosOptions) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async request(opts: any): Promise<any> {
           called = true;
           const headers = Object.fromEntries(
             (opts.headers as Headers).entries(),
@@ -959,6 +961,38 @@ describe('Transfer Manager', () => {
       await transferManager.uploadFileInChunks(filePath);
 
       assert(called);
+    });
+
+    it('should throw an error if UploadId cannot be parsed from initiateUpload response', async () => {
+      class TestAuthClient extends AuthClient {
+        async getAccessToken() {
+          return {token: '', res: undefined};
+        }
+
+        async getRequestHeaders(): Promise<Headers> {
+          return new Headers({});
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async request(): Promise<any> {
+          return {
+            data: Buffer.from(
+              '<InitiateMultipartUploadResult></InitiateMultipartUploadResult>',
+            ),
+            headers: {},
+          } as GaxiosResponse;
+        }
+      }
+
+      transferManager.bucket.storage.storageTransport.authClient =
+        new GoogleAuth({
+          authClient: new TestAuthClient(),
+        });
+
+      await assert.rejects(
+        transferManager.uploadFileInChunks(filePath, {autoAbortFailure: false}),
+        /Failed to parse UploadId from response/,
+      );
     });
 
     it('should use CRC32C validation when specified', async () => {
