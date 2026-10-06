@@ -1,6 +1,7 @@
 {
   "name": "google-test-utils",
   "version": "0.2.0",
+  "private": true,
   "description": "Testing utilities for Google Cloud client libraries",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
@@ -14,8 +15,8 @@
     "compile": "tsc -p .",
     "fix": "gts fix",
     "lint": "gts check",
-    "prepare": "npm run compile",
-    "pretest": "npm run compile",
+    "prepare": "pnpm run compile",
+    "pretest": "pnpm run compile",
     "docs": "jsdoc -c .jsdoc.js",
     "samples-test": "echo 'no samples test'",
     "system-test": "echo 'no system test'",
