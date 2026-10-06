@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 import {createHash} from 'crypto';
 import {
   GaxiosOptions,
@@ -98,9 +97,8 @@ export interface UploadConfig extends Pick<WritableOptions, 'highWaterMark'> {
    * emulator context is detected.
    */
   authClient?: {
-    request: <T>(
-      opts: GaxiosOptions,
-    ) => Promise<GaxiosResponse<T>> | GaxiosPromise<T>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    request<T = any>(opts: any): Promise<any>;
   };
 
   /**
@@ -247,6 +245,11 @@ export interface UploadConfig extends Pick<WritableOptions, 'highWaterMark'> {
    */
   retryOptions: RetryOptions;
 
+  /**
+   * Controls whether or not to use authentication when using a custom endpoint.
+   */
+  useAuthWithCustomEndpoint?: boolean;
+
   [GCCL_GCS_CMD_KEY]?: string;
 }
 
@@ -295,9 +298,8 @@ export class Upload extends Writable {
    * emulator context is detected.
    */
   authClient: {
-    request: <T>(
-      opts: GaxiosOptions,
-    ) => Promise<GaxiosResponse<T>> | GaxiosPromise<T>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    request<T = any>(opts: any): Promise<any>;
   };
   cacheKey: string;
   chunkSize?: number;
@@ -405,8 +407,10 @@ export class Upload extends Writable {
         !isSubDomainOfDefaultUniverse
       ) {
         // a custom, non-universe domain,
-        // use gaxios
-        this.authClient = gaxios;
+        // use gaxios only if useAuthWithCustomEndpoint is not true
+        if (cfg.useAuthWithCustomEndpoint !== true) {
+          this.authClient = gaxios;
+        }
       }
     }
 
@@ -604,6 +608,42 @@ export class Upload extends Writable {
   }
 
   /**
+   * Sets a header on a headers object, supporting global Headers instances,
+   * tuple arrays, and plain objects.
+   */
+  #setHeader(headers: GaxiosOptions['headers'], key: string, value: string) {
+    if (!headers) {
+      return;
+    }
+    if (headers instanceof Headers) {
+      headers.set(key, value);
+    } else if (Array.isArray(headers)) {
+      headers.push([key, value]);
+    } else {
+      (headers as Record<string, string>)[key] = value;
+    }
+  }
+
+  /**
+   * Converts a GaxiosOptions['headers'] object (which may be a Headers instance,
+   * tuple array, or plain object) into a plain object record.
+   */
+  #headersToObject(
+    headers: GaxiosOptions['headers'],
+  ): Record<string, string | undefined> {
+    if (!headers) {
+      return {};
+    }
+    if (headers instanceof Headers) {
+      return Object.assign(Object.fromEntries(headers.entries()), headers);
+    }
+    if (Array.isArray(headers)) {
+      return Object.fromEntries(headers);
+    }
+    return {...headers} as Record<string, string | undefined>;
+  }
+
+  /**
    * Builds and applies the X-Goog-Hash header to the request options
    * using either calculated hashes from #hashValidator or pre-calculated
    * client-side hashes. This should only be called on the final request.
@@ -626,15 +666,7 @@ export class Upload extends Writable {
     }
 
     if (checksums.length > 0 && headers) {
-      const value = checksums.join(',');
-
-      if (headers instanceof Headers) {
-        headers.set('X-Goog-Hash', value);
-      } else if (Array.isArray(headers)) {
-        headers.push(['X-Goog-Hash', value]);
-      } else {
-        (headers as Record<string, string>)['X-Goog-Hash'] = value;
-      }
+      this.#setHeader(headers, 'X-Goog-Hash', checksums.join(','));
     }
   }
 
@@ -822,7 +854,7 @@ export class Upload extends Writable {
 
     const {headers: reqHeaders, idempotencyToken} = decorateHeaders(
       {
-        ...this.customRequestOptions?.headers,
+        ...this.#headersToObject(this.customRequestOptions?.headers),
         ...headers,
       },
       {
@@ -848,13 +880,19 @@ export class Upload extends Writable {
     };
 
     if (metadata.contentLength) {
-      (reqOpts.headers as Record<string, string>)['X-Upload-Content-Length'] =
-        metadata.contentLength.toString();
+      this.#setHeader(
+        reqOpts.headers,
+        'X-Upload-Content-Length',
+        metadata.contentLength.toString(),
+      );
     }
 
     if (metadata.contentType) {
-      (reqOpts.headers as Record<string, string>)['X-Upload-Content-Type'] =
-        metadata.contentType;
+      this.#setHeader(
+        reqOpts.headers,
+        'X-Upload-Content-Type',
+        metadata.contentType,
+      );
     }
 
     if (typeof this.generation !== 'undefined') {
@@ -869,6 +907,9 @@ export class Upload extends Writable {
       reqOpts.params.predefinedAcl = this.predefinedAcl;
     }
 
+    if (this.origin) {
+      this.#setHeader(reqOpts.headers, 'Origin', this.origin);
+    }
     const uri = await AsyncRetry(
       async (bail: (err: Error) => void) => {
         try {
@@ -999,7 +1040,7 @@ export class Upload extends Writable {
     });
 
     const {headers, idempotencyToken} = decorateHeaders(
-      this.customRequestOptions?.headers,
+      this.#headersToObject(this.customRequestOptions?.headers),
       {
         idempotencyToken: this.currentInvocationId.chunk,
         gcclGcsCmd: this.#gcclGcsCmd,
@@ -1206,7 +1247,7 @@ export class Upload extends Writable {
     config: CheckUploadStatusConfig = {},
   ): Promise<GaxiosResponse<FileMetadata | void>> {
     const localHeaders: Record<string, unknown> = {
-      ...this.customRequestOptions?.headers,
+      ...this.#headersToObject(this.customRequestOptions?.headers),
       'Content-Length': 0,
       'Content-Range': 'bytes */*',
     };
@@ -1282,14 +1323,17 @@ export class Upload extends Writable {
   private async makeRequest(reqOpts: GaxiosOptions): GaxiosPromise {
     if (this.encryption) {
       reqOpts.headers = reqOpts.headers || {};
-      (reqOpts.headers as Record<string, string>)[
-        'x-goog-encryption-algorithm'
-      ] = 'AES256';
-      (reqOpts.headers as Record<string, string>)['x-goog-encryption-key'] =
-        this.encryption.key.toString();
-      (reqOpts.headers as Record<string, string>)[
-        'x-goog-encryption-key-sha256'
-      ] = this.encryption.hash.toString();
+      this.#setHeader(reqOpts.headers, 'x-goog-encryption-algorithm', 'AES256');
+      this.#setHeader(
+        reqOpts.headers,
+        'x-goog-encryption-key',
+        this.encryption.key.toString(),
+      );
+      this.#setHeader(
+        reqOpts.headers,
+        'x-goog-encryption-key-sha256',
+        this.encryption.hash.toString(),
+      );
     }
 
     if (this.userProject) {
@@ -1308,8 +1352,8 @@ export class Upload extends Writable {
       ...this.customRequestOptions,
       ...reqOpts,
       headers: {
-        ...this.customRequestOptions.headers,
-        ...reqOpts.headers,
+        ...this.#headersToObject(this.customRequestOptions.headers),
+        ...this.#headersToObject(reqOpts.headers),
       },
     };
 
@@ -1351,8 +1395,8 @@ export class Upload extends Writable {
       ...this.customRequestOptions,
       ...reqOpts,
       headers: {
-        ...this.customRequestOptions.headers,
-        ...reqOpts.headers,
+        ...this.#headersToObject(this.customRequestOptions.headers),
+        ...this.#headersToObject(reqOpts.headers),
       },
     };
 

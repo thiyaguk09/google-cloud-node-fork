@@ -53,8 +53,8 @@ describe('headers', () => {
       json: async () => ({}),
       clone: () => gaxiosResponse,
       blob: async () => new Blob([]),
-      bytes: async () => new Uint8Array(),
       formData: async () => new FormData(),
+      bytes: async () => new Uint8Array(),
     };
     storageTransport = new StorageTransport({
       authClient,
