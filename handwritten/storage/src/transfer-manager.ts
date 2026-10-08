@@ -963,6 +963,7 @@ export class TransferManager {
       await Promise.all(promises);
       return await mpuHelper.completeUpload();
     } catch (e) {
+      const uploadMsg = (e as Error)?.message ?? String(e);
       if (
         (options.autoAbortFailure === undefined || options.autoAbortFailure) &&
         mpuHelper.uploadId
@@ -970,15 +971,16 @@ export class TransferManager {
         try {
           await mpuHelper.abortUpload();
         } catch (abortErr) {
+          const abortMsg = (abortErr as Error)?.message ?? String(abortErr);
           throw new MultiPartUploadError(
-            `${(e as Error).message}\n${(abortErr as Error).message}`,
+            `${uploadMsg}\n${abortMsg}`,
             mpuHelper.uploadId!,
             mpuHelper.partsMap!
           );
         }
       }
       throw new MultiPartUploadError(
-        (e as Error).message,
+        uploadMsg,
         mpuHelper.uploadId!,
         mpuHelper.partsMap!
       );
