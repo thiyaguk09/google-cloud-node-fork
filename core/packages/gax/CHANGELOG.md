@@ -5,6 +5,21 @@
 
 [1]: https://www.npmjs.com/package/gax-nodejs?activeTab=versions
 
+## [6.12.0](https://github.com/googleapis/google-cloud-node/compare/google-gax-v6.11.1...google-gax-v6.12.0) (2026-10-07)
+
+
+### Features
+
+* **tools:** Add individual CLI flags for Bun monkey patches ([#9533](https://github.com/googleapis/google-cloud-node/issues/9533)) ([a5eec89](https://github.com/googleapis/google-cloud-node/commit/a5eec894b054e0605fd8e79591a88393bb2697c6))
+
+## [6.11.1](https://github.com/googleapis/google-cloud-node/compare/google-gax-v6.11.0...google-gax-v6.11.1) (2026-10-06)
+
+
+### Bug Fixes
+
+* **gax:** Only set resend_count on T4 attempt spans ([#9540](https://github.com/googleapis/google-cloud-node/issues/9540)) ([3b3f600](https://github.com/googleapis/google-cloud-node/commit/3b3f600a7adeb27b77df12c556e54b5f08b61325))
+* **gax:** Widen port to number | string in GrpcClientOptions ([#9542](https://github.com/googleapis/google-cloud-node/issues/9542)) ([17978e7](https://github.com/googleapis/google-cloud-node/commit/17978e7f9ef7773111c6472194f20679f6e2bd6d))
+
 ## [6.11.0](https://github.com/googleapis/google-cloud-node/compare/google-gax-v6.10.0...google-gax-v6.11.0) (2026-10-03)
 
 
