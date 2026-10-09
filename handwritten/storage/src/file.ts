@@ -1803,7 +1803,7 @@ class File extends ServiceObject<File, FileMetadata> {
           onComplete
         );
       } catch (err) {
-        if ((err as RequestError)?.code === 'ERR_STREAM_UNABLE_TO_PIPE') {
+        if ((err as {code?: string})?.code === 'ERR_STREAM_UNABLE_TO_PIPE') {
           shouldIgnoreComplete = true;
           cleanupSourceStream();
           return;
